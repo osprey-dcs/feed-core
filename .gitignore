@@ -1,0 +1,8 @@
+/bin/
+/lib/
+/db/
+/dbd/
+/include/
+/configure/*.local
+O.*/
+/FEED.*
