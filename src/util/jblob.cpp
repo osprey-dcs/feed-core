@@ -1,4 +1,6 @@
 
+#include <fstream>
+#include <sstream>
 #include <stdexcept>
 #include <list>
 #include <string.h>
@@ -28,16 +30,14 @@ struct context {
                 param;
     unsigned depth;
 
+    bool ignore_scratch;
     JRegister scratch;
 
-    typedef std::list<std::string> warnings_t;
-    warnings_t warnings;
-
     void warn(const std::string& msg) {
-        warnings.push_back(msg);
+        errlogPrintf("FEED JSON warning: %s\n", msg.c_str());
     }
 
-    context() :depth(0) {}
+    context() :depth(0), ignore_scratch(false) {}
 };
 
 #define TRY context *self = (context*)ctx; try
@@ -65,13 +65,28 @@ int jblob_integer(void *ctx, integer_arg val)
     TRY {
         if(self->depth==2) {
             if(self->param=="base_addr") {
-                self->scratch.base_addr = val;
+                if(val&0xff000000) {
+                    self->ignore_scratch = true;
+                    self->warn(SB()<<self->regname<<"."<<self->param<<" ignores out of range base_addr");
+                } else {
+                    self->scratch.base_addr = val;
+                }
 
             } else if(self->param=="addr_width") {
-                self->scratch.addr_width = val;
+                if(val>=32) {
+                    self->ignore_scratch = true;
+                    self->warn(SB()<<self->regname<<"."<<self->param<<" ignores out of range addr_width");
+                } else {
+                    self->scratch.addr_width = val;
+                }
 
             } else if(self->param=="data_width") {
-                self->scratch.data_width = val;
+                if(val>=32) {
+                    self->ignore_scratch = true;
+                    self->warn(SB()<<self->regname<<"."<<self->param<<" ignores out of range data_width");
+                } else {
+                    self->scratch.data_width = val;
+                }
 
             } else {
                 self->warn(SB()<<self->regname<<"."<<self->param<<" ignores integer value");
@@ -127,6 +142,8 @@ int jblob_start_map(void *ctx)
 {
     TRY {
         self->depth++;
+        if(self->depth==2)
+            self->ignore_scratch = false; // starting a new register
         if(self->depth>2) {
             throw std::runtime_error("Object depth limit (2) exceeded");
         }
@@ -158,8 +175,15 @@ int jblob_end_map(void *ctx)
 {
     TRY {
         if(self->depth==2) {
-            self->scratch.name = self->regname;
-            self->blob.registers[self->regname] = self->scratch;
+            if(self->ignore_scratch) {
+                self->warn(SB()<<"Ignore illformed definition for register "<<self->regname);
+
+            } else {
+                // ignore register definitions when some important part was incorrectly formatted
+                self->scratch.name = self->regname;
+                self->blob.registers[self->regname] = self->scratch;
+            }
+            self->ignore_scratch = false;
             self->scratch.clear();
         }
         if(self->depth==0)
@@ -197,6 +221,20 @@ struct handler {
 };
 
 } // namespace
+
+void JBlob::parseFile(const char *name)
+{
+    std::string content;
+    {
+        std::ifstream F(name, std::ios_base::in|std::ios_base::binary);
+        if(!F.is_open())
+            throw std::runtime_error(SB()<<"Can't open file \""<<name<<"\"");
+        std::ostringstream S;
+        S<<F.rdbuf();
+        content = S.str();
+    }
+    parse(content.c_str());
+}
 
 void JBlob::parse(const char *buf)
 {
@@ -250,12 +288,6 @@ void JBlob::parse(const char *buf, size_t buflen)
     case yajl_status_insufficient_data:
         throw std::runtime_error("Unexpected end of input");
 #endif
-    }
-
-    for(context::warnings_t::const_iterator it=ctxt.warnings.begin(), end=ctxt.warnings.end();
-        it!=end; ++it)
-    {
-        errlogPrintf("JSON parser warning: %s\n", it->c_str());
     }
 
     registers.swap(ctxt.blob.registers);
