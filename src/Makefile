@@ -5,13 +5,14 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
 
-LIBRARY += feedcom
+LIBRARY += feed
 
-feedcom_LIBS += Com
-feedcom_SYS_LIBS += z
+LIB_LIBS += $(EPICS_BASE_IOC_LIBS)
+LIB_SYS_LIBS += z
 
-feedcom_SRCS += jblob.cpp
-feedcom_SRCS += zpp.cpp
+SRC_DIRS += $(TOP)/src/util
+LIB_SRCS += jblob.cpp
+LIB_SRCS += zpp.cpp
 
 #===========================
 

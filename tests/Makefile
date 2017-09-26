@@ -5,9 +5,10 @@ include $(TOP)/configure/CONFIG
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
 
-USR_CPPFLAGS += -I$(TOP)/common
+USR_CPPFLAGS += -I$(TOP)/src/util
 
-PROD_LIBS += feedcom Com
+PROD_LIBS += feed
+PROD_LIBS += $(EPICS_BASE_IOC_LIBS)
 PROD_SYS_LIBS += z
 
 TESTPROD_HOST += testjson
