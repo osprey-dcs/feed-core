@@ -8,8 +8,10 @@ include $(TOP)/configure/CONFIG
 LIBRARY += feedcom
 
 feedcom_LIBS += Com
+feedcom_SYS_LIBS += z
 
 feedcom_SRCS += jblob.cpp
+feedcom_SRCS += zpp.cpp
 
 #===========================
 
