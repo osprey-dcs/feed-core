@@ -73,7 +73,7 @@ int jblob_integer(void *ctx, integer_arg val)
                 }
 
             } else if(self->param=="addr_width") {
-                if(val>=32) {
+                if(val>32) {
                     self->ignore_scratch = true;
                     self->warn(SB()<<self->regname<<"."<<self->param<<" ignores out of range addr_width");
                 } else {
@@ -81,7 +81,7 @@ int jblob_integer(void *ctx, integer_arg val)
                 }
 
             } else if(self->param=="data_width") {
-                if(val>=32) {
+                if(val>32) {
                     self->ignore_scratch = true;
                     self->warn(SB()<<self->regname<<"."<<self->param<<" ignores out of range data_width");
                 } else {
@@ -224,16 +224,7 @@ struct handler {
 
 void JBlob::parseFile(const char *name)
 {
-    std::string content;
-    {
-        std::ifstream F(name, std::ios_base::in|std::ios_base::binary);
-        if(!F.is_open())
-            throw std::runtime_error(SB()<<"Can't open file \""<<name<<"\"");
-        std::ostringstream S;
-        S<<F.rdbuf();
-        content = S.str();
-    }
-    parse(content.c_str());
+    parse(read_entire_file(name).c_str());
 }
 
 void JBlob::parse(const char *buf)

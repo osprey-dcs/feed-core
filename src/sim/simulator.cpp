@@ -19,31 +19,46 @@ const size_t pkt_size_limit = 128*8;
 SimReg::SimReg(const JRegister& reg)
     :name(reg.name)
     ,base(reg.base_addr)
-    ,mask((1u<<reg.data_width)-1)
+    ,mask((epicsUInt64(1u)<<reg.data_width)-1)
     ,readable(reg.readable)
     ,writable(reg.writable)
-    ,storage(1u<<reg.addr_width, 0u)
+    ,storage(epicsUInt64(1u)<<reg.addr_width, 0u)
 {
     if(base > 0xffffffff - (storage.size() - 1u))
         throw std::runtime_error(SB()<<name<<" has inconsistent base "<<base<<" and addr_width "<<reg.addr_width);
 }
 
 Simulator::Simulator(const osiSockAddr& ep, const JBlob& blob, const values_t &initial)
-    :serveaddr(ep)
+    :running(false)
+    ,serveaddr(ep)
 {
     for(JBlob::const_iterator it=blob.begin(), end=blob.end(); it!=end; ++it)
     {
-        const JRegister& info = it->second;
-        reg_by_name[info.name] = SimReg(info);
+        add(SimReg(it->second));
     }
 
-    for(reg_by_name_t::iterator it=reg_by_name.begin(), end=reg_by_name.end(); it!=end; ++it)
     {
-        SimReg& reg = it->second;
-        for(epicsUInt32 addr = reg.base, endaddr = reg.base+reg.storage.size(); addr<endaddr; addr++)
-        {
-            reg_by_addr[addr] = &reg;
-        }
+        SimReg temp;
+        temp.name = "Hello";
+        temp.base = 0;
+        temp.mask = 0xffffffff;
+        temp.readable = true;
+        temp.storage.resize(4);
+        temp.storage[0] = 0x48656c6c;
+        temp.storage[1] = 0x6f20576f;
+        temp.storage[2] = 0x726c6421;
+        temp.storage[3] = 0x0d0a0d0a;
+        add(temp);
+    }
+
+    {
+        SimReg temp;
+        temp.name = "ROM";
+        temp.base = 0x800;
+        temp.mask = 0x0000ffff;
+        temp.readable = true;
+        temp.storage.resize(0x8000/4u);
+        add(temp);
     }
 
     {
@@ -61,6 +76,20 @@ Simulator::~Simulator()
         Guard G(lock);
         if(running)
             std::cerr<<"Stop Simulator before destruction";
+    }
+}
+
+void Simulator::add(const SimReg& reg)
+{
+    Guard G(lock);
+
+    std::pair<reg_by_name_t::iterator, bool> P(reg_by_name.insert(std::make_pair(reg.name, reg)));
+    if(!P.second)
+        throw std::runtime_error(SB()<<"Duplicate register name: "<<reg.name);
+
+    for(epicsUInt32 addr = reg.base, endaddr = reg.base+reg.storage.size(); addr<endaddr; addr++)
+    {
+        reg_by_addr[addr] = &P.first->second;
     }
 }
 
@@ -103,7 +132,7 @@ void Simulator::exec()
                 if(ret<0)
                     throw SocketError(SOCKERRNO);
 
-                if(fds[1].revents&POLLERR) {
+                if(fds[1].revents&(POLLERR|POLLHUP)) {
                     throw std::runtime_error("socket error from wakeupRx");
                 }
 
@@ -112,25 +141,33 @@ void Simulator::exec()
                 }
 
                 if(fds[1].revents&POLLIN) {
+                    fds[1].revents &= ~POLLIN;
+
                     char temp;
                     wakeupRx.recvall(&temp, 1);
                     stop = true;
                 }
 
 
-                if(fds[1].revents&POLLIN) {
+                if(fds[0].revents&POLLIN) {
+                    fds[0].revents &= ~POLLIN;
 
                     buf.resize(pkt_size_limit);
 
                     serve.recvfrom(peer, buf);
                     process = true;
                 }
+
+                if(fds[0].revents || fds[1].revents) {
+                    std::cerr<<"poll() events unhandled  "<<std::hex<<fds[0].revents<<" "<<std::hex<<fds[1].revents<<"\n";
+                }
             }
             // locked again
 
+            PrintAddr addr(peer);
+
             if(process) {
                 if(buf.size()%8) {
-                    PrintAddr addr(peer);
                     errlogPrintf("%s: sent request with %u bytes of trailing junk\n",
                                  addr.c_str(), unsigned(buf.size()%8));
                 }
@@ -145,13 +182,15 @@ void Simulator::exec()
                     reg_by_addr_t::iterator it(reg_by_addr.find(cmd_addr&0x00ffffff));
 
                     if(cmd_addr&0xef000000) {
-                        PrintAddr addr(peer);
                         errlogPrintf("%s: unused bits set in cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
                     }
 
                     if(it==reg_by_addr.end()) {
-                        PrintAddr addr(peer);
-                        errlogPrintf("%s: read of unknown cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
+                        errlogPrintf("%s: unknown cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
+
+                        if(cmd_addr&0x10000000) {
+                            data = 0xabadface;
+                        }
 
                     } else {
                         SimReg& reg = *it->second;
@@ -159,11 +198,25 @@ void Simulator::exec()
 
                         if(cmd_addr&0x10000000) {
                             // read
-                            data = reg.storage[offset];
+                            if(reg.readable) {
+                                data = reg.storage[offset];
+                                errlogPrintf("%s: read %06x -> %08x\n", addr.c_str(), unsigned(cmd_addr), unsigned(data));
+                            } else {
+                                errlogPrintf("%s: read of unreadable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
+                                data = 0u;
+                            }
 
                         } else {
                             // write
-                            reg.storage[offset] = data;
+                            if(reg.writable) {
+                                reg.storage[offset] = data & reg.mask;
+                                errlogPrintf("%s: write %06x <- %08x\n", addr.c_str(), unsigned(cmd_addr), unsigned(reg.storage[offset]));
+
+                                // echo back value written
+                            } else {
+                                errlogPrintf("%s: write of unwriteable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
+                                data = 0u;
+                            }
                         }
                     }
 
@@ -188,4 +241,12 @@ void Simulator::interrupt()
     char c = '!';
 
     wakeupTx.sendall(&c, 1);
+}
+
+SimReg& Simulator::operator[](const std::string& name)
+{
+    reg_by_name_t::iterator it(reg_by_name.find(name));
+    if(it==reg_by_name.end())
+        throw std::runtime_error(SB()<<"No register "<<name);
+    return it->second;
 }

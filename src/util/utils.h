@@ -39,6 +39,8 @@ using std::auto_ptr;
 #endif
 }
 
+std::string read_entire_file(const char *name);
+
 struct SocketError : public std::exception
 {
     int code;
@@ -110,16 +112,24 @@ private:
     Socket& operator=(const Socket&);
 };
 
+// lazy printing of socket address
 struct PrintAddr
 {
     // worst cast size of "<ip>:<port>"
+    bool init;
+    const osiSockAddr& addr;
     char buf[4*3 + 3 + 1 + 5 + 1];
     PrintAddr(const osiSockAddr& addr)
-    {
-        sockAddrToDottedIP(&addr.sa, buf, sizeof(buf));
-        buf[sizeof(buf)-1] = '\0';
+        :init(false), addr(addr)
+    {}
+    const char* c_str() {
+        if(!init) {
+            sockAddrToDottedIP(&addr.sa, buf, sizeof(buf));
+            buf[sizeof(buf)-1] = '\0';
+            init = true;
+        }
+        return buf;
     }
-    const char* c_str() const { return buf; }
 };
 
 #endif // UTILS_H

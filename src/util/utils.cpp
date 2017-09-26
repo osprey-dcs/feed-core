@@ -1,8 +1,19 @@
+#include <fstream>
 
 #include <unistd.h>
 
 #include "utils.h"
 
+
+std::string read_entire_file(const char *name)
+{
+    std::ifstream F(name, std::ios_base::in|std::ios_base::binary);
+    if(!F.is_open())
+        throw std::runtime_error(SB()<<"Failed to read file "<<name);
+    std::ostringstream S;
+    S << F.rdbuf();
+    return S.str();
+}
 
 const char* SocketError::what() const throw()
 {

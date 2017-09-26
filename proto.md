@@ -53,9 +53,9 @@ May be assigned arbitrarily by a Requester to aid in Reply processing.
 
 This 1 byte field selects the operation in which the Address and Data.
 
-* 0x01 This least significant bit is _set_ for a _Read_ operation, and _cleared_ for a _Write_.  This bit is echoed in a Reply.
+* 0x10 This least significant bit is _set_ for a _Read_ operation, and _cleared_ for a _Write_.  This bit is echoed in a Reply.
 
-* 0xfe The remaining 7 bits are not currently used and should be zeroed in Requests and ignored in Replies.
+* 0xef The remaining 7 bits are not currently used and should be zeroed in Requests and ignored in Replies.
 
 ### Address
 
@@ -67,9 +67,9 @@ MSB order.
 
 ### Data
 
-When Bits[0] is set (Read operation) this field is ignored in Requests and filled in for Replies.
+When Bits[4] is set (Read operation) this field is ignored in Requests and filled in for Replies.
 
-When Bits[0] is clear (Write operation) this field contains the value to be written, which is _echoed_ in Replies.
+When Bits[4] is clear (Write operation) this field contains the value to be written, which is _echoed_ in Replies.
 
 To read back the actual value of a register after a write operation, a Read operation with the same address may be added following a Write within the same message.
 
@@ -190,7 +190,12 @@ The Address of this register
 
 ### "addr_width": Number
 
-????
+Determines number of Addresses which constitute this register.
+Number of Address is 2 to the power of addr_width.
+
+<pre>
+  naddrs = 1u<<addr_width;
+</pre>
 
 ### "data_width": Number
 

@@ -19,6 +19,10 @@ TESTPROD_HOST += testz
 testz_SRCS += testz.cpp
 TESTS += testz
 
+TESTPROD_HOST += testrom
+testrom_SRCS += testrom.cpp
+TESTS += testrom
+
 TESTSCRIPTS_HOST += $(TESTS:%=%.t)
 
 #===========================

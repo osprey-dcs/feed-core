@@ -36,6 +36,8 @@ public:
                        const values_t& initial);
     ~Simulator();
 
+    void add(const SimReg& reg);
+
     void endpoint(osiSockAddr&);
     void exec();
     void interrupt();

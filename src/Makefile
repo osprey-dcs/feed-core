@@ -13,6 +13,7 @@ LIB_SYS_LIBS += z
 SRC_DIRS += $(TOP)/src/util
 LIB_SRCS += jblob.cpp
 LIB_SRCS += zpp.cpp
+LIB_SRCS += rom.cpp
 LIB_SRCS += utils.cpp
 
 SRC_DIRS += $(TOP)/src/sim
