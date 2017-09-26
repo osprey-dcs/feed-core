@@ -117,6 +117,11 @@ void testEncode()
 
     testOk(romblob.size()>4, "blob size=%u", unsigned(romblob.size()));
 
+    testOk(romblob[0]==0, "rom[0]=%u", romblob[0]);
+    testOk(romblob[1]==0, "rom[1]=%u", romblob[1]);
+    testOk(romblob[2]==0x40, "rom[2]=%u", romblob[2]);
+    testOk(romblob[3]==0x06, "rom[3]=%u", romblob[3]);
+
     ROM rom2;
 
     rom2.parse(&romblob[0], romblob.size());

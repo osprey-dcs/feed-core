@@ -29,7 +29,8 @@ SimReg::SimReg(const JRegister& reg)
 }
 
 Simulator::Simulator(const osiSockAddr& ep, const JBlob& blob, const values_t &initial)
-    :running(false)
+    :debug(false)
+    ,running(false)
     ,serveaddr(ep)
 {
     for(JBlob::const_iterator it=blob.begin(), end=blob.end(); it!=end; ++it)
@@ -54,7 +55,7 @@ Simulator::Simulator(const osiSockAddr& ep, const JBlob& blob, const values_t &i
     {
         SimReg temp;
         temp.name = "ROM";
-        temp.base = 0x800;
+        temp.base = 0x8000;
         temp.mask = 0x0000ffff;
         temp.readable = true;
         temp.storage.resize(0x8000/4u);
@@ -175,9 +176,9 @@ void Simulator::exec()
                 // build reply in place
                 // leave header alone and start with first command at offset 8
 
-                for(size_t i=8; i+8<buf.size(); i+=8) {
-                    epicsUInt32 cmd_addr = ntohl(*reinterpret_cast<const char*>(&buf[i]));
-                    epicsUInt32 data = ntohl(*reinterpret_cast<const char*>(&buf[i+4]));
+                for(size_t i=8; i+8<=buf.size(); i+=8) {
+                    epicsUInt32 cmd_addr = ntohl(*reinterpret_cast<const epicsUInt32*>(&buf[i]));
+                    epicsUInt32 data = ntohl(*reinterpret_cast<const epicsUInt32*>(&buf[i+4]));
 
                     reg_by_addr_t::iterator it(reg_by_addr.find(cmd_addr&0x00ffffff));
 
@@ -200,7 +201,11 @@ void Simulator::exec()
                             // read
                             if(reg.readable) {
                                 data = reg.storage[offset];
-                                errlogPrintf("%s: read %06x -> %08x\n", addr.c_str(), unsigned(cmd_addr), unsigned(data));
+                                if(debug)
+                                    errlogPrintf("%s: read %s[%u] (%06x) -> %08x\n",
+                                                 addr.c_str(),
+                                                 reg.name.c_str(), unsigned(offset),
+                                                 unsigned(cmd_addr), unsigned(data));
                             } else {
                                 errlogPrintf("%s: read of unreadable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
                                 data = 0u;
@@ -210,7 +215,11 @@ void Simulator::exec()
                             // write
                             if(reg.writable) {
                                 reg.storage[offset] = data & reg.mask;
-                                errlogPrintf("%s: write %06x <- %08x\n", addr.c_str(), unsigned(cmd_addr), unsigned(reg.storage[offset]));
+                                if(debug)
+                                    errlogPrintf("%s: write %s[%u] (%06x) <- %08x\n",
+                                                 addr.c_str(),
+                                                 reg.name.c_str(), unsigned(offset),
+                                                 unsigned(cmd_addr), unsigned(reg.storage[offset]));
 
                                 // echo back value written
                             } else {
@@ -220,7 +229,7 @@ void Simulator::exec()
                         }
                     }
 
-                    *reinterpret_cast<char*>(&buf[i+4]) = htonl(data);
+                    *reinterpret_cast<epicsUInt32*>(&buf[i+4]) = htonl(data);
                 }
 
                 UnGuard U(G);

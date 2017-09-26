@@ -119,6 +119,9 @@ void ROM::parse(const char* buf, size_t buflen)
 size_t ROM::prepare(epicsUInt32* buf, size_t count)
 {
     size_t ret = prepare(reinterpret_cast<char*>(buf), count*4u);
+    for(size_t i=0; i<count; i++) {
+        buf[i] = ntohl(buf[i]);
+    }
     return ret/4u;
 }
 

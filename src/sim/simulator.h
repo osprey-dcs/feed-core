@@ -44,6 +44,7 @@ public:
 
     SimReg& operator[](const std::string& name);
 
+    bool debug;
     epicsMutex lock;
 private:
     bool running;
@@ -57,6 +58,11 @@ private:
 
     Socket serve, wakeupRx, wakeupTx;
     osiSockAddr serveaddr;
+
+public:
+    typedef reg_by_name_t::iterator iterator;
+    iterator begin() { return reg_by_name.begin(); }
+    iterator end() { return reg_by_name.end(); }
 };
 
 #endif // SIMULATOR_H

@@ -15,7 +15,7 @@ namespace {
 
 void usage(const char* exe)
 {
-    std::cout<<"Usage: "<<exe<<" [-h] [-H <iface>[:<port>]] <json_file>\n";
+    std::cout<<"Usage: "<<exe<<" [-hd] [-H <iface>[:<port>]] <json_file>\n";
 }
 
 Simulator* volatile current;
@@ -32,17 +32,21 @@ int main(int argc, char *argv[])
 {
     try {
         int opt;
+        bool debug = false;
         osiSockAddr endpoint;
         memset(&endpoint, 0, sizeof(endpoint));
         endpoint.ia.sin_family = AF_INET;
         endpoint.ia.sin_addr.s_addr = htonl(INADDR_ANY);
         endpoint.ia.sin_port = htons(50006);
 
-        while((opt=getopt(argc, argv, "hH:"))!=-1) {
+        while((opt=getopt(argc, argv, "hH:d"))!=-1) {
             switch(opt) {
             case 'H':
                 if(aToIPAddr(optarg, 50006, &endpoint.ia))
                     throw std::runtime_error("-H with invalid host[:port]");
+                break;
+            case 'd':
+                debug = true;
                 break;
             default:
                 std::cerr<<"Unknown option '"<<opt<<"'\n\n";
@@ -72,11 +76,24 @@ int main(int argc, char *argv[])
         rom.push_back(ROMDescriptor::JSON, json);
 
         Simulator sim(endpoint, blob, initial);
+        sim.debug = debug;
 
         {
             SimReg& reg = sim["ROM"];
             size_t len = rom.prepare(&reg.storage[0], reg.storage.size());
             std::cout<<"ROM contents "<<len<<"/"<<reg.storage.size()<<"\n";
+        }
+
+        if(debug) {
+            std::cout<<"Registers:\n";
+            for(Simulator::iterator it=sim.begin(), end=sim.end(); it!=end; ++it)
+            {
+                SimReg& reg = it->second;
+                std::cout<<"  "<<reg.name<<"\t"
+                         <<std::hex<<reg.base<<":"
+                         <<std::hex<<(reg.base+reg.storage.size()-1)
+                         <<"\n";
+            }
         }
 
         signal(SIGINT, &handler);
