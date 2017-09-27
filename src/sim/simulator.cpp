@@ -62,6 +62,25 @@ Simulator::Simulator(const osiSockAddr& ep, const JBlob& blob, const values_t &i
         add(temp);
     }
 
+    const SimReg& romreg((*this)["ROM"]);
+
+    for(values_t::const_iterator it=initial.begin(), end=initial.end(); it!=end; ++it)
+    {
+        reg_by_addr_t::iterator rit = reg_by_addr.find(it->first);
+        if(rit==reg_by_addr.end()) {
+            std::cout<<"Can't initialize non-existant register "<<std::hex<<it->first;
+            continue;
+        }
+        SimReg& reg = *rit->second;
+        if(&reg==&romreg)
+            continue; // don't override rom
+        assert(reg.base!=0x800);
+
+        epicsUInt32 offset = rit->first - reg.base;
+
+        reg.storage[offset] = it->second;
+    }
+
     {
         Socket temp(AF_INET, SOCK_DGRAM, 0);
         temp.bind(serveaddr);

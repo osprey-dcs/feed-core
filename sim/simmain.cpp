@@ -15,7 +15,7 @@ namespace {
 
 void usage(const char* exe)
 {
-    std::cout<<"Usage: "<<exe<<" [-hd] [-H <iface>[:<port>]] <json_file>\n";
+    std::cout<<"Usage: "<<exe<<" [-hd] [-H <iface>[:<port>]] <json_file> [initials_file]\n";
 }
 
 Simulator* volatile current;
@@ -64,7 +64,39 @@ int main(int argc, char *argv[])
 
         std::string json(read_entire_file(argv[optind]));
 
-        Simulator::values_t initial; // TODO
+        Simulator::values_t initial;
+        if(optind+1<argc) {
+            std::ifstream strm(argv[optind+1]);
+            if(!strm.is_open()) {
+                std::cerr<<"Failed to open '"<<argv[optind+1]<<"'\n";
+                return 1;
+            }
+
+            std::string line;
+            unsigned lineno=0;
+            while(std::getline(strm, line)) {
+                lineno++;
+                epicsUInt32 addr, value;
+
+                // skip blank
+                if(line.find_first_not_of(" \t\r\n")==line.npos)
+                    continue;
+
+                std::istringstream lstrm(line);
+
+                lstrm>>std::hex>>addr>>std::hex>>value;
+                if(lstrm.bad() || !lstrm.eof())
+                    throw std::runtime_error(SB()<<argv[optind+1]<<" Error on line "<<lineno);
+
+                if(value!=0) {
+                    initial[addr] = value;
+                    if(debug)
+                        std::cout<<"Initialize "<<std::hex<<addr<<" with "<<std::hex<<value<<"\n";
+                }
+            }
+            if(strm.bad() || !strm.eof())
+                throw std::runtime_error(SB()<<argv[optind+1]<<" Error on or after line "<<lineno<<" "<<std::hex<<strm.rdstate()<<"\n");
+        }
 
         JBlob blob;
         blob.parse(json.c_str());

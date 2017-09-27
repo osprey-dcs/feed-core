@@ -55,6 +55,8 @@ def dumpaddrs(args, dev):
     values = dev.exchange(addrs)
 
     for addr, value in zip(addrs, values):
+        if value==0 and args.ignore_zeros:
+            continue
         print("%08x %08x"%(addr, value))
 
 
@@ -65,18 +67,19 @@ def getargs():
     P.add_argument('-q','--quiet',action='store_const', const=logging.WARN, dest='debug')
     P.add_argument('-l','--list', action='store_true', help='List register names')
     P.add_argument('-t','--timeout', type=float, default=1.0)
-    P.add_argument('dest')
+    P.add_argument('dest', metavar="host[:port]", help="Server address")
 
     SP = P.add_subparsers()
 
     S = SP.add_parser('reg', help='read/write registers')
     S.set_defaults(func=readwrite)
-    S.add_argument('addr', nargs='+')
+    S.add_argument('addr', nargs='+', help="address/register name with optional value to write")
 
     S = SP.add_parser('list', help='list registers')
     S.set_defaults(func=listreg)
 
     S = SP.add_parser('dump', help='dump registers')
+    S.add_argument('-Z','--ignore-zeros', action='store_true', help="Only print registers with non-zero values")
     S.set_defaults(func=dumpaddrs)
 
     return P.parse_args()

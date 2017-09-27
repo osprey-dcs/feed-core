@@ -29,7 +29,7 @@ struct SimReg {
 class Simulator
 {
 public:
-    typedef std::map<std::string, epicsUInt32> values_t;
+    typedef std::map<epicsUInt32, epicsUInt32> values_t;
 
     explicit Simulator(const osiSockAddr& ep,
                        const JBlob& blob,
