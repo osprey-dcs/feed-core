@@ -93,7 +93,7 @@ size_t Socket::recvfrom(osiSockAddr& src, char* buf, size_t buflen) const
 void Socket::pipe(Socket& rx, Socket& tx)
 {
     int fds[2] = {-1, -1};
-    if(::pipe(fds)!=0)
+    if(::socketpair(AF_UNIX, SOCK_STREAM, 0, fds)!=0)
         throw SocketError(SOCKERRNO);
 
     Socket temp_rx(fds[0]);

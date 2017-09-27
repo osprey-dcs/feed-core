@@ -132,7 +132,9 @@ int main(int argc, char *argv[])
         signal(SIGHUP, &handler);
         signal(SIGTERM, &handler);
 
+        current = &sim;
         sim.exec();
+        current = 0;
 
         return 0;
     }catch(SocketError&e){
