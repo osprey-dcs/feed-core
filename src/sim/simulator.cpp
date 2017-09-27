@@ -186,6 +186,12 @@ void Simulator::exec()
 
             PrintAddr addr(peer);
 
+            if(process && buf.size()<32) {
+                errlogPrintf("%s: ignoring too short request (%u bytes)\n",
+                             addr.c_str(), unsigned(buf.size()));
+                process = false;
+            }
+
             if(process) {
                 if(buf.size()%8) {
                     errlogPrintf("%s: sent request with %u bytes of trailing junk\n",
@@ -227,11 +233,12 @@ void Simulator::exec()
                                                  unsigned(cmd_addr), unsigned(data));
                             } else {
                                 errlogPrintf("%s: read of unreadable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
-                                data = 0u;
+                                data = 0xdeadbeef;
                             }
 
                         } else {
                             // write
+                            // echo back value written
                             if(reg.writable) {
                                 reg.storage[offset] = data & reg.mask;
                                 if(debug)
@@ -240,10 +247,8 @@ void Simulator::exec()
                                                  reg.name.c_str(), unsigned(offset),
                                                  unsigned(cmd_addr), unsigned(reg.storage[offset]));
 
-                                // echo back value written
                             } else {
                                 errlogPrintf("%s: write of unwriteable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
-                                data = 0u;
 
                             }
                         }
