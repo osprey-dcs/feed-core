@@ -49,6 +49,8 @@ def dumpaddrs(args, dev):
     addrs = []
     for info in dev.json.values():
         base = info['base_addr']
+        if info.get("access", '').find('r')==-1:
+            continue
         for addr in range(0, 1<<info.get('addr_width',0)):
             addrs.append(base+addr)
 
