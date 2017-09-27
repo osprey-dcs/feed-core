@@ -119,7 +119,7 @@ The first 4 registers will read back the 16 byte constant value "Hello World!\r\
 
 ### 0x000800 - 0x000fff
 
-This 2048 registers access static configuration data.
+These 2048 registers access static configuration data.
 See section Configuration ROM.
 
 Configuration ROM Format

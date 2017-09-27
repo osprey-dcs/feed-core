@@ -128,6 +128,7 @@ size_t ROM::prepare(epicsUInt32* buf, size_t count)
 size_t ROM::prepare(char* buf, size_t buflen)
 {
     const char* const orig = buf;
+    const size_t origlen = buflen;
 
     for(infos_t::const_iterator it=infos.begin(), end=infos.end(); it!=end; ++it)
     {
@@ -164,8 +165,11 @@ size_t ROM::prepare(char* buf, size_t buflen)
         if(contents.size()%2)
             contents.push_back('\0');
 
+        // check that word size in header won't overflow
         if(contents.size()/2u >= 0x4000)
             throw std::runtime_error(SB()<<"Descriptor type="<<info.type<<" too large size="<<contents.size());
+
+        // check for space in output buffer
         if(4u+contents.size()*2u>buflen)
             throw std::runtime_error(SB()<<"Not enough space to encode ROM contents at "
                                      <<(buf-orig)<<" have "<<buflen<<" need "<<(4u+contents.size()*2u));
@@ -185,6 +189,8 @@ size_t ROM::prepare(char* buf, size_t buflen)
 
         buf += contents.size()*2u;
         buflen -= contents.size()*2u;
+
+        assert(buf-orig+buflen == origlen);
     }
 
     if(buflen<4) {

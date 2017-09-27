@@ -55,10 +55,10 @@ Simulator::Simulator(const osiSockAddr& ep, const JBlob& blob, const values_t &i
     {
         SimReg temp;
         temp.name = "ROM";
-        temp.base = 0x8000;
-        temp.mask = 0x0000ffff;
+        temp.base = 0x0800;
+        temp.mask = 0xffff;
         temp.readable = true;
-        temp.storage.resize(0x8000/4u);
+        temp.storage.resize(0x800);
         add(temp);
     }
 
@@ -225,6 +225,7 @@ void Simulator::exec()
                             } else {
                                 errlogPrintf("%s: write of unwriteable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
                                 data = 0u;
+
                             }
                         }
                     }
