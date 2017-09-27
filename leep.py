@@ -96,6 +96,12 @@ class Device(object):
 
     def _exchange(self, addrs, values=None):
 
+        pad = None
+        if len(addrs)<3:
+            pad = 3-len(addrs)
+            addrs.extend([0]*pad)
+            values.extend([None]*pad)
+
         msg = numpy.zeros(2+2*len(addrs), dtype=be32)
         msg[0] = random.randint(0,0xffffffff)
         msg[1] = msg[0]&0xffffffff
@@ -132,7 +138,10 @@ class Device(object):
 
             break
 
-        return reply[3::2]
+        ret = reply[3::2]
+        if pad:
+            ret = ret[:-pad]
+        return ret
 
     def exchange(self, addrs, values=None):
         """Accepts a list of address and values (None to read).
