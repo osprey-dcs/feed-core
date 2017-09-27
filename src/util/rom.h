@@ -27,8 +27,12 @@ struct ROM {
     typedef std::list<ROMDescriptor> infos_t;
     infos_t infos;
 
+    // process byte array as ROM image.
+    // replace our infos
     void parse(const char* buf, size_t buflen);
 
+    // generate a ROM image based on our infos.
+    // throws std::runtime_error on failure, including insufficient space
     size_t prepare(epicsUInt32* buf, size_t count);
     size_t prepare(char* buf, size_t buflen);
 

@@ -279,6 +279,7 @@ void Simulator::interrupt()
 
 SimReg& Simulator::operator[](const std::string& name)
 {
+    Guard G(lock);
     reg_by_name_t::iterator it(reg_by_name.find(name));
     if(it==reg_by_name.end())
         throw std::runtime_error(SB()<<"No register "<<name);

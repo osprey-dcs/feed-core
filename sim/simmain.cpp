@@ -62,6 +62,8 @@ int main(int argc, char *argv[])
             return 2;
         }
 
+        // read input files
+
         std::string json(read_entire_file(argv[optind]));
 
         Simulator::values_t initial;
@@ -98,6 +100,8 @@ int main(int argc, char *argv[])
                 throw std::runtime_error(SB()<<argv[optind+1]<<" Error on or after line "<<lineno<<" "<<std::hex<<strm.rdstate()<<"\n");
         }
 
+        // build ROM image
+
         JBlob blob;
         blob.parse(json.c_str());
 
@@ -110,6 +114,7 @@ int main(int argc, char *argv[])
         Simulator sim(endpoint, blob, initial);
         sim.debug = debug;
 
+        // copy in ROM image
         {
             SimReg& reg = sim["ROM"];
             size_t len = rom.prepare(&reg.storage[0], reg.storage.size());
@@ -132,6 +137,7 @@ int main(int argc, char *argv[])
         signal(SIGHUP, &handler);
         signal(SIGTERM, &handler);
 
+        // time to run now...
         current = &sim;
         sim.exec();
         current = 0;

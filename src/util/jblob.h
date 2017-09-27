@@ -11,7 +11,7 @@ struct JRegister {
     std::string name,
                 description;
     epicsUInt32 base_addr;
-    epicsUInt8  addr_width, //??
+    epicsUInt8  addr_width,
                 data_width;
     enum sign_t {
         Unsigned, Signed

@@ -16,13 +16,13 @@
 struct SimReg {
     std::string name;
     epicsUInt32 base;
-    epicsUInt32 mask;
+    epicsUInt32 mask; // data bit mask
     bool readable, writable;
 
     typedef std::vector<epicsUInt32> storage_t;
     storage_t storage;
 
-    SimReg() :readable(false), writable(false) {}
+    SimReg() :base(0), mask(0), readable(false), writable(false) {}
     SimReg(const JRegister& reg);
 };
 
@@ -31,20 +31,35 @@ class Simulator
 public:
     typedef std::map<epicsUInt32, epicsUInt32> values_t;
 
+    /* Create simulator listening at given endpoint (address+port).
+     * Provides registers listed in JBlob.
+     * Initial address values taken from initial map (except ROM)
+     */
     explicit Simulator(const osiSockAddr& ep,
                        const JBlob& blob,
                        const values_t& initial);
     ~Simulator();
 
+    // manually add a register (in addition to those defined in JBlob)
     void add(const SimReg& reg);
 
+    // read back the actual endpoint.
+    // eg. after passing port 0 to ctor, use this to find the randomly assigned port
     void endpoint(osiSockAddr&);
+    // begin receiving and processing messages.
+    // Doesn't return until interrupt() is called
     void exec();
+    // cause exec() to return.
+    // Calls to interrupt() are queued.
     void interrupt();
 
+    // access register information.
+    // take lock to modify register contents
     SimReg& operator[](const std::string& name);
 
+    // turns on some extra debug prints
     bool debug;
+    // guard access  to register values
     epicsMutex lock;
 private:
     bool running;

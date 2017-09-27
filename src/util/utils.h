@@ -39,6 +39,7 @@ using std::auto_ptr;
 #endif
 }
 
+// return contents of file
 std::string read_entire_file(const char *name);
 
 struct SocketError : public std::exception
