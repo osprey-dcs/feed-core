@@ -113,7 +113,7 @@ class Device(object):
             _log.debug("%s Recv (%d) %s", src, len(reply), repr(reply))
 
             if len(reply)%8:
-                rmsg = rmsg[:-(len(reply)%8)]
+                reply = reply[:-(len(reply)%8)]
 
             if len(tosend)!=len(reply):
                 _log.error("Reply truncated %d %d", len(tosend), len(reply))
