@@ -34,6 +34,14 @@ Socket::Socket(int domain, int type, int protocol)
         throw SocketError(SOCKERRNO);
 }
 
+void Socket::set_blocking(bool block)
+{
+    int val = !block;
+    int ret = socket_ioctl(sock, FIONBIO, &val);
+    if(ret<0)
+        throw SocketError(SOCKERRNO);
+}
+
 void Socket::bind(osiSockAddr& ep) const
 {
     if(::bind(sock, &ep.sa, sizeof(ep))!=0)
@@ -42,6 +50,17 @@ void Socket::bind(osiSockAddr& ep) const
     osiSocklen_t len = sizeof(ep);
     if(::getsockname(sock, &ep.sa, &len)!=0)
         throw SocketError(SOCKERRNO);
+}
+
+size_t Socket::trysend(const char* buf, size_t buflen) const
+{
+    ssize_t ret = ::send(sock, buf, buflen, 0);
+    if(ret<0) {
+        if(SOCKERRNO==SOCK_EWOULDBLOCK)
+            return 0;
+        throw SocketError(SOCKERRNO);
+    }
+    return size_t(ret);
 }
 
 void Socket::sendall(const char* buf, size_t buflen) const

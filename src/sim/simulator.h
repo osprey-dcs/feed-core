@@ -35,9 +35,9 @@ public:
      * Provides registers listed in JBlob.
      * Initial address values taken from initial map (except ROM)
      */
-    explicit Simulator(const osiSockAddr& ep,
-                       const JBlob& blob,
-                       const values_t& initial);
+    Simulator(const osiSockAddr& ep,
+              const JBlob& blob,
+              const values_t& initial);
     ~Simulator();
 
     // manually add a register (in addition to those defined in JBlob)

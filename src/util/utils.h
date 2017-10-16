@@ -94,7 +94,11 @@ struct Socket
 
     operator SOCKET() const { return sock; }
 
+    void set_blocking(bool block);
+
     void bind(osiSockAddr& ep) const;
+
+    size_t trysend(const char* buf, size_t buflen) const;
 
     void sendall(const char* buf, size_t buflen) const;
     void recvall(char* buf, size_t buflen) const;
@@ -116,16 +120,23 @@ private:
 // lazy printing of socket address
 struct PrintAddr
 {
-    // worst cast size of "<ip>:<port>"
     bool init;
-    const osiSockAddr& addr;
+    const osiSockAddr* addr;
+    // worst cast size of "<ip>:<port>"
     char buf[4*3 + 3 + 1 + 5 + 1];
+
+    PrintAddr() :init(true), addr(0) {buf[0]='\0';}
     PrintAddr(const osiSockAddr& addr)
-        :init(false), addr(addr)
+        :init(false), addr(&addr)
     {}
+    PrintAddr& operator=(const osiSockAddr& addr) {
+        init = false;
+        this->addr = &addr;
+        return *this;
+    }
     const char* c_str() {
         if(!init) {
-            sockAddrToDottedIP(&addr.sa, buf, sizeof(buf));
+            sockAddrToDottedIP(&addr->sa, buf, sizeof(buf));
             buf[sizeof(buf)-1] = '\0';
             init = true;
         }
