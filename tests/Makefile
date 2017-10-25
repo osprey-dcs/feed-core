@@ -6,6 +6,15 @@ include $(TOP)/configure/CONFIG
 #=============================
 
 USR_CPPFLAGS += -I$(TOP)/src/util
+USR_CPPFLAGS += -I$(TOP)/src/sim
+USR_CPPFLAGS += -I$(TOP)/src/driver
+
+USR_CPPFLAGS += -DTOP=\""$(TOP)"\"
+
+DBDDEPENDS_FILES += testfeed.dbd$(DEP)
+TESTFILES += $(COMMON_DIR)/testfeed.dbd
+testfeed_DBD += base.dbd
+testfeed_DBD += feed.dbd
 
 PROD_LIBS += feed
 PROD_LIBS += $(EPICS_BASE_IOC_LIBS)
@@ -22,6 +31,11 @@ TESTS += testz
 TESTPROD_HOST += testrom
 testrom_SRCS += testrom.cpp
 TESTS += testrom
+
+TESTPROD_HOST += testdevice
+testdevice_SRCS += testdevice.cpp
+testdevice_SRCS += testfeed_registerRecordDeviceDriver.cpp
+TESTS += testdevice
 
 TESTSCRIPTS_HOST += $(TESTS:%=%.t)
 

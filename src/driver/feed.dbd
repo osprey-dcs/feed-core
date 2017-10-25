@@ -1,0 +1,24 @@
+# device-wide settings
+device(longout, INST_IO, devSoFEEDDebug, "FEED Debug")
+device(stringout, INST_IO, devSoFEEDAddress, "FEED Set Address")
+device(bo, INST_IO, devBoFEEDCommit, "FEED Commit")
+
+# device-wide status
+device(mbbi, INST_IO, devMbbiFEEDDevState, "FEED State")
+device(longin, INST_IO, devLiFEEDCounter, "FEED Counter")
+device(aai, INST_IO, devAaiFEEDError, "FEED Error")
+
+# register status
+device(mbbi, INST_IO, devMbbiFEEDRegState, "FEED Register State")
+
+# register writes
+device(longout, INST_IO, devLoFEEDWriteReg, "FEED Register Write")
+device(ao, INST_IO, devAoFEEDWriteReg, "FEED Register Write")
+device(aao, INST_IO, devAaoFEEDWriteReg, "FEED Register Write")
+
+# register reads
+device(longin, INST_IO, devLiFEEDWriteReg, "FEED Register Read")
+device(ai, INST_IO, devAiFEEDWriteReg, "FEED Register Read")
+device(aai, INST_IO, devAaiFEEDWriteReg, "FEED Register Read")
+
+driver(drvFEED)

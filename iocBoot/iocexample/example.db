@@ -1,0 +1,19 @@
+record(longin, "$(P)HelloInt-I") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=HELLO wait=false")
+}
+
+record(longout, "$(P)One-SP") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=one")
+}
+
+record(longin, "$(P)One-I") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=one")
+}
+
+record(longout, "$(P)Two-SP") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=two")
+}

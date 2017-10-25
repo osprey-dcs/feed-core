@@ -36,7 +36,7 @@ unsigned unhexchar(char c)
         return 0;
 }
 
-void ROM::parse(const char* buf, size_t buflen)
+void ROM::parse(const char* buf, size_t buflen, bool swap)
 {
     const char* const orig = buf;
 
@@ -44,7 +44,9 @@ void ROM::parse(const char* buf, size_t buflen)
 
     while(buflen>=4) {
         // only lower 2 bytes are used
-        epicsUInt32 val(ntohl(*reinterpret_cast<const epicsUInt32*>(buf)));
+        epicsUInt32 val(*reinterpret_cast<const epicsUInt32*>(buf));
+        if(swap)
+            val = ntohl(val);
 
         if(val&0xffff0000) {
             throw std::runtime_error("Does not look like ROM contents (high word set)");
@@ -69,8 +71,13 @@ void ROM::parse(const char* buf, size_t buflen)
         std::vector<char> contents(size/2u); // copy excluding unused upper bytes
 
         for(unsigned i=0; i<contents.size(); i+=2) {
-            contents[i+0] = buf[2*i+2];
-            contents[i+1] = buf[2*i+3];
+            if(swap) {
+                contents[i+0] = buf[2*i+2];
+                contents[i+1] = buf[2*i+3];
+            } else {
+                contents[i+0] = buf[2*i+1];
+                contents[i+1] = buf[2*i+0];
+            }
         }
 
         ROMDescriptor desc;

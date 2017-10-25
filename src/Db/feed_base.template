@@ -1,0 +1,90 @@
+record(longout, "$(P)Debug-SP") {
+    field(DTYP, "FEED Debug")
+    field(DESC, "Debug print mask")
+    field(OUT , "@name=$(NAME)")
+    field(VAL , "$(DEBUG=0)")
+    field(PINI, "YES")
+}
+
+record(bo, "$(P)Rst-Cmd") {
+    field(DESC, "Force re-connect")
+    field(ZNAM, "Reset")
+    field(ONAM, "Reset")
+    field(UDF , "0")
+    field(FLNK, "$(P)Addr-SP") # setting address always forces reset
+}
+
+record(stringout, "$(P)Addr-SP") {
+    field(DTYP, "FEED Set Address")
+    field(DESC, "Set Device IP address")
+    field(OUT , "@name=$(NAME)")
+    field(VAL , "$(ADDR=)")
+    field(PINI, "YES")
+}
+
+record(mbbi, "$(P)State-Sts") {
+    field(DTYP, "FEED State")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(ZRST, "Error")
+    field(ONST, "Idle")
+    field(TWST, "Searching")
+    field(THST, "Inspecting")
+    field(FRST, "Running")
+    field(ZRSV, "MAJOR")
+    field(ONSV, "")
+    field(TWSV, "MINOR")
+    field(THSV, "MINOR")
+    field(FRSV, "")
+}
+
+record(aai, "$(P)LastError-I") {
+    field(DTYP, "FEED Error")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(NELM, "256")
+}
+
+record(longin, "$(P)CntTx-I") {
+    field(DTYP, "FEED Counter")
+    field(INP , "@name=$(NAME) offset=0")
+    field(SCAN, "I/O Intr")
+    field(FLNK, "$(P)CntRx-I")
+}
+record(longin, "$(P)CntRx-I") {
+    field(DTYP, "FEED Counter")
+    field(INP , "@name=$(NAME) offset=1")
+    field(FLNK, "$(P)CntIgnore-I")
+}
+record(longin, "$(P)CntIgnore-I") {
+    field(DTYP, "FEED Counter")
+    field(INP , "@name=$(NAME) offset=2")
+    field(FLNK, "$(P)CntTimo-I")
+}
+record(longin, "$(P)CntTimo-I") {
+    field(DTYP, "FEED Counter")
+    field(INP , "@name=$(NAME) offset=3")
+    field(FLNK, "$(P)CntErr-I")
+}
+record(longin, "$(P)CntErr-I") {
+    field(DTYP, "FEED Counter")
+    field(INP , "@name=$(NAME) offset=4")
+    field(FLNK, "$(P)CntSeq-I")
+}
+record(longin, "$(P)CntSeq-I") {
+    field(DTYP, "FEED Counter")
+    field(INP , "@name=$(NAME) offset=5")
+}
+
+record(aai, "$(P)Hello-I") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=HELLO")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "UCHAR")
+    field(NELM, "64")
+}

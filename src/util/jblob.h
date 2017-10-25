@@ -43,6 +43,8 @@ struct JBlob {
     const_iterator begin() const { return registers.begin(); }
     const_iterator end() const { return registers.end(); }
     const_iterator find(const std::string& k) const { return registers.find(k); }
+
+    const JRegister& operator[](const std::string& name) const;
 };
 
 std::ostream& operator<<(std::ostream& strm, const JBlob& blob);

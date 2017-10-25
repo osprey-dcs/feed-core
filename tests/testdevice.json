@@ -1,0 +1,9 @@
+{
+    "one": {
+        "access": "rw",
+        "addr_width": 0,
+        "base_addr": 32,
+        "data_width": 32,
+        "sign": "unsigned"
+    }
+}

@@ -6,6 +6,7 @@ include $(TOP)/configure/CONFIG
 #=============================
 
 LIBRARY += feed
+DBD += feed.dbd
 
 LIB_LIBS += $(EPICS_BASE_IOC_LIBS)
 LIB_SYS_LIBS += z
@@ -18,6 +19,11 @@ LIB_SRCS += utils.cpp
 
 SRC_DIRS += $(TOP)/src/sim
 LIB_SRCS += simulator.cpp
+
+SRC_DIRS += $(TOP)/src/driver
+LIB_SRCS += device.cpp
+LIB_SRCS += devdev.cpp
+LIB_SRCS += iocsh.cpp
 
 #===========================
 

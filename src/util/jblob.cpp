@@ -14,7 +14,7 @@
 namespace {
 
 // undef implies API version 0
-#ifndef EPICS_YAJL_API_VERSION
+#ifndef EPICS_YAJL_VERSION
 typedef long integer_arg;
 typedef unsigned size_arg;
 #else
@@ -234,7 +234,7 @@ void JBlob::parse(const char *buf)
 
 void JBlob::parse(const char *buf, size_t buflen)
 {
-#ifndef EPICS_YAJL_API_VERSION
+#ifndef EPICS_YAJL_VERSION
     yajl_parser_config conf;
     memset(&conf, 0, sizeof(conf));
     conf.allowComments = 1;
@@ -243,14 +243,14 @@ void JBlob::parse(const char *buf, size_t buflen)
 
     context ctxt;
 
-#ifndef EPICS_YAJL_API_VERSION
+#ifndef EPICS_YAJL_VERSION
     handler handle(yajl_alloc(&jblob_cbs, &conf, NULL, &ctxt));
 #else
     handler handle(yajl_alloc(&jblob_cbs, NULL, &ctxt));
 #endif
 
     yajl_status sts = yajl_parse(handle, (const unsigned char*)buf, buflen);
-#ifndef EPICS_YAJL_API_VERSION
+#ifndef EPICS_YAJL_VERSION
     if(sts==yajl_status_insufficient_data) {
         sts = yajl_parse_complete(handle);
     }
@@ -275,13 +275,21 @@ void JBlob::parse(const char *buf, size_t buflen)
     }
     case yajl_status_client_canceled:
         throw std::runtime_error(ctxt.err);
-#ifndef EPICS_YAJL_API_VERSION
+#ifndef EPICS_YAJL_VERSION
     case yajl_status_insufficient_data:
         throw std::runtime_error("Unexpected end of input");
 #endif
     }
 
     registers.swap(ctxt.blob.registers);
+}
+
+const JRegister& JBlob::operator[](const std::string& name) const
+{
+    const_iterator it(find(name));
+    if(it==registers.end())
+        throw std::runtime_error("No such register");
+    return it->second;
 }
 
 std::ostream& operator<<(std::ostream& strm, const JBlob& blob)
@@ -303,7 +311,7 @@ std::ostream& operator<<(std::ostream& strm, const JRegister& reg)
 {
     strm<<"{"
           "\"access\":\""<<(reg.readable?"r":"")<<(reg.writable?"w":"")<<"\", "
-          "\"addr_width\":"<<reg.addr_width<<", "
+          "\"addr_width\":"<<unsigned(reg.addr_width)<<", "
           "\"base_addr\":"<<reg.base_addr<<", "
           "\"data_width\":"<<reg.data_width<<", "
           "\"description\":\""<<reg.description<<"\", "

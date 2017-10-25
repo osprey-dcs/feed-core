@@ -29,7 +29,7 @@ struct ROM {
 
     // process byte array as ROM image.
     // replace our infos
-    void parse(const char* buf, size_t buflen);
+    void parse(const char* buf, size_t buflen, bool swap=true);
 
     // generate a ROM image based on our infos.
     // throws std::runtime_error on failure, including insufficient space

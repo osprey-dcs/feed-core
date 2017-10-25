@@ -33,7 +33,7 @@ void zdeflate(std::vector<char>& out, const char *in, size_t inlen, int lvl)
             if(err==Z_STREAM_END)
                 break;
             else if(err && strm.msg)
-                throw std::runtime_error(strm.msg);
+                throw std::runtime_error(SB()<<"deflate() : "<<strm.msg);
             else if(err)
                 throw std::runtime_error(SB()<<"deflate() -> "<<err);
         }
@@ -80,7 +80,7 @@ void zinflate(std::vector<char>& out, const char *in, size_t inlen)
             if(err==Z_STREAM_END)
                 break;
             else if(err && strm.msg)
-                throw std::runtime_error(strm.msg);
+                throw std::runtime_error(SB()<<"inflate() : "<<strm.msg);
             else if(err)
                 throw std::runtime_error(SB()<<"inflate() -> "<<err);
         }
