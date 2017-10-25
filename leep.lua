@@ -18,14 +18,15 @@ function leep.dissector (buf, pkt, root)
 
     local tree = root:add(leep, buf)
 
-    if buf:len()<8
+    if buf:len()<32
     then
         pkt.cols.info:append("Invalid (Truncated?)")
         return
     end
 
-    pkt.cols.info:append(string.format("Header %04x%04x", buf(0,4):uint(), buf(4,4):uint()))
-    
+    pkt.cols.info:append(string.format("Header %08x %08x %06x",
+                        buf(0,4):uint(), buf(4,4):uint(), buf(9,3):uint()))
+
     tree:add(header, buf(0,8))
 
     buf = buf(8):tvb()
