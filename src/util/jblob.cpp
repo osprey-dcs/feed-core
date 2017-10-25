@@ -48,16 +48,16 @@ int jblob_null(void *ctx)
 {
     TRY {
         self->warn("ignoring unsupported: null");
+        return 1;
     }CATCH()
-    return 1;
 }
 
 int jblob_boolean(void *ctx, int val)
 {
     TRY {
         self->warn(SB()<<"ignoring unsupported: boolean value "<<val);
+        return 1;
     }CATCH()
-    return 1;
 }
 
 int jblob_integer(void *ctx, integer_arg val)
@@ -101,8 +101,8 @@ int jblob_double(void *ctx, double val)
 {
     TRY {
         self->warn(SB()<<"ignoring unsupported: double value "<<val);
+        return 1;
     }CATCH()
-    return 1;
 }
 
 int jblob_string(void *ctx, const unsigned char *val, size_arg len)
