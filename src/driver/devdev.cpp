@@ -17,6 +17,7 @@
 
 #include <dbAccess.h>
 #include <dbStaticLib.h>
+#include <callback.h>
 #include <menuScan.h>
 #include <dbCommon.h>
 #include <stringoutRecord.h>
@@ -38,17 +39,40 @@ namespace {
 
 struct RecInfo : public RegInterest
 {
+    dbCommon * const prec;
     Device * const device;
 
     epicsUInt32 offset;
+    epicsUInt32 mask;
+    epicsUInt32 value;
+    double retry;
 
     bool autocommit;
     bool wait;
 
     RecInfo(dbCommon *prec, Device *device)
-        :RegInterest(prec)
-        ,device(device), offset(0u), autocommit(true), wait(true)
+        :prec(prec)
+        ,device(device)
+        ,offset(0u), mask(0u), value(0u)
+        ,retry(1.0)
+        ,autocommit(true), wait(true)
     {}
+
+    // reset after error/exception in dset function
+    virtual void cleanup() {
+        prec->pact = 0;
+    }
+
+    virtual void complete() {
+        long (*process)(dbCommon*) = (long (*)(dbCommon*))prec->rset->process;
+        dbScanLock(prec);
+        (*process)(prec); // ignore result
+        dbScanUnlock(prec);
+    }
+
+    virtual void show(std::ostream& strm, int lvl) {
+        strm<<prec->name;
+    }
 };
 
 typedef std::map<std::string, std::string> pairs_t;
@@ -108,6 +132,16 @@ bool get_pair(const pairs_t& pairs, const std::string& key, epicsUInt32& out)
     return true;
 }
 
+bool get_pair(const pairs_t& pairs, const std::string& key, double& out)
+{
+    pairs_t::const_iterator it = pairs.find(key);
+    if(it==pairs.end())
+        return false;
+    else if(epicsParseDouble(it->second.c_str(), &out, 0))
+        throw std::runtime_error("Error parsing double");
+    return true;
+}
+
 bool get_pair(const pairs_t& pairs, const std::string& key, bool& out)
 {
     pairs_t::const_iterator it = pairs.find(key);
@@ -139,6 +173,9 @@ DBLINK *getDevLnk(dbCommon *prec)
     return ret;
 }
 
+#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) printf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+
+template<typename Priv>
 long init_common(dbCommon *prec)
 {
     try {
@@ -148,6 +185,12 @@ long init_common(dbCommon *prec)
 
         pairs_t pairs;
         split_pairs(lstr, pairs);
+        if(prec->tpro>2) {
+            for(pairs_t::const_iterator it(pairs.begin()), end(pairs.end()); it!=end; ++it)
+            {
+                printf("%s : '%s'='%s'\n", prec->name, it->first.c_str(), it->second.c_str());
+            }
+        }
 
         std::string name;
         if(!get_pair(pairs, "name", name))
@@ -174,9 +217,12 @@ long init_common(dbCommon *prec)
                        "# Listening @ "<<addr.c_str()<<"\n";
         }
 
-        feed::auto_ptr<RecInfo> info(new RecInfo(prec, it->second));
+        feed::auto_ptr<Priv> info(new Priv(prec, it->second));
 
         get_pair(pairs, "offset", info->offset);
+        get_pair(pairs, "mask", info->mask);
+        get_pair(pairs, "value", info->value);
+        get_pair(pairs, "retry", info->retry);
         get_pair(pairs, "autocommit", info->autocommit);
         get_pair(pairs, "wait", info->wait);
 
@@ -184,14 +230,16 @@ long init_common(dbCommon *prec)
         if(get_pair(pairs, "reg", regname))
         {
             info->device->reg_interested.insert(std::make_pair(regname, info.get()));
+            IFDBG(1, "Attach to %s", regname.c_str());
 
             Device::reg_by_name_t::iterator it(info->device->reg_by_name.find(regname));
             if(it!=info->device->reg_by_name.end() && it->second->bootstrap) {
                 // bootstrap registers connected immediately and perpetually
                 info->reg = it->second;
                 it->second->interested.push_back(info.get());
+                IFDBG(1, "Attach to bootstrap");
             }
-        }
+        } else IFDBG(1, "No register named in: %s", lstr);
 
         prec->dpvt = info.release();
         return 0;
@@ -200,6 +248,9 @@ long init_common(dbCommon *prec)
         return -EIO;
     }
 }
+
+#undef IFDBG
+#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 long get_dev_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
@@ -219,12 +270,10 @@ long get_reg_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 
 #define TRY RecInfo *info = (RecInfo*)prec->dpvt; if(!info) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
-    Device *device=info->device; try
+    Device *device=info->device; (void)device; try
 
 #define CATCH() catch(std::exception& e) { (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); \
-    errlogPrintf("%s: Error %s\n", prec->name, e.what()); prec->pact = 0; return 0; }
-
-#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+    errlogPrintf("%s: Error %s\n", prec->name, e.what()); info->cleanup(); return 0; }
 
 long write_debug(longoutRecord *prec)
 {
@@ -366,7 +415,7 @@ long write_register_common(dbCommon *prec, const epicsInt32 *raw, size_t count, 
                 }
 
                 if(info->wait) {
-                    info->reg->records.push_back(prec);
+                    info->reg->records.push_back(info);
                     prec->pact = 1;
                     IFDBG(1, "begin async\n");
                 }
@@ -459,7 +508,7 @@ long read_register_common(dbCommon *prec, epicsInt32 *raw, size_t *count, unsign
                     IFDBG(1, "failed to queue\n");
                     return ENODEV;
                 } else {
-                    info->reg->records.push_back(prec);
+                    info->reg->records.push_back(info);
                 }
 
                 prec->pact = 1;
@@ -498,6 +547,117 @@ long read_register_aai(aaiRecord *prec)
     return ret;
 }
 
+struct WaitInfo : public RecInfo
+{
+
+    bool cb_inprogress;
+    CALLBACK cb;
+
+    WaitInfo(dbCommon *prec, Device *dev)
+        :RecInfo(prec, dev)
+        ,cb_inprogress(false)
+    {
+        callbackSetCallback(&expire, &cb);
+        callbackSetPriority(prec->prio, &cb);
+        callbackSetUser(this, &cb);
+    }
+
+    virtual void cleanup() {
+        RecInfo::cleanup();
+        if(cb_inprogress) {
+            callbackCancelDelayed(&cb);
+            cb_inprogress = false;
+        }
+    }
+
+    virtual void complete()
+    {
+        bool done = true;
+        try {
+            Guard G(device->lock);
+            if(reg && reg->state==DevReg::InSync) {
+
+
+                epicsUInt32 val(ntohl(reg->mem[offset]));
+
+                if((val & mask) == value)
+                {
+                    IFDBG(1, "Match");
+
+                } else {
+                    IFDBG(1, "No match %08x & %08x != %08x",
+                          (unsigned)val, (unsigned)mask, (unsigned)value);
+
+                    callbackRequestDelayed(&cb, retry);
+                    done = false;
+                }
+
+            } else IFDBG(1, "Lost attachment  %p  %u", reg, reg ? reg->state : -1);
+        }catch(std::exception& e){
+            errlogPrintf("%s: error in complete() : %s\n", prec->name, e.what());
+            done = true;
+        }
+
+        if(done)
+            RecInfo::complete();
+    }
+
+    void done()
+    {
+        IFDBG(1, "retry");
+        Guard G(device->lock);
+        if(reg) {
+            reg->queue(false); // ignore result (already Q'd is ok)
+            reg->records.push_back(this);
+        }
+    }
+
+    static void expire(CALLBACK *cb)
+    {
+        void *raw;
+        callbackGetUser(raw, cb);
+        WaitInfo *self = (WaitInfo*)raw;
+        try {
+            self->done();
+        }catch(std::exception& e){
+            errlogPrintf("%s : Error in timer callback : %s\n", self->prec->name, e.what());
+        }
+    }
+};
+
+
+long write_test_mask(boRecord *prec)
+{
+    TRY {
+        Guard G(device->lock);
+
+        if(info->reg
+                && info->offset < info->reg->mem.size()
+                && !info->reg->inprogress())
+        {
+            if(!prec->pact) {
+                IFDBG(1, "Start Watch of %s", info->reg->info.name.c_str());
+
+                info->reg->queue(false);
+                info->reg->records.push_back(info);
+                prec->pact = 1;
+
+            } else {
+                IFDBG(1, "Complete");
+                prec->pact = 0;
+            }
+            return 0;
+
+        } else {
+            info->cleanup();
+            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            IFDBG(1, "no association %p\n", info->reg);
+            return ENODEV;
+        }
+
+    }CATCH()
+}
+
 template<typename REC>
 struct dset6 {
     long N;
@@ -515,24 +675,27 @@ struct dset6 {
 } // namespace
 
 // device-wide settings
-DSET(devSoFEEDDebug, longout, init_common, NULL, write_debug)
-DSET(devSoFEEDAddress, stringout, init_common, NULL, write_address)
-DSET(devBoFEEDCommit, bo, init_common, NULL, write_commit)
+DSET(devSoFEEDDebug, longout, init_common<RecInfo>, NULL, write_debug)
+DSET(devSoFEEDAddress, stringout, init_common<RecInfo>, NULL, write_address)
+DSET(devBoFEEDCommit, bo, init_common<RecInfo>, NULL, write_commit)
 
 // device-wide status
-DSET(devMbbiFEEDDevState, mbbi, init_common, get_dev_changed_intr, read_dev_state)
-DSET(devLiFEEDCounter, longin, init_common, get_dev_changed_intr, read_counter)
-DSET(devAaiFEEDError, aai, init_common, get_dev_changed_intr, read_error)
+DSET(devMbbiFEEDDevState, mbbi, init_common<RecInfo>, get_dev_changed_intr, read_dev_state)
+DSET(devLiFEEDCounter, longin, init_common<RecInfo>, get_dev_changed_intr, read_counter)
+DSET(devAaiFEEDError, aai, init_common<RecInfo>, get_dev_changed_intr, read_error)
 
 // register status
-DSET(devMbbiFEEDRegState, mbbi, init_common, get_reg_changed_intr, read_reg_state)
+DSET(devMbbiFEEDRegState, mbbi, init_common<RecInfo>, get_reg_changed_intr, read_reg_state)
 
 // register writes
-DSET(devLoFEEDWriteReg, longout, init_common, NULL, write_register_lo)
-DSET(devAoFEEDWriteReg, ao, init_common, NULL, write_register_ao)
-DSET(devAaoFEEDWriteReg, aao, init_common, NULL, write_register_aao)
+DSET(devLoFEEDWriteReg, longout, init_common<RecInfo>, NULL, write_register_lo)
+DSET(devAoFEEDWriteReg, ao, init_common<RecInfo>, NULL, write_register_ao)
+DSET(devAaoFEEDWriteReg, aao, init_common<RecInfo>, NULL, write_register_aao)
 
 // register reads
-DSET(devLiFEEDWriteReg, longin, init_common, get_reg_changed_intr, read_register_li)
-DSET(devAiFEEDWriteReg, ai, init_common, get_reg_changed_intr, read_register_ai)
-DSET(devAaiFEEDWriteReg, aai, init_common, get_reg_changed_intr, read_register_aai)
+DSET(devLiFEEDWriteReg, longin, init_common<RecInfo>, get_reg_changed_intr, read_register_li)
+DSET(devAiFEEDWriteReg, ai, init_common<RecInfo>, get_reg_changed_intr, read_register_ai)
+DSET(devAaiFEEDWriteReg, aai, init_common<RecInfo>, get_reg_changed_intr, read_register_aai)
+
+// register special
+DSET(devBoFEEDWatchReg, bo, init_common<WaitInfo>, NULL, write_test_mask)

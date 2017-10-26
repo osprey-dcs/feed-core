@@ -43,8 +43,8 @@ const struct gblrom_t {
 } gblrom;
 }
 
-RegInterest::RegInterest(dbCommon *prec)
-    :prec(prec), reg(0)
+RegInterest::RegInterest()
+    :reg(0)
 {
     scanIoInit(&changed);
 }
@@ -173,9 +173,6 @@ Device::Device(const std::__cxx11::string &name, osiSockAddr &ep)
     wakeupTx.set_blocking(false);
 
     reset();
-
-    // ok to start now as we aren't addressed
-    runner.start();
 
     epicsAtExit(feed_shutdown, this);
 }
@@ -544,7 +541,6 @@ void Device::handle_inspect()
             RegInterest *interest = range.first->second;
             dreg->interested.push_back(interest);
             interest->reg = dreg.get();
-            IFDBG(2, "%s attach %s.%s", interest->prec->name, myname.c_str(), reg.name.c_str());
         }
 
         reg_by_name[reg.name] = dreg.release();
@@ -635,11 +631,7 @@ void Device::run()
                 for(DevReg::records_t::const_iterator it = completed.begin(), end = completed.end();
                     it != end; ++it)
                 {
-                    dbCommon *prec = *it;
-                    long (*process)(dbCommon*) = (long (*)(dbCommon*))prec->rset->process;
-                    dbScanLock(prec);
-                    (*process)(prec); // ignore result
-                    dbScanUnlock(prec);
+                    (*it)->complete();
                 }
 
                 std::fill(doProcess.begin(),
@@ -779,7 +771,9 @@ void Device::show(std::ostream& strm, int lvl) const
     for(reg_interested_t::const_iterator it = reg_interested.begin(), end = reg_interested.end();
         it != end; ++it)
     {
-        strm<<" "<<it->second->prec->name<<" -> "<<it->first<<"\n";
+        strm<<" ";
+        it->second->show(strm, lvl);
+        strm<<" -> "<<it->first<<"\n";
     }
 
     if(lvl<5)
@@ -838,8 +832,10 @@ void DevReg::show(std::ostream& strm, int lvl) const
     for(DevReg::records_t::const_iterator it2 = this->records.begin(), end2 = this->records.end();
         it2 != end2; ++it2)
     {
-        dbCommon * const prec = const_cast<dbCommon*>(*it2);
-        strm<<"  "<<prec->name<<"\n";
+        RegInterest * const reg = *it2;
+        strm<<"  ";
+        reg->show(strm, lvl);
+        strm<<"\n";
     }
 
     strm<<"Interested records:\n";
@@ -847,6 +843,8 @@ void DevReg::show(std::ostream& strm, int lvl) const
         it2 != end2; ++it2)
     {
         RegInterest *reg(*it2);
-        strm<<"  "<<reg->prec->name<<"\n";
+        strm<<"  ";
+        reg->show(strm, lvl);
+        strm<<"\n";
     }
 }

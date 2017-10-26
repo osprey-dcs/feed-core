@@ -21,4 +21,8 @@ device(longin, INST_IO, devLiFEEDWriteReg, "FEED Register Read")
 device(ai, INST_IO, devAiFEEDWriteReg, "FEED Register Read")
 device(aai, INST_IO, devAaiFEEDWriteReg, "FEED Register Read")
 
+# register special
+device(bo, INST_IO, devBoFEEDWatchReg, "FEED Register Watch")
+
 driver(drvFEED)
+registrar(feedRegistrar)

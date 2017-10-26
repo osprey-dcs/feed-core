@@ -1,0 +1,21 @@
+record(longout, "$(PREF)-SP") {
+    field(DTYP, "FEED Register Write")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(OUT , "@name=$(NAME) reg=$(REG)")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+record(bo, "$(PREF)-I") {
+    field(DTYP, "FEED Register Watch")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(OUT , "@name=$(NAME) reg=$(REG) mask=0x0000000f value=2")
+    field(FLNK, "$(PREF)Cnt-I")
+    field(TPRO, "5")
+}
+record(calc, "$(PREF)Cnt-I") {
+    field(SDIS, "$(PREF)-I MSI") # propagate invalid
+    field(DISV, "-42")
+    field(INPA, "$(PREF)Cnt-I NPP")
+    field(CALC, "A+1")
+    field(TPRO, "1")
+}

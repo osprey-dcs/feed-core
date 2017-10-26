@@ -25,11 +25,12 @@ struct DevReg;
 
 struct RegInterest
 {
-    dbCommon * const prec;
     DevReg *reg;
     IOSCANPVT changed;
-    RegInterest(dbCommon *prec);
+    RegInterest();
     virtual ~RegInterest() {}
+    virtual void complete() =0;
+    virtual void show(std::ostream&, int lvl) {}
 };
 
 struct DevReg
@@ -70,7 +71,7 @@ struct DevReg
 
     // async. record processing waiting on this register
     short stat, sevr;
-    typedef std::list<dbCommon*> records_t;
+    typedef std::list<RegInterest*> records_t;
     records_t records;
 
     void process();

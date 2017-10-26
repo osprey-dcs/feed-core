@@ -6,7 +6,8 @@ feedioc_registerRecordDeviceDriver(pdbbase)
 
 epicsEnvSet("EPICS_DB_INCLUDE_PATH", ".:../../db")
 
-dbLoadTemplate("example.substitutions","P=TST:,NAME=device,DEBUG=0xffffffef")
+dbLoadRecords("feed_base.template","PREF=TST:ctrl:,NAME=device,DEBUG=0")
+dbLoadRecords("bitmonitor.db", "PREF=TST:one,NAME=device,REG=one")
 
 iocInit()
 

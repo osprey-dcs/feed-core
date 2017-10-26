@@ -6,3 +6,4 @@
 /configure/*.local
 O.*/
 /FEED.*
+*.dbl
