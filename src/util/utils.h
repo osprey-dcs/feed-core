@@ -121,22 +121,23 @@ private:
 struct PrintAddr
 {
     bool init;
-    const osiSockAddr* addr;
+    osiSockAddr addr;
     // worst cast size of "<ip>:<port>"
     char buf[4*3 + 3 + 1 + 5 + 1];
 
-    PrintAddr() :init(true), addr(0) {buf[0]='\0';}
+    PrintAddr() {clear();}
     PrintAddr(const osiSockAddr& addr)
-        :init(false), addr(&addr)
+        :init(false), addr(addr)
     {}
     PrintAddr& operator=(const osiSockAddr& addr) {
         init = false;
-        this->addr = &addr;
+        this->addr = addr;
         return *this;
     }
+    void clear() {init = true; buf[0]='\0';}
     const char* c_str() {
         if(!init) {
-            sockAddrToDottedIP(&addr->sa, buf, sizeof(buf));
+            sockAddrToDottedIP(&addr.sa, buf, sizeof(buf));
             buf[sizeof(buf)-1] = '\0';
             init = true;
         }

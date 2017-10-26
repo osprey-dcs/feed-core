@@ -28,8 +28,9 @@ struct simrunner : public epicsThreadRunable {
     {
         endpoint.ia.sin_family = AF_INET;
         endpoint.ia.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-        //endpoint.ia.sin_port = htonl(0);
-        endpoint.ia.sin_port = htons(50006);
+        endpoint.ia.sin_port = htonl(0);
+        // use well-known port to simply wireshark tracing
+        //endpoint.ia.sin_port = htons(50006);
 
         JBlob blob;
         Simulator::values_t initial;

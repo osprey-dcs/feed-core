@@ -299,6 +299,7 @@ void Device::handle_send(Guard& G)
     }
 
     // second pass to send any Ready
+    unsigned nsent=0;
     for(size_t i=0, N=inflight.size(); i<N; i++)
     {
         DevMsg& msg = inflight[i];
@@ -324,11 +325,14 @@ void Device::handle_send(Guard& G)
             want_to_send = true;
             return;
         }
-        IFDBG(1, "Send seq=%08x", (unsigned)msg.seq);
+        IFDBG(1, "Send seq=%08x %zu bytes", (unsigned)msg.seq, msg.buf.size()*4u);
 
         msg.due = due;
         msg.state = DevMsg::Sent;
+        nsent++;
     }
+
+    IFDBG(4, "Sent %u messages", nsent);
 }
 
 void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
@@ -345,7 +349,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
     epicsUInt32 seq = ntohl(ibuf[1]);
     epicsUInt8 off = seq>>24;
 
-    IFDBG(1, "Recv seq=%08x", (unsigned)seq);
+    IFDBG(1, "Recv seq=%08x %zu bytes", (unsigned)seq, buf.size());
 
     if(ntohl(ibuf[0])!=0xfeedc0de || off>=inflight.size()) {
         cnt_ignore++;
@@ -586,8 +590,14 @@ void Device::run()
     IFDBG(4, "Worker starts");
     Guard G(lock);
 
-    std::vector<char> buf;
-    buf.reserve(pkt_size_limit+16);
+    std::vector<std::vector<char> > bufs(inflight.size());
+    // pre-alloc Rx buffers
+    for(size_t i=0; i<bufs.size(); i++)
+        bufs[i].resize(pkt_size_limit+16);
+
+    std::vector<bool> doProcess(inflight.size(), false);
+
+    std::vector<PrintAddr> addrs(inflight.size());
 
     pollfd fds[2];
     fds[0].fd = sock;
@@ -596,9 +606,6 @@ void Device::run()
     while(!runner_stop) {
         try {
             IFDBG(4, "Looping state=%u", current);
-            osiSockAddr peer;
-            PrintAddr addr;
-            bool doprocess = false;
 
             if(active())
                 handle_send(G);
@@ -628,6 +635,10 @@ void Device::run()
                     dbScanUnlock(prec);
                 }
 
+                std::fill(doProcess.begin(),
+                          doProcess.end(),
+                          false);
+
                 int ret = ::poll(fds, 2, feedTimeout*1000);
                 if(ret<0) {
                     throw SocketError(SOCKERRNO);
@@ -655,27 +666,38 @@ void Device::run()
                     if(fds[0].revents&POLLIN) {
                         fds[0].revents &= ~POLLIN;
 
-                        buf.resize(pkt_size_limit+16);
+                        unsigned nrecv=0;
+                        for(size_t i=0, N=bufs.size(); i<N; i++)
+                        {
 
-                        try{
-                            sock.recvfrom(peer, buf);
-                            addr = peer;
-                            doprocess = true;
-                            cnt_recv++;
-                        }catch(SocketBusy&){
+                            bufs[i].resize(pkt_size_limit+16);
 
+                            osiSockAddr peer;
+                            try{
+                                sock.recvfrom(peer, bufs[i]);
+                                addrs[i] = peer;
+                                doProcess[i] = true;
+                                cnt_recv++;
+                            }catch(SocketBusy&){
+                                break;
+                            }
+
+                            if(!doProcess[i]) {
+                                // nothing to process
+                            } else if(!sockAddrAreIdentical(&peer, &peer_addr)) {
+                                IFDBG(4, "Warning, RX ignore message from %s", addrs[i].c_str());
+                                cnt_ignore++;
+                                doProcess[i] = false;
+
+                            } else if(bufs[i].size()>pkt_size_limit) {
+                                IFDBG(0, "Warning, RX message truncated");
+                            }
+
+                            if(doProcess[i])
+                                nrecv++;
                         }
 
-                        if(!doprocess) {
-                            // nothing to process
-                        } else if(!sockAddrAreIdentical(&peer, &peer_addr)) {
-                            IFDBG(4, "Warning, RX ignore message from %s", addr.c_str());
-                            cnt_ignore++;
-                            doprocess = false;
-
-                        } else if(buf.size()>pkt_size_limit) {
-                            IFDBG(0, "Warning, RX message truncated");
-                        }
+                        IFDBG(4, "Received %u messages", nrecv);
                     }
 
                     if(fds[0].revents&POLLOUT) {
@@ -690,8 +712,11 @@ void Device::run()
                 // re-lock
             }
 
-            if(doprocess) {
-                handle_process(buf, addr);
+            for(size_t i=0, N=bufs.size(); i<N; i++)
+            {
+                if(doProcess[i]) {
+                    handle_process(bufs[i], addrs[i]);
+                }
             }
 
             handle_timeout();
@@ -758,6 +783,14 @@ void Device::show(std::ostream& strm, int lvl) const
     {
         strm<<"["<<i<<"] -> ";
         inflight[i].show(strm, lvl);
+    }
+
+    strm<<"Send queue:\n";
+    for(reg_send_t::const_iterator it(reg_send.begin()), end(reg_send.end());
+        it != end; ++it)
+    {
+        const DevReg *reg = *it;
+        strm<<"  "<<reg->info.name<<"\n";
     }
 }
 

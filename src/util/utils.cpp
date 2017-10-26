@@ -58,9 +58,10 @@ size_t Socket::trysend(const char* buf, size_t buflen) const
 {
     ssize_t ret = ::send(sock, buf, buflen, 0);
     if(ret<0) {
-        if(SOCKERRNO==SOCK_EWOULDBLOCK)
+        int code = SOCKERRNO;
+        if(SOCKERRNO==code)
             return 0;
-        throw SocketError(SOCKERRNO);
+        throw SocketError(code);
     }
     return size_t(ret);
 }
@@ -92,11 +93,12 @@ void Socket::recvall(char* buf, size_t buflen) const
 void Socket::sendto(const osiSockAddr& dest, const char* buf, size_t buflen) const
 {
     ssize_t ret = ::sendto(sock, buf, buflen, 0, &dest.sa, sizeof(dest));
-    if(ret==SOCK_EWOULDBLOCK)
-        throw SocketBusy();
-    else if(ret<0)
-        throw SocketError(SOCKERRNO);
-    else if(size_t(ret)!=buflen)
+    if(ret<0) {
+        int code = SOCKERRNO;
+        if(code==SOCK_EWOULDBLOCK)
+            throw SocketBusy();
+        throw SocketError(code);
+    } else if(size_t(ret)!=buflen)
         throw std::runtime_error("Incomplete sendto()");
 }
 
@@ -104,10 +106,12 @@ size_t Socket::recvfrom(osiSockAddr& src, char* buf, size_t buflen) const
 {
     osiSocklen_t len = sizeof(src);
     ssize_t ret = ::recvfrom(sock, buf, buflen, 0, &src.sa, &len);
-    if(ret==SOCK_EWOULDBLOCK)
-        throw SocketBusy();
-    else if(ret<0)
-        throw SocketError(SOCKERRNO);
+    if(ret<0) {
+        int code = SOCKERRNO;
+        if(code==SOCK_EWOULDBLOCK)
+            throw SocketBusy();
+        throw SocketError(code);
+    }
     return size_t(ret);
 }
 
