@@ -110,8 +110,8 @@ MAIN(testdevice)
         testdbReadDatabase("testfeed.dbd", 0, 0);
         testfeed_registerRecordDeviceDriver(pdbbase);
 
-        testdbReadDatabase("feed_base.template", ".:" TOP "/db", "P=tst:,NAME=test");
-        testdbReadDatabase("testdevice.db", ".:..:", "P=tst:,NAME=test");
+        testdbReadDatabase("feed_base.template", ".:" TOP "/db", "PREF=tst:,NAME=test");
+        testdbReadDatabase("testdevice.db", ".:..:", "PREF=tst:,NAME=test");
 
         eltc(0);
         testIocInitOk();

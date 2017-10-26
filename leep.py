@@ -5,7 +5,8 @@ from __future__ import print_function
 import logging
 _log = logging.getLogger(__name__)
 
-import sys, socket, struct, random, zlib, json
+import sys, os, socket, struct, random, zlib, json, tempfile
+from collections import defaultdict
 
 import numpy
 
@@ -61,6 +62,51 @@ def dumpaddrs(args, dev):
             continue
         print("%08x %08x"%(addr, value))
 
+def dumpjson(args, dev):
+    print(json.dumps(dev.json, indent=2))
+
+def gentemplate(args, dev):
+
+    files = defaultdict(list)
+    for name, info in dev.json.items():
+        if len(name)==0:
+            _log.warn("Zero length register name")
+            continue
+        components = {
+            'access': info.get('access', ''),
+            'type': 'scalar' if info.get('addr_width',0)==0 else 'array',
+        }
+        values = {
+            'name':name,
+            'pv':'reg:'+name, # TODO: apply naming convention here
+            'size':1<<info.get('addr_width',0),
+        }
+        values.update(info)
+
+        name = 'feed_reg_%(access)s_%(type)s.template'%components
+
+        files[name].append(values)
+
+    # sort to get stable output order
+    files = list(files.items())
+    files.sort(key=lambda i:i[0])
+
+    out = tempfile.NamedTemporaryFile('r+')
+
+    out.write('file "feed_base.template"\n{\n{PREF="$(P)ctrl:"}\n}\n\n')
+
+    for fname, infos in files:
+        out.write('file "%s"\n{\n'%fname)
+
+        infos.sort(key=lambda i:i['pv'])
+
+        for info in infos:
+            out.write('{PREF="$(P)%(pv)s",\tREG="%(name)s",\tSIZE="%(size)s"}\n'%info)
+
+        out.write('}\n\n')
+
+    os.rename(out.name, args.output)
+    out.delete = False
 
 def getargs():
     from argparse import ArgumentParser
@@ -83,6 +129,13 @@ def getargs():
     S = SP.add_parser('dump', help='dump registers')
     S.add_argument('-Z','--ignore-zeros', action='store_true', help="Only print registers with non-zero values")
     S.set_defaults(func=dumpaddrs)
+
+    S = SP.add_parser('json', help='print json')
+    S.set_defaults(func=dumpjson)
+
+    S = SP.add_parser('template', help='Generate MSI substitutions file')
+    S.set_defaults(func=gentemplate)
+    S.add_argument('output', help='Output file')
 
     return P.parse_args()
 
@@ -189,7 +242,7 @@ class Device(object):
                 blob = ''.join(["%04x"%b for b in blob])
                 _log.info("ROM Hash %s", blob)
             elif type==3:
-                self.json = json.loads(zlib.decompress(blob.tostring()))
+                self.json = json.loads(zlib.decompress(blob.tostring()).decode('ascii'))
 
         if self.json is None:
             raise RuntimeError('ROM contains no JSON')

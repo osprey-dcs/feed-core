@@ -212,7 +212,8 @@ long get_dev_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 long get_reg_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
     RecInfo *info = (RecInfo*)prec->dpvt;
-    *scan = info->changed;
+    if(info)
+        *scan = info->changed;
     return 0;
 }
 

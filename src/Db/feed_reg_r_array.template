@@ -1,0 +1,8 @@
+record(aai, "$(PREF)-I") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(INP , "@name=$(NAME) reg=$(REG)")
+    field(FTVL, "LONG")
+    field(NELM, "$(SIZE)")
+    field(SCAN, "$(SCAN=1 second)")
+}

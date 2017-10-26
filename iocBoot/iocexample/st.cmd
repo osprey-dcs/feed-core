@@ -4,9 +4,10 @@ dbLoadDatabase("../../dbd/feedioc.dbd",0,0)
 feedioc_registerRecordDeviceDriver(pdbbase) 
 
 
-dbLoadRecords("../../db/feed_base.template","P=TST:,NAME=device,DEBUG=0xffffffef")
-dbLoadRecords("example.db","P=TST:,NAME=device")
+epicsEnvSet("EPICS_DB_INCLUDE_PATH", ".:../../db")
+
+dbLoadTemplate("example.substitutions","P=TST:,NAME=device,DEBUG=0xffffffef")
 
 iocInit()
 
-dbpf "TST:Addr-SP" "127.0.0.1"
+dbpf "TST:ctrl:Addr-SP" "127.0.0.1"

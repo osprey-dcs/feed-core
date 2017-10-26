@@ -1,0 +1,7 @@
+record(longout, "$(PREF)-SP") {
+    field(DTYP, "FEED Register Write")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(OUT , "@name=$(NAME) reg=$(REG)")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}

@@ -1,9 +1,9 @@
-record(longin, "$(P)HelloInt-I") {
+record(longin, "$(PREF)HelloInt-I") {
     field(DTYP, "FEED Register Read")
     field(INP , "@name=$(NAME) reg=HELLO wait=false")
 }
 
-record(longout, "$(P)One-SP") {
+record(longout, "$(PREF)One-SP") {
     field(DTYP, "FEED Register Write")
     field(OUT , "@name=$(NAME) reg=one")
 }
