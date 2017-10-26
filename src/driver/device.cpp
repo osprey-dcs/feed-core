@@ -741,57 +741,60 @@ void Device::show(std::ostream& strm, int lvl) const
 {
     Guard G(lock);
 
-    strm<<"Current state: "<<current<<"\n"
-          "Peer: "<<peer_name<<"\n"
-          "Msg: "<<last_message<<"\n"
-          "Cnt Tx: "<<cnt_sent<<"\n"
-          "Cnt Rx: "<<cnt_recv<<"\n"
-          "Cnt Ig: "<<cnt_ignore<<"\n"
-          "Cnt TM: "<<cnt_timo<<"\n"
-          "Cnt ER: "<<cnt_err<<"\n"
-          "Cnt SQ: "<<send_seq<<"\n"
+    strm<<" Current state: "<<current<<"\n"
+          " Peer: "<<peer_name<<"\n"
+          " Msg: "<<last_message<<"\n"
+          " Cnt Tx: "<<cnt_sent<<"\n"
+          " Cnt Rx: "<<cnt_recv<<"\n"
+          " Cnt Ig: "<<cnt_ignore<<"\n"
+          " Cnt TM: "<<cnt_timo<<"\n"
+          " Cnt ER: "<<cnt_err<<"\n"
+          " Cnt SQ: "<<send_seq<<"\n"
           ;
-
-    strm<<"Registers:\n";
 
     if(lvl<=0)
         return;
 
-    for(reg_by_name_t::const_iterator it = reg_by_name.begin(), end = reg_by_name.end();
-        it != end; ++it)
-    {
-        strm<<it->first;
-        it->second->show(strm, lvl);
-    }
-
-    if(lvl<=2)
-        return;
-
-    strm<<"Interests:\n";
-    for(reg_interested_t::const_iterator it = reg_interested.begin(), end = reg_interested.end();
-        it != end; ++it)
-    {
-        strm<<" ";
-        it->second->show(strm, lvl);
-        strm<<" -> "<<it->first<<"\n";
-    }
-
-    if(lvl<5)
-        return;
-
-    strm<<"Messages:\n";
+    strm<<" Messages:\n";
     for(size_t i=0; i<inflight.size(); i++)
     {
-        strm<<"["<<i<<"] -> ";
+        strm<<"  ["<<i<<"] -> ";
         inflight[i].show(strm, lvl);
     }
 
-    strm<<"Send queue:\n";
+    if(lvl<=1)
+        return;
+
+    strm<<" Send queue:\n";
     for(reg_send_t::const_iterator it(reg_send.begin()), end(reg_send.end());
         it != end; ++it)
     {
         const DevReg *reg = *it;
         strm<<"  "<<reg->info.name<<"\n";
+    }
+
+    if(lvl<=2)
+        return;
+
+    strm<<" Interests:\n";
+    for(reg_interested_t::const_iterator it = reg_interested.begin(), end = reg_interested.end();
+        it != end; ++it)
+    {
+        strm<<"  ";
+        it->second->show(strm, lvl);
+        strm<<" -> "<<it->first<<"\n";
+    }
+
+    if(lvl<=3)
+        return;
+
+    strm<<" Registers:\n";
+
+    for(reg_by_name_t::const_iterator it = reg_by_name.begin(), end = reg_by_name.end();
+        it != end; ++it)
+    {
+        strm<<"  "<<it->first;
+        it->second->show(strm, lvl);
     }
 }
 
@@ -824,26 +827,26 @@ void DevReg::show(std::ostream& strm, int lvl) const
         strm<<" : "<<this->info;
 
     strm<<"\n"
-          "Reg State: "<<this->state<<"\n"
-          "next_send: "<<this->next_send<<"\n"
-          "Pending async records:\n"
+          "   Reg State: "<<this->state<<"\n"
+          "   next_send: "<<this->next_send<<"\n"
+          "   Pending async records:\n"
           ;
 
     for(DevReg::records_t::const_iterator it2 = this->records.begin(), end2 = this->records.end();
         it2 != end2; ++it2)
     {
         RegInterest * const reg = *it2;
-        strm<<"  ";
+        strm<<"    ";
         reg->show(strm, lvl);
         strm<<"\n";
     }
 
-    strm<<"Interested records:\n";
+    strm<<"  Interested records:\n";
     for(DevReg::interested_t::const_iterator it2(this->interested.begin()), end2(this->interested.end());
         it2 != end2; ++it2)
     {
         RegInterest *reg(*it2);
-        strm<<"  ";
+        strm<<"    ";
         reg->show(strm, lvl);
         strm<<"\n";
     }
