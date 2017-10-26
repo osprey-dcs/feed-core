@@ -144,4 +144,6 @@ struct PrintAddr
     }
 };
 
+const char* logTime();
+
 #endif // UTILS_H

@@ -30,8 +30,6 @@ struct RegInterest
     IOSCANPVT changed;
     RegInterest(dbCommon *prec);
     virtual ~RegInterest() {}
-//    virtual void attach() {}
-//    virtual void detach() {}
 };
 
 struct DevReg
@@ -77,6 +75,8 @@ struct DevReg
 
     // queue to be sent
     bool queue(bool write);
+
+    void show(std::ostream& strm, int lvl) const;
 };
 
 struct DevMsg
@@ -102,6 +102,7 @@ struct DevMsg
         memset(reg, 0, sizeof(reg));
         buf.clear();
     }
+    void show(std::ostream& strm, int lvl) const;
 };
 
 struct Device : public epicsThreadRunable

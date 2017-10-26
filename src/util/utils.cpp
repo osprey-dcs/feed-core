@@ -2,6 +2,8 @@
 
 #include <unistd.h>
 
+#include <epicsTime.h>
+
 #include "utils.h"
 
 
@@ -119,4 +121,16 @@ void Socket::pipe(Socket& rx, Socket& tx)
     Socket temp_tx(fds[1]);
     rx.swap(temp_rx);
     tx.swap(temp_tx);
+}
+
+const char* logTime()
+{
+    static __thread char buf[64];
+
+    epicsTimeStamp now = {0,0};
+    epicsTimeGetCurrent(&now);
+    buf[0] = '\0';
+    epicsTimeToStrftime(buf, sizeof(buf), "%Y/%m/%d %H:%M:%S.%f", &now);
+    buf[sizeof(buf)-1] = '\0';
+    return buf;
 }

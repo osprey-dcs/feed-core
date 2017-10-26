@@ -223,6 +223,8 @@ long get_reg_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 #define CATCH() catch(std::exception& e) { (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); \
     errlogPrintf("%s: Error %s\n", prec->name, e.what()); prec->pact = 0; return 0; }
 
+#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+
 long write_debug(longoutRecord *prec)
 {
     TRY {
@@ -365,8 +367,7 @@ long write_register_common(dbCommon *prec, const epicsInt32 *raw, size_t count, 
                 if(info->wait) {
                     info->reg->records.push_back(prec);
                     prec->pact = 1;
-                    if(prec->tpro>1)
-                        errlogPrintf("%s : begin async\n", prec->name);
+                    IFDBG(1, "begin async\n");
                 }
 
             } else {
@@ -374,15 +375,13 @@ long write_register_common(dbCommon *prec, const epicsInt32 *raw, size_t count, 
 
                 prec->pact = 0;
 
-                if(prec->tpro>1)
-                    errlogPrintf("%s : complete async\n", prec->name);
+                IFDBG(1, "complete async\n");
             }
             return 0;
 
         } else {
             prec->pact = 0;
-            if(prec->tpro>1)
-                errlogPrintf("%s : no association %p %u\n", prec->name, info->reg, info->reg ? info->reg->state : -1);
+            IFDBG(1, "no association %p %u\n", info->reg, info->reg ? info->reg->state : -1);
             (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
             return ENODEV;
         }
@@ -450,15 +449,13 @@ long read_register_common(dbCommon *prec, epicsInt32 *raw, size_t *count, unsign
                     *count = nreq;
 
                 (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                if(prec->tpro>1)
-                    errlogPrintf("%s : Copy in %zu words.  sevr=%u\n",
-                                 prec->name, nreq, info->reg->sevr);
+                IFDBG(1, "Copy in %zu words.  sevr=%u\n",
+                                 nreq, info->reg->sevr);
 
             } else {
                 if(!info->reg->queue(false)) {
                     (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
-                    if(prec->tpro>1)
-                        errlogPrintf("%s : failed to queue\n", prec->name);
+                    IFDBG(1, "failed to queue\n");
                     return ENODEV;
                 } else {
                     info->reg->records.push_back(prec);
@@ -468,16 +465,14 @@ long read_register_common(dbCommon *prec, epicsInt32 *raw, size_t *count, unsign
                 if(count)
                     *count = 0;
 
-                if(prec->tpro>1)
-                    errlogPrintf("%s : begin async\n", prec->name);
+                IFDBG(1, "begin async\n");
             }
             return 0;
 
         } else {
             prec->pact = 0;
             (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
-            if(prec->tpro>1)
-                errlogPrintf("%s : no association %p\n", prec->name, info->reg);
+            IFDBG(1, "no association %p\n", info->reg);
             return ENODEV;
         }
 

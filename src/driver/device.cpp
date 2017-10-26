@@ -49,7 +49,7 @@ RegInterest::RegInterest(dbCommon *prec)
     scanIoInit(&changed);
 }
 
-#define IFDBG(N, FMT, ...) if(dev->debug&(1u<<(N))) errlogPrintf("%s : " FMT "\n", dev->myname.c_str(), __VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(dev->debug&(1u<<(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), dev->myname.c_str(), __VA_ARGS__)
 
 DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
     :dev(dev)
@@ -129,7 +129,7 @@ static void feed_shutdown(void *raw)
     dev->runner.exitWait();
 }
 
-#define IFDBG(N, FMT, ...) if(debug&(1u<<(N))) errlogPrintf("%s : " FMT "\n", myname.c_str(), ##__VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(debug&(1u<<(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), myname.c_str(), ##__VA_ARGS__)
 
 Device::Device(const std::__cxx11::string &name, osiSockAddr &ep)
     :sock(AF_INET, SOCK_DGRAM, 0)
@@ -736,31 +736,8 @@ void Device::show(std::ostream& strm, int lvl) const
     for(reg_by_name_t::const_iterator it = reg_by_name.begin(), end = reg_by_name.end();
         it != end; ++it)
     {
-        const DevReg * const reg = it->second;
         strm<<it->first;
-        if(lvl>=2)
-            strm<<" : "<<reg->info;
-
-        strm<<"\n"
-              "Reg State: "<<reg->state<<"\n"
-              "next_send: "<<reg->next_send<<"\n"
-              "Pending async records:\n"
-              ;
-
-        for(DevReg::records_t::const_iterator it2 = reg->records.begin(), end2 = reg->records.end();
-            it2 != end2; ++it2)
-        {
-            dbCommon * const prec = const_cast<dbCommon*>(*it2);
-            strm<<"  "<<prec->name<<"\n";
-        }
-
-        strm<<"Interested records:\n";
-        for(DevReg::interested_t::const_iterator it2(reg->interested.begin()), end2(reg->interested.end());
-            it2 != end2; ++it2)
-        {
-            RegInterest *reg(*it2);
-            strm<<"  "<<reg->prec->name<<"\n";
-        }
+        it->second->show(strm, lvl);
     }
 
     if(lvl<=2)
@@ -771,5 +748,65 @@ void Device::show(std::ostream& strm, int lvl) const
         it != end; ++it)
     {
         strm<<" "<<it->second->prec->name<<" -> "<<it->first<<"\n";
+    }
+
+    if(lvl<5)
+        return;
+
+    strm<<"Messages:\n";
+    for(size_t i=0; i<inflight.size(); i++)
+    {
+        strm<<"["<<i<<"] -> ";
+        inflight[i].show(strm, lvl);
+    }
+}
+
+
+void DevMsg::show(std::ostream& strm, int lvl) const
+{
+    switch(state) {
+    case Free:
+        strm<<"Free\n";
+        return;
+    case Ready:
+        strm<<"Ready\n";
+        break;
+    case Sent:
+        strm<<"Sent due=";
+    {
+        char buf[128];
+        due.strftime(buf, sizeof(buf), "%H:%M:%S.%f");
+        buf[sizeof(buf)-1] = '\0';
+        strm<<buf<<"\n";
+    }
+        break;
+    }
+}
+
+
+void DevReg::show(std::ostream& strm, int lvl) const
+{
+    if(lvl>=2)
+        strm<<" : "<<this->info;
+
+    strm<<"\n"
+          "Reg State: "<<this->state<<"\n"
+          "next_send: "<<this->next_send<<"\n"
+          "Pending async records:\n"
+          ;
+
+    for(DevReg::records_t::const_iterator it2 = this->records.begin(), end2 = this->records.end();
+        it2 != end2; ++it2)
+    {
+        dbCommon * const prec = const_cast<dbCommon*>(*it2);
+        strm<<"  "<<prec->name<<"\n";
+    }
+
+    strm<<"Interested records:\n";
+    for(DevReg::interested_t::const_iterator it2(this->interested.begin()), end2(this->interested.end());
+        it2 != end2; ++it2)
+    {
+        RegInterest *reg(*it2);
+        strm<<"  "<<reg->prec->name<<"\n";
     }
 }
