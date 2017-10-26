@@ -5,3 +5,9 @@ record(longout, "$(PREF)-SP") {
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
 }
+record(longin, "$(PREF)-I") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(INP , "@name=$(NAME) reg=$(REG)")
+    field(SCAN, "$(SCAN=1 second)")
+}
