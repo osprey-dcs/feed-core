@@ -58,6 +58,7 @@ DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
     ,state(Invalid)
     ,mem(1u<<info.addr_width, 0)
     ,received(1u<<info.addr_width, false)
+    ,nremaining(0u)
     ,next_send(mem.size())
 {}
 
@@ -87,6 +88,7 @@ bool DevReg::queue(bool write)
     std::fill(received.begin(),
               received.end(),
               false);
+    nremaining = received.size();
     next_send = 0;
 
     if((!write && !info.readable)
@@ -397,12 +399,17 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
                 // writes simply echo written value, ignore data
             }
 
-            msg.reg[j]->received.at(offset) = true;
+            if(!msg.reg[j]->received.at(offset)) {
+                msg.reg[j]->received.at(offset) = true;
+                msg.reg[j]->nremaining--;
+            }
 
-            if(std::find(msg.reg[j]->received.begin(),
-                         msg.reg[j]->received.end(),
-                         false) == msg.reg[j]->received.end())
+            if(!msg.reg[j]->nremaining)
             {
+                assert(std::find(msg.reg[j]->received.begin(),
+                                 msg.reg[j]->received.end(),
+                                 false) == msg.reg[j]->received.end());
+
                 // all addresses received
                 msg.reg[j]->state = DevReg::InSync;
 

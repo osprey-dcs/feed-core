@@ -55,6 +55,8 @@ struct DevReg
     typedef std::vector<bool> flags_t;
     // track which addresses have been received
     flags_t received;
+    // optimization.  a count of the # cleared bits in 'received'
+    size_t nremaining;
 
     // next offset (in .mem) to send
     epicsUInt32 next_send;
