@@ -689,8 +689,10 @@ void Device::run()
                                 cnt_ignore++;
                                 doProcess[i] = false;
 
-                            } else if(bufs[i].size()>pkt_size_limit) {
-                                IFDBG(0, "Warning, RX message truncated");
+                            } else if(bufs[i].size()>pkt_size_limit+7) {
+                                // complain if an extra cmd+addr+data is included
+                                IFDBG(0, "Warning, RX message truncated expect=%zu threshold=%zu",
+                                      bufs[i].size(), pkt_size_limit+7);
                             }
 
                             if(doProcess[i])
@@ -742,7 +744,7 @@ void Device::show(std::ostream& strm, int lvl) const
 {
     Guard G(lock);
 
-    strm<<" Current state: "<<current<<"\n"
+    strm<<" Current state: "<<current_name[current]<<"\n"
           " Peer: "<<peer_name<<"\n"
           " Msg: "<<last_message<<"\n"
           " Cnt Tx: "<<cnt_sent<<"\n"
