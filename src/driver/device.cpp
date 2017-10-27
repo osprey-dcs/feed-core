@@ -14,7 +14,7 @@
 #include "rom.h"
 
 // max number of concurrent requests
-int feedNumInFlight = 8;
+int feedNumInFlight = 1;
 // timeout for reply (in sec.)
 double feedTimeout = 1.0;
 
