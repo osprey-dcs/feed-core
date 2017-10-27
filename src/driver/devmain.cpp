@@ -165,9 +165,8 @@ long write_commit(boRecord *prec)
     }CATCH()
 }
 
-long write_register_common(dbCommon *prec, const epicsInt32 *raw, size_t count, unsigned valsize)
+long write_register_common(dbCommon *prec, const char *raw, size_t count, unsigned valsize)
 {
-    const epicsUInt32 *value = (const epicsUInt32 *)raw;
     TRY {
         Guard G(device->lock);
 
@@ -177,25 +176,21 @@ long write_register_common(dbCommon *prec, const epicsInt32 *raw, size_t count, 
                 && !info->reg->inprogress())
         {
             if(!prec->pact) {
-                switch(valsize) {
-                case 2: {
-                    epicsUInt16 *out = (epicsUInt16*)&info->reg->mem[info->offset],
-                                *in  = (epicsUInt16*)value;
-                    for(size_t i=0; i<count; i++)
-                        out[i] = htons(in[i]);
-                }
-                    break;
-                case 4: {
-                    epicsUInt32 *buf = &info->reg->mem[info->offset];
-                    for(size_t i=0; i<count; i++)
-                        buf[i] = htonl(value[i]);
-                }
-                    break;
-                default:
-                    std::copy(value,
-                              value+count,
-                              info->reg->mem.begin()+info->offset);
-                    break;
+
+                const char *out = raw, *end = raw+count*valsize;
+
+                for(size_t i=info->offset, N = info->reg->mem.size();
+                    i<N && out+valsize<=end; i+=info->step, out+=valsize)
+                {
+                    epicsUInt32 val;
+
+                    switch(valsize) {
+                    case 1: val = *(const epicsUInt8*)raw; break;
+                    case 2: val = *(const epicsUInt16*)raw; break;
+                    case 4: val = *(const epicsUInt32*)raw; break;
+                    }
+
+                    info->reg->mem[i] = htonl(val);
                 }
 
                 if(!info->reg->queue(true)) {
@@ -230,22 +225,21 @@ long write_register_common(dbCommon *prec, const epicsInt32 *raw, size_t count, 
 
 long write_register_lo(longoutRecord *prec)
 {
-    return write_register_common((dbCommon*)prec, &prec->val, 1, sizeof(prec->val));
+    return write_register_common((dbCommon*)prec, (const char*)&prec->val, 1, sizeof(prec->val));
 }
 
 long write_register_ao(aoRecord *prec)
 {
-    return write_register_common((dbCommon*)prec, &prec->rval, 1, sizeof(prec->val));
+    return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, sizeof(prec->val));
 }
 
 long write_register_aao(aaoRecord *prec)
 {
-    return write_register_common((dbCommon*)prec, (epicsInt32*)prec->bptr, prec->nord, dbValueSize(prec->ftvl));
+    return write_register_common((dbCommon*)prec, (const char*)prec->bptr, prec->nord, dbValueSize(prec->ftvl));
 }
 
-long read_register_common(dbCommon *prec, epicsInt32 *raw, size_t *count, unsigned valsize)
+long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned valsize)
 {
-    epicsUInt32 *value = (epicsUInt32 *)raw;
     TRY {
         size_t nreq = count ? *count : 1;
 
@@ -255,33 +249,35 @@ long read_register_common(dbCommon *prec, epicsInt32 *raw, size_t *count, unsign
                 && info->offset < info->reg->mem.size()
                 && !info->reg->inprogress())
         {
-            if(nreq > info->reg->mem.size() - info->offset)
-                nreq = info->reg->mem.size() - info->offset;
 
             if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact) {
                 // I/O Intr scan, use current, or async completion
 
-                switch(valsize) {
-                case 2: {
-                    epicsUInt16 *in= (epicsUInt16*)&info->reg->mem[info->offset],
-                                *out=(epicsUInt16*)value;
-                    for(size_t i=0; i<nreq*2; i++)
-                        out[i] = ntohs(in[i]);
+                // mask for sign extension
+                epicsUInt32 signmask = 0;
+
+                if(info->reg->info.sign==JRegister::Signed) {
+                    // mask of sign bit and higher.
+                    signmask = 0xffffffff << (info->reg->info.data_width-1);
                 }
-                    break;
-                case 4: {
-                    epicsUInt32 *ptr= &info->reg->mem[info->offset];
-                    for(size_t i=0; i<nreq; i++)
-                        value[i] = ntohl(ptr[i]);
+
+                char *out = raw, *end = raw+nreq*valsize;
+
+                for(size_t i=info->offset, N = info->reg->mem.size();
+                    i<N && out+valsize<=end; i+=info->step, out+=valsize)
+                {
+                    epicsUInt32 val = ntohl(info->reg->mem[i]);
+                    if(val & signmask)
+                        val |= signmask;
+
+                    switch(valsize) {
+                    case 1: *(epicsUInt8*)out = val; break;
+                    case 2: *(epicsUInt16*)out = val; break;
+                    case 4: *(epicsUInt32*)out = val; break;
+                    }
                 }
-                    break;
-                // TODO: 8
-                default:
-                    std::copy(info->reg->mem.begin() + info->offset,
-                              info->reg->mem.begin() + info->offset + nreq,
-                              value);
-                    break;
-                }
+
+                nreq = (out-raw)/valsize;
 
                 prec->pact = 0;
                 if(count)
@@ -320,18 +316,18 @@ long read_register_common(dbCommon *prec, epicsInt32 *raw, size_t *count, unsign
 
 long read_register_li(longinRecord *prec)
 {
-    return read_register_common((dbCommon*)prec, &prec->val, 0, sizeof(prec->val));
+    return read_register_common((dbCommon*)prec, (char*)&prec->val, 0, sizeof(prec->val));
 }
 
 long read_register_ai(aiRecord *prec)
 {
-    return read_register_common((dbCommon*)prec, &prec->rval, 0, sizeof(prec->rval));
+    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, sizeof(prec->rval));
 }
 
 long read_register_aai(aaiRecord *prec)
 {
     size_t cnt = prec->nelm * dbValueSize(prec->ftvl) /4u;
-    long ret = read_register_common((dbCommon*)prec, (epicsInt32*)prec->bptr, &cnt, dbValueSize(prec->ftvl));
+    long ret = read_register_common((dbCommon*)prec, (char*)prec->bptr, &cnt, dbValueSize(prec->ftvl));
     prec->nord = cnt;
     return ret;
 }

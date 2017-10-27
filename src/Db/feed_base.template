@@ -81,14 +81,6 @@ record(longin, "$(PREF)CntSeq-I") {
     field(INP , "@name=$(NAME) offset=5")
 }
 
-record(aai, "$(PREF)Hello-I") {
-    field(DTYP, "FEED Register Read")
-    field(INP , "@name=$(NAME) reg=HELLO")
-    field(SCAN, "I/O Intr")
-    field(FTVL, "UCHAR")
-    field(NELM, "64")
-}
-
 record(aai, "$(PREF)ROM-I") {
     field(DTYP, "FEED Register Read")
     field(INP , "@name=$(NAME) reg=ROM")

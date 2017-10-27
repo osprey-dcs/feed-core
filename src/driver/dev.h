@@ -25,7 +25,8 @@ struct RecInfo : public RegInterest
     dbCommon * const prec;
     Device * const device;
 
-    epicsUInt32 offset;
+    epicsUInt32 offset, // offset of first element (in words)
+                step;   // increment between elements (in words)
 
     bool autocommit;
     bool wait;
@@ -34,11 +35,13 @@ struct RecInfo : public RegInterest
         :prec(prec)
         ,device(device)
         ,offset(0u)
+        ,step(1)
         ,autocommit(true), wait(true)
     {}
 
     virtual void configure(const pairs_t& pairs) {
         get_pair(pairs, "offset", offset);
+        get_pair(pairs, "step", step);
         get_pair(pairs, "autocommit", autocommit);
         get_pair(pairs, "wait", wait);
     }

@@ -102,7 +102,7 @@ void testfeed_registerRecordDeviceDriver(struct dbBase *);
 
 MAIN(testdevice)
 {
-    testPlan(9);
+    testPlan(7);
     try {
         simrunner sim;
 
@@ -137,12 +137,6 @@ MAIN(testdevice)
 
             testOk(N>0, "timeout count %u", N);
             testOk(S==4, "Final state %u", S);
-        }
-
-        testdbPutFieldOk("tst:Hello-I.PROC", DBF_LONG, 1);
-        {
-            aaiRecord *prec = (aaiRecord*)testdbRecordPtr("tst:Hello-I");
-            testOk(strcmp((char*)prec->bptr, "Hello World!\r\n\r\n")==0, "%s = \"Hello World!\"", (char*)prec->bptr);
         }
 
         testdbPutFieldOk("tst:HelloInt-I.PROC", DBF_LONG, 1);
