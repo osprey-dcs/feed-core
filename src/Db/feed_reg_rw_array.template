@@ -13,5 +13,5 @@ record(aai, "$(PREF)-I") {
     field(INP , "@name=$(NAME) reg=$(REG)")
     field(FTVL, "LONG")
     field(NELM, "$(SIZE)")
-    field(SCAN, "$(SCAN=1 second)")
+    field(SCAN, "$(REGSCAN=)")
 }

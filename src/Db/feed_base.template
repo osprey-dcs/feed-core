@@ -88,3 +88,11 @@ record(aai, "$(PREF)Hello-I") {
     field(FTVL, "UCHAR")
     field(NELM, "64")
 }
+
+record(aai, "$(PREF)ROM-I") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=ROM")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "LONG")
+    field(NELM, "8192")
+}
