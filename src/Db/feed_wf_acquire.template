@@ -1,0 +1,61 @@
+# waveform buffer handling
+#
+# Write one to bit N in circle_buf_flip to enable acquisition of channel N
+#
+# Wait for bit N in llrf_circle_ready to be set
+#
+# Read shell_#_circle_data and shell_#_slow_data
+#
+# Macros
+#  PREF - Record name prefix
+#  NAME - FEED Device name
+#  BIT  - Channel bit number (0 is first channel)
+#  MASK - Channel bit mask (1 is first channel)
+
+record(bo, "$(PREF)Acq-Cmd") {
+    field(DESC, "Start aquisition")
+    field(ZNAM, "Acquire")
+    field(ONAM, "Acquire")
+    field(FLNK, "$(PREF)Acq-Cmd_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# write $(MASK) to reg circle_buf_flip
+record(longout, "$(PREF)Acq-Cmd_") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=circle_buf_flip")
+    field(VAL , "$(MASK)")
+    field(FLNK, "$(PREF)Rdy-I_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# wait for value & $(MASK) == $(MASK) for reg llrf_circle_ready
+record(bo, "$(PREF)Rdy-I_") {
+    field(DTYP, "FEED Register Watch")
+    field(OUT , "@name=$(NAME) retry=0.1 reg=llrf_circle_ready mask=$(MASK) value=$(MASK)")
+    field(FLNK, "$(PREF)Circ-I")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(aai, "$(PREF)Circ-I") {
+    field(SDIS, "$(PREF)Rdy-I_ MSI")
+    field(DISV, "-42")
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data")
+    field(FTVL, "LONG")
+    field(NELM, "8192")
+    field(FLNK, "$(PREF)Slow-I")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(aai, "$(PREF)Slow-I") {
+    field(SDIS, "$(PREF)Rdy-I_ MSI")
+    field(DISV, "-42")
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data")
+    field(FTVL, "LONG")
+    field(NELM, "128")
+    field(TPRO, "$(TPRO=0)")
+}
