@@ -313,7 +313,7 @@ std::ostream& operator<<(std::ostream& strm, const JRegister& reg)
           "\"access\":\""<<(reg.readable?"r":"")<<(reg.writable?"w":"")<<"\", "
           "\"addr_width\":"<<unsigned(reg.addr_width)<<", "
           "\"base_addr\":"<<reg.base_addr<<", "
-          "\"data_width\":"<<reg.data_width<<", "
+          "\"data_width\":"<<unsigned(reg.data_width)<<", "
           "\"description\":\""<<reg.description<<"\", "
           "\"sign\":\""<<(reg.sign==JRegister::Unsigned?"un":"")<<"signed\""
           "}";
