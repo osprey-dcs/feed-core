@@ -22,7 +22,9 @@ LIB_SRCS += simulator.cpp
 
 SRC_DIRS += $(TOP)/src/driver
 LIB_SRCS += device.cpp
-LIB_SRCS += devdev.cpp
+LIB_SRCS += devmain.cpp
+LIB_SRCS += devutil.cpp
+LIB_SRCS += devwatch.cpp
 LIB_SRCS += iocsh.cpp
 
 #===========================
