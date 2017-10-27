@@ -192,4 +192,7 @@ struct Device : public epicsThreadRunable
     static devices_t devices;
 };
 
+extern int feedNumInFlight;
+extern double feedTimeout;
+
 #endif // DEVICE_H

@@ -50,4 +50,6 @@ static void feedRegistrar()
 extern "C" {
 epicsExportAddress(drvet, drvFEED);
 epicsExportRegistrar(feedRegistrar);
+epicsExportAddress(int, feedNumInFlight);
+epicsExportAddress(double, feedTimeout);
 }

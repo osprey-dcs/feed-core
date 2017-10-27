@@ -26,3 +26,5 @@ device(bo, INST_IO, devBoFEEDWatchReg, "FEED Register Watch")
 
 driver(drvFEED)
 registrar(feedRegistrar)
+variable(feedTimeout, double)
+variable(feedNumInFlight, int)
