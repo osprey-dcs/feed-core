@@ -5,7 +5,7 @@ from __future__ import print_function
 import logging
 _log = logging.getLogger(__name__)
 
-import sys, os, socket, struct, random, zlib, json, tempfile
+import sys, os, socket, struct, random, zlib, json, tempfile, shutil
 from collections import defaultdict
 
 import numpy
@@ -105,8 +105,8 @@ def gentemplate(args, dev):
 
         out.write('}\n\n')
 
-    os.rename(out.name, args.output)
-    out.delete = False
+    out.flush()
+    shutil.copyfile(out.name, args.output)
 
 def getargs():
     from argparse import ArgumentParser

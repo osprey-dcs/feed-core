@@ -16,6 +16,7 @@
 #include <osiSock.h>
 
 #include <dbAccess.h>
+#include <recSup.h>
 #include <dbStaticLib.h>
 #include <callback.h>
 #include <menuScan.h>
