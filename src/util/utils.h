@@ -11,6 +11,7 @@
 #include <osiSock.h>
 #include <epicsMutex.h>
 #include <epicsGuard.h>
+#include <shareLib.h>
 
 typedef epicsGuard<epicsMutex> Guard;
 typedef epicsGuardRelease<epicsMutex> UnGuard;
@@ -40,9 +41,9 @@ using std::auto_ptr;
 }
 
 // return contents of file
-std::string read_entire_file(const char *name);
+epicsShareExtern std::string read_entire_file(const char *name);
 
-struct SocketError : public std::exception
+struct epicsShareClass SocketError : public std::exception
 {
     int code;
 
@@ -53,7 +54,7 @@ struct SocketError : public std::exception
     const char *what() const throw();
 };
 
-struct SocketBusy : public SocketError
+struct epicsShareClass SocketBusy : public SocketError
 {
     SocketBusy() :SocketError(SOCK_EWOULDBLOCK) {}
     virtual ~SocketBusy() throw() {}

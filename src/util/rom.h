@@ -5,6 +5,7 @@
 #include <string>
 
 #include <epicsTypes.h>
+#include <shareLib.h>
 
 struct ROMDescriptor
 {
@@ -23,7 +24,7 @@ struct ROMDescriptor
     {}
 };
 
-struct ROM {
+struct epicsShareClass ROM {
     typedef std::list<ROMDescriptor> infos_t;
     infos_t infos;
 

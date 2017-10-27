@@ -5,12 +5,14 @@
 
 #include <vector>
 
+#include <shareLib.h>
+
 // compress input and store in output.
 // existing contents of output are replaced
-void zdeflate(std::vector<char>& out, const char *in, size_t inlen, int lvl=6);
+epicsShareExtern void zdeflate(std::vector<char>& out, const char *in, size_t inlen, int lvl=6);
 
 // uncompress input and store in output.
 // existing contents of output are replaced
-void zinflate(std::vector<char>& out, const char *in, size_t inlen);
+epicsShareExtern void zinflate(std::vector<char>& out, const char *in, size_t inlen);
 
 #endif // ZPP_H

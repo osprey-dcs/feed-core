@@ -6,6 +6,7 @@
 #include <map>
 
 #include <epicsTypes.h>
+#include <shareLib.h>
 
 struct JRegister {
     std::string name,
@@ -30,7 +31,7 @@ struct JRegister {
     JRegister() {clear();}
 };
 
-struct JBlob {
+struct epicsShareClass JBlob {
     typedef std::map<std::string, JRegister> registers_t;
     registers_t registers;
 

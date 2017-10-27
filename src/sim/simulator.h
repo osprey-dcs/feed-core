@@ -9,6 +9,7 @@
 #include <epicsEvent.h>
 #include <epicsMutex.h>
 #include <epicsThread.h>
+#include <shareLib.h>
 
 #include "utils.h"
 #include "jblob.h"
@@ -26,7 +27,7 @@ struct SimReg {
     SimReg(const JRegister& reg);
 };
 
-class Simulator
+class epicsShareClass Simulator
 {
 public:
     typedef std::map<epicsUInt32, epicsUInt32> values_t;

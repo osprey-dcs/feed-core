@@ -13,6 +13,7 @@
 
 #include <dbCommon.h>
 #include <dbScan.h>
+#include <shareLib.h>
 
 #include "jblob.h"
 #include "utils.h"
@@ -108,7 +109,7 @@ struct DevMsg
     void show(std::ostream& strm, int lvl) const;
 };
 
-struct Device : public epicsThreadRunable
+struct epicsShareClass Device : public epicsThreadRunable
 {
     Device(const std::string& name, osiSockAddr &ep);
     ~Device();
