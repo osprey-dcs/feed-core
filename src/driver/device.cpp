@@ -357,6 +357,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
         return;
 
     } else if(inflight[off].state!=DevMsg::Sent) {
+        IFDBG(0, "Duplicate ignored seq=%08x", (unsigned)seq);
         cnt_ignore++;
         return;
 
