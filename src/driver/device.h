@@ -85,7 +85,7 @@ struct DevReg
 
 struct DevMsg
 {
-    static const unsigned nreg = 127;
+    static const unsigned nreg = 180;
 
     enum state_t {Free, Ready, Sent} state;
 
@@ -181,6 +181,7 @@ struct epicsShareClass Device : public epicsThreadRunable
     void handle_send(Guard &G);
     void handle_process(const std::vector<char>& buf, PrintAddr& addr);
     void handle_timeout();
+    void do_timeout(unsigned i);
     void handle_inspect();
     void handle_state();
 

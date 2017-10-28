@@ -8,12 +8,13 @@
 #include <errlog.h>
 
 #include "simulator.h"
+#include "device.h"
 
 typedef epicsGuard<epicsMutex> Guard;
 typedef epicsGuardRelease<epicsMutex> UnGuard;
 
 namespace {
-const size_t pkt_size_limit = 128*8;
+const size_t pkt_size_limit = (DevMsg::nreg+1)*8;
 }
 
 SimReg::SimReg(const JRegister& reg)

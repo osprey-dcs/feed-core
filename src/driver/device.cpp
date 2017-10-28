@@ -19,7 +19,7 @@ int feedNumInFlight = 1;
 double feedTimeout = 1.0;
 
 namespace {
-const size_t pkt_size_limit = 128*8;
+const size_t pkt_size_limit = (DevMsg::nreg+1)*8;
 
 // description of automatic/bootstrap registers
 const struct gblrom_t {
@@ -374,7 +374,8 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
             continue;
 
         if(j*2+3 >= ilen) {
-            IFDBG(0, "Warning: reply truncated");
+            IFDBG(0, "Warning: reply truncated %zu expected %zu", ilen*4, msg.buf.size()*4);
+            do_timeout(off);
             continue;
 
         }else if((ibuf[j*2 + 2]&0xfffffff0)!=msg.buf[j*2+2]) {
@@ -385,7 +386,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
             continue;
         }
 
-        if(msg.reg[j]) {
+        {
             epicsUInt32 cmd_addr = ntohl(ibuf[j*2 + 2]),
                         data     = ibuf[j*2 + 3];
 
@@ -420,7 +421,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
             }
         }
 
-
+        msg.reg[j] = 0;
     }
 
     msg.clear();
@@ -438,48 +439,54 @@ void Device::handle_timeout()
 
         IFDBG(1, "timeout seq=%08x", (unsigned)msg.seq);
 
-        // timeout!
-        cnt_timo++;
+        do_timeout(i);
+    }
+}
 
-        // Full reset following any timeout
-        reset_requested = true;
+void Device::do_timeout(unsigned i)
+{
+    DevMsg& msg = inflight[i];
+    // timeout!
+    cnt_timo++;
 
-        for(unsigned j=0; j<DevMsg::nreg; j++)
+    // Full reset following any timeout
+    reset_requested = true;
+
+    for(unsigned j=0; j<DevMsg::nreg; j++)
+    {
+        if(!msg.reg[j])
+            continue;
+        DevReg *reg = msg.reg[j];
+
+        assert(reg->inprogress());
+
+        IFDBG(1, "timeout for register %s", msg.reg[j]->info.name.c_str());
+
+        // orphan any replies for this register
+        for(size_t m=0, N=inflight.size(); m<N; m++)
         {
-            if(!msg.reg[j])
-                continue;
-            DevReg *reg = msg.reg[j];
-
-            assert(reg->inprogress());
-
-            IFDBG(1, "timeout for register %s", msg.reg[j]->info.name.c_str());
-
-            // orphan any replies for this register
-            for(size_t m=0; m<N; m++)
+            for(unsigned k=0; k<DevMsg::nreg; k++)
             {
-                for(unsigned k=0; k<DevMsg::nreg; k++)
-                {
-                    inflight[m].reg[k] = 0;
-                }
+                inflight[m].reg[k] = 0;
             }
-
-            if(!reg_send.empty() && reg_send.front()==reg) {
-                reg_send.pop_front();
-            } else {
-                assert(reg->next_send>=reg->mem.size());
-            }
-
-            reg->state = DevReg::Invalid;
-
-            reg->stat = COMM_ALARM;
-            reg->sevr = INVALID_ALARM;
-            reg->process();
-
-            reg->scan_interested();
         }
 
-        msg.clear();
+        if(!reg_send.empty() && reg_send.front()==reg) {
+            reg_send.pop_front();
+        } else {
+            assert(reg->next_send>=reg->mem.size());
+        }
+
+        reg->state = DevReg::Invalid;
+
+        reg->stat = COMM_ALARM;
+        reg->sevr = INVALID_ALARM;
+        reg->process();
+
+        reg->scan_interested();
     }
+
+    msg.clear();
 }
 
 void Device::handle_inspect()

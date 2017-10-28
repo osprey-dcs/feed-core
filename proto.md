@@ -33,7 +33,9 @@ UDP Message Format
 
 Request and Reply messages have the same format.
 Each UDP message, request or reply, is composed of a 8 byte header followed by between 3 and 127 address/data pairs.
-Total message size _must_ be between 32 and 1024 bytes inclusive.
+Total message size _must_ be at least 32.
+The real maximum limit is the ethernet MTU less transport protocol headers.
+For the default 1500 bytes and UDP/IPv4 (42 header bytes) this is 1456 bytes of UDP payload.
 Messages size _should_ be a multiple of 8 bytes.
 Recipients _must_ truncate messages to a multiple of 8 bytes.
 
