@@ -200,7 +200,11 @@ void Device::reset()
 
     want_to_send = false;
     reset_requested = false;
-    current = Idle;
+
+    if(peer_name.empty())
+        current = Idle;
+    else
+        current = Searching;
 
     // forget about pending or Sent messages
     for(size_t i=0, N=inflight.size(); i<N; i++)
