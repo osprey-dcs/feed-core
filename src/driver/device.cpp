@@ -252,8 +252,7 @@ void Device::reset()
 
 void Device::handle_send(Guard& G)
 {
-    const epicsTime now(epicsTime::getCurrent()),
-                    due(now + feedTimeout);
+    const epicsTime due(loop_time + feedTimeout);
 
     // first pass to populate DevMsg
     for(size_t i=0, N=inflight.size(); i<N && !reg_send.empty(); i++)
@@ -416,6 +415,9 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
                 // all addresses received
                 msg.reg[j]->state = DevReg::InSync;
 
+                // register timestamp is the time when this last packet is received.
+                msg.reg[j]->rx = loop_time;
+
                 msg.reg[j]->stat = 0;
                 msg.reg[j]->sevr = 0;
                 msg.reg[j]->process();
@@ -433,12 +435,10 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
 
 void Device::handle_timeout()
 {
-    epicsTime now(epicsTime::getCurrent());
-
     for(size_t i=0, N=inflight.size(); i<N; i++)
     {
         DevMsg& msg = inflight[i];
-        if(msg.state!=DevMsg::Sent || msg.due>now)
+        if(msg.state!=DevMsg::Sent || msg.due>loop_time)
             continue;
 
         IFDBG(1, "timeout seq=%08x", (unsigned)msg.seq);
@@ -605,6 +605,8 @@ void Device::run()
     IFDBG(4, "Worker starts");
     Guard G(lock);
 
+    loop_time = epicsTime::getCurrent();
+
     std::vector<std::vector<char> > bufs(inflight.size());
     // pre-alloc Rx buffers
     for(size_t i=0; i<bufs.size(); i++)
@@ -634,6 +636,7 @@ void Device::run()
                 want_to_send = false;
             }
 
+            epicsTime after_poll;
             {
                 DevReg::records_t completed;
                 completed.swap(records);
@@ -651,6 +654,9 @@ void Device::run()
                           false);
 
                 int ret = ::poll(fds, 2, feedTimeout*1000);
+
+                after_poll = epicsTime::getCurrent();
+
                 if(ret<0) {
                     throw SocketError(SOCKERRNO);
 
@@ -724,6 +730,7 @@ void Device::run()
 
                 // re-lock
             }
+            loop_time = after_poll;
 
             for(size_t i=0, N=bufs.size(); i<N; i++)
             {

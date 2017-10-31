@@ -143,6 +143,8 @@ struct epicsShareClass Device : public epicsThreadRunable
 
     IOSCANPVT current_changed;
 
+    epicsTime loop_time;
+
     epicsUInt32 cnt_sent,
                 cnt_recv,
                 cnt_ignore,

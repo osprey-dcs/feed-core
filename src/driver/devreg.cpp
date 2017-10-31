@@ -176,6 +176,10 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
                 if(count)
                     *count = nreq;
 
+                if(prec->tse==epicsTimeEventDeviceTime) {
+                    prec->time = info->reg->rx;
+                }
+
                 (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
                 IFDBG(1, "Copy in %zu words.  sevr=%u\n",
                                  nreq, info->reg->sevr);

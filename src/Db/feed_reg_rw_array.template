@@ -14,4 +14,5 @@ record(aai, "$(PREF)-I") {
     field(FTVL, "LONG")
     field(NELM, "$(SIZE)")
     field(SCAN, "$(REGSCAN=)")
+    field(TSE , "-2")
 }

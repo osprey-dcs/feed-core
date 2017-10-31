@@ -10,4 +10,5 @@ record(longin, "$(PREF)-I") {
     field(DESC, "$(DESC=Reg $(NAME))")
     field(INP , "@name=$(NAME) reg=$(REG)")
     field(SCAN, "$(REGSCAN=)")
+    field(TSE , "-2")
 }
