@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <sstream>
 #include <algorithm>
 
 #include <poll.h>
@@ -11,6 +12,7 @@
 #include <epicsExit.h>
 
 #include "device.h"
+#include "zpp.h"
 #include "rom.h"
 
 // max number of concurrent requests
@@ -235,6 +237,7 @@ void Device::reset()
     reg_by_name["ROM"] = reg_rom.get();
 
     last_message.clear();
+    dev_infos.clear();
 
     for(reg_interested_t::const_iterator it = reg_interested.begin(), end = reg_interested.end();
         it != end; ++it)
@@ -531,6 +534,8 @@ void Device::handle_inspect()
     JBlob blob;
     blob.parse(json.c_str());
 
+    RegInterest::infos_t infos;
+
     for(JBlob::const_iterator it = blob.begin(), end = blob.end(); it != end; ++it)
     {
         const JRegister& reg = it->second;
@@ -551,12 +556,52 @@ void Device::handle_inspect()
         for(; range.first != range.second; ++range.first)
         {
             RegInterest *interest = range.first->second;
+
             dreg->interested.push_back(interest);
+
             interest->reg = dreg.get();
+
+            interest->getInfo(infos);
         }
 
         reg_by_name[reg.name] = dreg.release();
     }
+
+    std::ostringstream strm;
+
+    strm<<"{"
+            "\"peer\": \""<<peer_name<<"\","
+            "\"records\": {";
+
+    bool first1 = true;
+    for(RegInterest::infos_t::const_iterator it(infos.begin()), end(infos.end()); it!=end; ++it)
+    {
+        if(!first1) {
+            strm<<",";
+        } else {
+            first1 = false;
+        }
+        strm<<"\""<<it->first<<"\": {";
+        bool first2 = true;
+        for(RegInterest::info_items_t::const_iterator it2(it->second.begin()), end2(it->second.end()); it2!=end2; ++it2)
+        {
+            if(!first2) {
+                strm<<",";
+            } else {
+                first2 = false;
+            }
+            strm<<"\""<<it2->first<<"\": "<<it2->second;
+        }
+        strm<<"}";
+    }
+
+    strm<<  "}"
+          "}";
+
+    std::string jstring(strm.str());
+
+    dev_infos.clear();
+    zdeflate(dev_infos, jstring.c_str(), jstring.size(), 9);
 }
 
 void Device::handle_state()

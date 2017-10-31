@@ -6,4 +6,5 @@ record(aai, "$(PREF)-I") {
     field(NELM, "$(SIZE)")
     field(SCAN, "$(REGSCAN=)")
     field(TSE , "-2")
+    info(feed:info:input, "$(PREF)-I")
 }

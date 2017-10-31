@@ -4,4 +4,5 @@ record(longin, "$(PREF)-I") {
     field(INP , "@name=$(NAME) reg=$(REG)")
     field(SCAN, "$(REGSCAN=)")
     field(TSE , "-2")
+    info(feed:info:input, "$(PREF)-I")
 }

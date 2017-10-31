@@ -101,3 +101,40 @@ DBLINK *getDevLnk(dbCommon *prec)
     dbFinishEntry(&entry);
     return ret;
 }
+
+void RecInfo::getInfo(infos_t& infos)
+{
+    DBENTRY entry;
+
+    if(!reg)
+        return;
+
+    infos_t::iterator it(infos.find(reg->info.name));
+    if(it==infos.end()) {
+        infos[reg->info.name];
+        it = infos.find(reg->info.name);
+        assert(it!=infos.end());
+    }
+    info_items_t& items = it->second;
+
+    dbInitEntry(pdbbase, &entry);
+
+    if(dbFindRecord(&entry, prec->name))
+        throw std::logic_error("Can't find myself");
+
+    if(!dbFirstInfo(&entry)) {
+        do {
+            const char *name = dbGetInfoName(&entry);
+
+            if(strncmp(name, "feed:info:", 10)!=0)
+                continue;
+            name += 10;
+
+            items[name] = SB()<<"\""<<dbGetInfoString(&entry)<<"\"";
+
+        }while(!dbNextInfo(&entry));
+    }
+
+    dbFinishEntry(&entry);
+
+}

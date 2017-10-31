@@ -165,6 +165,32 @@ long write_commit(boRecord *prec)
     }CATCH()
 }
 
+long read_jblob(aaiRecord *prec)
+{
+    TRY {
+        if(prec->nelm<16)
+            throw std::runtime_error("Need NELM>=16");
+        Guard G(device->lock);
+
+        if(device->dev_infos.empty()) {
+            IFDBG(1, "Not connected");
+        } else if(device->dev_infos.size() > prec->nelm) {
+            IFDBG(1, "blob size %zu exceeds NELM=%u",
+                  device->dev_infos.size(), (unsigned)prec->nelm);
+        } else {
+            memcpy(prec->bptr,
+                   &device->dev_infos[0],
+                   device->dev_infos.size());
+
+            prec->nord = device->dev_infos.size();
+            return 0;
+        }
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
+
+        return ENODEV;
+    }CATCH()
+}
+
 } // namespace
 
 // device-wide settings
@@ -176,6 +202,7 @@ DSET(devBoFEEDCommit, bo, init_common<RecInfo>, NULL, write_commit)
 DSET(devMbbiFEEDDevState, mbbi, init_common<RecInfo>, get_dev_changed_intr, read_dev_state)
 DSET(devLiFEEDCounter, longin, init_common<RecInfo>, get_dev_changed_intr, read_counter)
 DSET(devAaiFEEDError, aai, init_common<RecInfo>, get_dev_changed_intr, read_error)
+DSET(devAaiFEEDJBlob, aai, init_common<RecInfo>, get_dev_changed_intr, read_jblob)
 
 // register status
 DSET(devMbbiFEEDRegState, mbbi, init_common<RecInfo>, get_reg_changed_intr, read_reg_state)

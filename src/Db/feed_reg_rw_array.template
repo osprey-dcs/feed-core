@@ -6,6 +6,7 @@ record(aao, "$(PREF)-SP") {
     field(NELM, "$(SIZE)")
     field(PINI, "YES")
     info(autosaveFields_pass1, "VAL")
+    info(feed:info:output, "$(PREF)-SP")
 }
 record(aai, "$(PREF)-I") {
     field(DTYP, "FEED Register Read")
@@ -15,4 +16,5 @@ record(aai, "$(PREF)-I") {
     field(NELM, "$(SIZE)")
     field(SCAN, "$(REGSCAN=)")
     field(TSE , "-2")
+    info(feed:info:input, "$(PREF)-I")
 }

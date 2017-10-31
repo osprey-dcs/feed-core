@@ -108,6 +108,15 @@ record(calc, "$(PREF)RateErr-I") {
     field(EGU , "pkt/s")
 }
 
+record(aai, "$(PREF)JInfo-I") {
+    field(DTYP, "FEED JBlob")
+    field(DESC, "zlib compressed JSON")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "CHAR")
+    field(NELM, "16000")
+}
+
 record(aai, "$(PREF)ROM-I") {
     field(DTYP, "FEED Register Read")
     field(INP , "@name=$(NAME) reg=ROM")

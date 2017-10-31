@@ -26,12 +26,17 @@ struct DevReg;
 
 struct RegInterest
 {
+    // keys will be quoted, values are raw json
+    typedef std::map<std::string, std::string> info_items_t;
+    typedef std::map<std::string, info_items_t> infos_t;
+
     DevReg *reg;
     IOSCANPVT changed;
     RegInterest();
     virtual ~RegInterest() {}
     virtual void complete() =0;
     virtual void show(std::ostream&, int lvl) {}
+    virtual void getInfo(infos_t&) {}
 };
 
 struct DevReg
@@ -144,6 +149,9 @@ struct epicsShareClass Device : public epicsThreadRunable
     IOSCANPVT current_changed;
 
     epicsTime loop_time;
+
+    // compressed json blob of our info.
+    std::vector<char> dev_infos;
 
     epicsUInt32 cnt_sent,
                 cnt_recv,
