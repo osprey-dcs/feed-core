@@ -54,11 +54,17 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, unsign
     TRY {
         Guard G(device->lock);
 
-        if(info->reg
-                && info->offset < info->reg->mem.size()
-                && info->offset+count <= info->reg->mem.size()
-                && !info->reg->inprogress())
-        {
+        if(!info->reg) {
+            IFDBG(1, "No association");
+        } else if(!info->reg->info.writable) {
+            IFDBG(1, "Not writable");
+        } else if(info->offset >= info->reg->mem.size()
+                || count > info->reg->mem.size() - info->offset) {
+            IFDBG(1, "Array bounds violation offset=%u size=%zu not within size=%zu",
+                  (unsigned)info->offset, count, info->reg->mem.size());
+        } else if(info->reg->inprogress()) {
+            IFDBG(1, "Busy");
+        } else {
             if(!prec->pact) {
 
                 const char *out = raw, *end = raw+count*valsize;
@@ -96,13 +102,11 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, unsign
                 IFDBG(1, "complete async\n");
             }
             return 0;
-
-        } else {
-            prec->pact = 0;
-            IFDBG(1, "no association %p %u\n", info->reg, info->reg ? info->reg->state : -1);
-            (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
-            return ENODEV;
         }
+
+        info->cleanup();
+        (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
+        return ENODEV;
 
     }CATCH()
 }
@@ -129,11 +133,16 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
 
         Guard G(device->lock);
 
-        if(info->reg
-                && info->offset < info->reg->mem.size()
-                && !info->reg->inprogress())
-        {
-
+        if(!info->reg) {
+            IFDBG(1, "No association");
+        } else if(!info->reg->info.readable) {
+            IFDBG(1, "Not readable");
+        } else if(info->offset >= info->reg->mem.size()) {
+            IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
+                  (unsigned)info->offset, info->reg->mem.size());
+        } else if(info->reg->inprogress()) {
+            IFDBG(1, "Busy");
+        } else {
             if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact) {
                 // I/O Intr scan, use current, or async completion
 
@@ -188,12 +197,11 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
             }
             return 0;
 
-        } else {
-            prec->pact = 0;
-            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
-            IFDBG(1, "no association %p\n", info->reg);
-            return ENODEV;
         }
+
+        info->cleanup();
+        (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+        return ENODEV;
 
     }CATCH()
 }

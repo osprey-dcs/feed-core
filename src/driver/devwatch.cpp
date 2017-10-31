@@ -119,10 +119,16 @@ long write_test_mask(boRecord *prec)
     TRY {
         Guard G(device->lock);
 
-        if(info->reg
-                && info->offset < info->reg->mem.size()
-                && !info->reg->inprogress())
-        {
+        if(!info->reg) {
+            IFDBG(1, "No association");
+        } else if(!info->reg->info.readable) {
+            IFDBG(1, "Not readable");
+        } else if(info->offset >= info->reg->mem.size()) {
+            IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
+                  (unsigned)info->offset, info->reg->mem.size());
+        } else if(info->reg->inprogress()) {
+            IFDBG(1, "Busy");
+        } else {
             if(!prec->pact) {
                 IFDBG(1, "Start Watch of %s", info->reg->info.name.c_str());
 
@@ -136,12 +142,11 @@ long write_test_mask(boRecord *prec)
             }
             return 0;
 
-        } else {
-            info->cleanup();
-            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
-            IFDBG(1, "no association %p\n", info->reg);
-            return ENODEV;
         }
+
+        info->cleanup();
+        (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+        return ENODEV;
 
     }CATCH()
 }
