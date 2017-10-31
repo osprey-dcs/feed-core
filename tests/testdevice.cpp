@@ -125,6 +125,7 @@ MAIN(testdevice)
                 testAbort("Device not created");
             dev = it->second;
         }
+        (void)dev;
 
         testdbPutFieldOk("tst:Addr-SP", DBF_STRING, sim.addr.c_str());
 
