@@ -596,8 +596,10 @@ void Device::handle_state()
     case Running:
         break;
     }
-    if(prev!=current)
+    if(prev!=current) {
         IFDBG(3, "Transition %s -> %s", current_name[prev], current_name[current]);
+        scanIoRequest(current_changed);
+    }
 }
 
 void Device::run()
@@ -742,8 +744,6 @@ void Device::run()
             handle_timeout();
 
             handle_state();
-
-            scanIoRequest(current_changed);
 
         } catch(std::exception& e) {
             cnt_err++;
