@@ -100,6 +100,7 @@ bool DevReg::queue(bool write)
     dev->reg_send.push_back(this);
 
     state = write ? Writing : Reading;
+
     IFDBG(1, "queue %s for %s from %06x",
                  info.name.c_str(),
                  write ? "write" : "read",
@@ -233,8 +234,8 @@ void Device::reset()
 
     // restart with only automatic/bootstrap registers
     reg_by_name.clear();
-    reg_by_name["HELLO"] = reg_id.get();
-    reg_by_name["ROM"] = reg_rom.get();
+    reg_by_name[reg_id->info.name] = reg_id.get();
+    reg_by_name[reg_rom->info.name] = reg_rom.get();
 
     last_message.clear();
     dev_infos.clear();
@@ -380,54 +381,53 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
             continue;
 
         if(j*2+3 >= ilen) {
-            IFDBG(0, "Warning: reply truncated %zu expected %zu", ilen*4, msg.buf.size()*4);
+            IFDBG(0, "reply truncated %zu expected %zu", ilen*4, msg.buf.size()*4);
             do_timeout(off);
             continue;
 
         }else if((ibuf[j*2 + 2]&0xfffffff0)!=msg.buf[j*2+2]) {
             // we don't expect re-ordering or change in command type
             // but allow 4 bits don't-care as future status bits.
-            IFDBG(0, "Warning: response type doesn't match request (%08x %08x)",
+            IFDBG(0, "response type doesn't match request (%08x %08x)",
                          (unsigned)ibuf[j*2 + 2], (unsigned)msg.buf[j*2+2]);
+            do_timeout(off);
             continue;
         }
 
+        epicsUInt32 cmd_addr = ntohl(ibuf[j*2 + 2]),
+                data     = ibuf[j*2 + 3];
+
+        epicsUInt32 offset = (cmd_addr&0x00ffffff) - msg.reg[j]->info.base_addr;
+
+        if(cmd_addr&0x10000000) {
+            msg.reg[j]->mem.at(offset) = data;
+        } else {
+            // writes simply echo written value, ignore data
+        }
+
+        if(!msg.reg[j]->received.at(offset)) {
+            msg.reg[j]->received.at(offset) = true;
+            msg.reg[j]->nremaining--;
+        }
+
+        if(!msg.reg[j]->nremaining)
         {
-            epicsUInt32 cmd_addr = ntohl(ibuf[j*2 + 2]),
-                        data     = ibuf[j*2 + 3];
+            assert(std::find(msg.reg[j]->received.begin(),
+                             msg.reg[j]->received.end(),
+                             false) == msg.reg[j]->received.end());
 
-            epicsUInt32 offset = (cmd_addr&0x00ffffff) - msg.reg[j]->info.base_addr;
+            // all addresses received
+            msg.reg[j]->state = DevReg::InSync;
 
-            if(cmd_addr&0x10000000) {
-                msg.reg[j]->mem.at(offset) = data;
-            } else {
-                // writes simply echo written value, ignore data
-            }
+            // register timestamp is the time when this last packet is received.
+            msg.reg[j]->rx = loop_time;
 
-            if(!msg.reg[j]->received.at(offset)) {
-                msg.reg[j]->received.at(offset) = true;
-                msg.reg[j]->nremaining--;
-            }
+            msg.reg[j]->stat = 0;
+            msg.reg[j]->sevr = 0;
+            msg.reg[j]->process();
 
-            if(!msg.reg[j]->nremaining)
-            {
-                assert(std::find(msg.reg[j]->received.begin(),
-                                 msg.reg[j]->received.end(),
-                                 false) == msg.reg[j]->received.end());
-
-                // all addresses received
-                msg.reg[j]->state = DevReg::InSync;
-
-                // register timestamp is the time when this last packet is received.
-                msg.reg[j]->rx = loop_time;
-
-                msg.reg[j]->stat = 0;
-                msg.reg[j]->sevr = 0;
-                msg.reg[j]->process();
-
-                msg.reg[j]->scan_interested();
-                IFDBG(1, "complete %s", msg.reg[j]->info.name.c_str());
-            }
+            msg.reg[j]->scan_interested();
+            IFDBG(1, "complete %s", msg.reg[j]->info.name.c_str());
         }
 
         msg.reg[j] = 0;
@@ -479,6 +479,7 @@ void Device::do_timeout(unsigned i)
         }
 
         if(!reg_send.empty() && reg_send.front()==reg) {
+            // timeout before all sent
             reg_send.pop_front();
         } else {
             assert(reg->next_send>=reg->mem.size());
@@ -498,6 +499,8 @@ void Device::do_timeout(unsigned i)
 
 void Device::handle_inspect()
 {
+    // Process ROM to extract JSON
+
     ROM rom;
 
     rom.parse((char*)&reg_rom->mem[0], reg_rom->mem.size()*4);
@@ -536,6 +539,7 @@ void Device::handle_inspect()
 
     RegInterest::infos_t infos;
 
+    // iterate registeres and find interested
     for(JBlob::const_iterator it = blob.begin(), end = blob.end(); it != end; ++it)
     {
         const JRegister& reg = it->second;
@@ -546,7 +550,8 @@ void Device::handle_inspect()
         IFDBG(2, "add register %s", reg.name.c_str());
 
         feed::auto_ptr<DevReg> dreg(new DevReg(this, reg));
-        // The following isn't exception safe (leaves dangling pointers)
+
+        // The following isn't directly exception safe (leaves dangling pointers)
         // however, the catch in run() will call reset() which cleans these up
 
         // fill in list of interested records
@@ -567,6 +572,7 @@ void Device::handle_inspect()
         reg_by_name[reg.name] = dreg.release();
     }
 
+    // Print driver JSON blob
     std::ostringstream strm;
 
     strm<<"{"
@@ -614,13 +620,15 @@ void Device::handle_state()
 
     switch(current) {
     case Error:
-        break; //TODO: remove for auto-recover?
+        break; //TODO: Error state latched.  Remove for auto-recover?
+
     case Idle:
         if(!peer_name.empty()) {
             current = Searching;
             IFDBG(3, "Searching for %s", peer_name.c_str());
         }
         break;
+
     case Searching:
         if(reg_id->state==DevReg::InSync) {
             // InSync means reply received
@@ -632,15 +640,18 @@ void Device::handle_state()
             reg_id->queue(false);
         }
         break;
+
     case Inspecting:
         if(reg_rom->state==DevReg::InSync) {
             handle_inspect();
             current = Running;
         }
         break;
+
     case Running:
         break;
     }
+
     if(prev!=current) {
         IFDBG(3, "Transition %s -> %s", current_name[prev], current_name[current]);
         scanIoRequest(current_changed);
@@ -659,6 +670,7 @@ void Device::run()
     for(size_t i=0; i<bufs.size(); i++)
         bufs[i].resize(pkt_size_limit+16);
 
+    // flags for which bufs[i] have been filled
     std::vector<bool> doProcess(inflight.size(), false);
 
     std::vector<PrintAddr> addrs(inflight.size());
@@ -680,7 +692,6 @@ void Device::run()
 
             if(want_to_send) {
                 fds[0].events |= POLLOUT;
-                want_to_send = false;
             }
 
             epicsTime after_poll;
@@ -765,19 +776,20 @@ void Device::run()
 
                         IFDBG(4, "Received %u messages", nrecv);
                     }
-
-                    if(fds[0].revents&POLLOUT) {
-                        fds[0].revents &= ~POLLOUT;
-                        // loop around and try to send
-                    }
-
-                    if(fds[0].revents || fds[1].revents)
-                        IFDBG(4, "Unhandled poll() events [0]=%x [1]=%x", fds[0].revents, fds[1].revents);
                 }
 
                 // re-lock
             }
             loop_time = after_poll;
+
+            if(fds[0].revents&POLLOUT) {
+                fds[0].revents &= ~POLLOUT;
+                want_to_send = false;
+                // loop around and try to send
+            }
+
+            if(fds[0].revents || fds[1].revents)
+                IFDBG(4, "Unhandled poll() events [0]=%x [1]=%x", fds[0].revents, fds[1].revents);
 
             for(size_t i=0, N=bufs.size(); i<N; i++)
             {

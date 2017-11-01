@@ -24,6 +24,7 @@ typedef epicsGuardRelease<epicsMutex> UnGuard;
 struct Device;
 struct DevReg;
 
+// Something (a PDB record) which wants to access register data
 struct RegInterest
 {
     // keys will be quoted, values are raw json
@@ -34,17 +35,23 @@ struct RegInterest
     IOSCANPVT changed;
     RegInterest();
     virtual ~RegInterest() {}
+    // callback after register read/write is complete
     virtual void complete() =0;
+    // debug
     virtual void show(std::ostream&, int lvl) {}
+    // called when building Device::dev_info
     virtual void getInfo(infos_t&) {}
 };
 
+// Device Register
 struct DevReg
 {
     DevReg(Device *dev, const JRegister& info, bool bootstrap = false);
 
     Device * const dev;
     const JRegister info;
+    // bootstrap (aka automatic or implicit) register?
+    // if yes, then not removed on disconnect/timeout
     const bool bootstrap;
 
     enum state_t {Invalid, //!< Idle, w/o valid data
@@ -71,6 +78,8 @@ struct DevReg
     // time last received (read or write)
     epicsTime rx;
 
+    // Records associated with this register
+    // Triggers when SCAN=I/O Intr
     typedef std::vector<RegInterest*> interested_t;
     interested_t interested;
     void scan_interested();
@@ -97,8 +106,12 @@ struct DevMsg
     // sequence number used (when Sent)
     epicsUInt32 seq;
 
+    // registers associated with this message.
+    // some may be NULL if message shorter than max.
+    // Does not include padding reads for really short messages
     DevReg* reg[nreg];
 
+    // packet construction buffer
     std::vector<epicsUInt32> buf;
 
     // timeout if no reply by this time
@@ -148,6 +161,8 @@ struct epicsShareClass Device : public epicsThreadRunable
 
     IOSCANPVT current_changed;
 
+    // optimization. time at which current loop iteration "starts"
+    // eg. worker thread start, or poll() returns
     epicsTime loop_time;
 
     // compressed json blob of our info.
@@ -165,12 +180,17 @@ struct epicsShareClass Device : public epicsThreadRunable
     typedef std::map<std::string, DevReg*> reg_by_name_t;
     reg_by_name_t reg_by_name;
 
+    // list of registers queued to be sent.
+    // front() entry is currently being sent
     typedef std::deque<DevReg*> reg_send_t;
     reg_send_t reg_send;
 
+    // keep track of all interestes.
+    // those current w/ an assocation, and those without
     typedef std::multimap<std::string, RegInterest*> reg_interested_t;
     reg_interested_t reg_interested;
 
+    // async. records to complete in next loop iteration
     DevReg::records_t records;
 
     // special registers which low level code knows about
@@ -178,23 +198,37 @@ struct epicsShareClass Device : public epicsThreadRunable
 
     std::vector<DevMsg> inflight;
 
+    // whether we should poll() to see if send() would block
     bool want_to_send;
     bool runner_stop;
+    // request to transition to Idle on next iteration
     bool reset_requested;
+
     epicsThread runner;
 
+    // cause runner to end poll() early.
+    // call after queuing for send
     void poke_runner();
 
     void request_reset();
     void reset();
 
+    // handle_* called from run().
+
+    // send as much as possible (empty reg_send to fill inflight)
     void handle_send(Guard &G);
+    // process a single received packet
     void handle_process(const std::vector<char>& buf, PrintAddr& addr);
+    // check for timeout of inflight requests
     void handle_timeout();
+    // timeout inflight[i]
     void do_timeout(unsigned i);
+    // process ROM and prepare for transition to Running
     void handle_inspect();
+    // state machine logic
     void handle_state();
 
+    // main loop
     virtual void run();
 
     void show(std::ostream& strm, int lvl) const;
