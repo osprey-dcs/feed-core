@@ -31,7 +31,16 @@ struct RecInfo : public RegInterest
     bool autocommit;
     bool wait;
 
+    // registry of logical signal names
+    typedef std::map<std::string, RecInfo*> signals_t;
+    static signals_t signals;
+
+    std::string regname;
+    // our logical signal name (or empty())
+    std::string signal;
+
     RecInfo(dbCommon *prec, Device *device);
+    ~RecInfo();
 
     // called during init_common_base()
     virtual void configure(const pairs_t& pairs);

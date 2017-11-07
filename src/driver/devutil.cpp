@@ -6,6 +6,8 @@
 
 #include "dev.h"
 
+RecInfo::signals_t RecInfo::signals;
+
 void split_pairs(const char *lstr, pairs_t& pairs)
 {
     while(*lstr==' ' || *lstr=='\t') lstr++; // skip leading whitespace
@@ -132,20 +134,34 @@ long init_common_base(dbCommon *prec, RecInfo*(*buildfn)(dbCommon *prec, Device 
 
         info->configure(pairs);
 
-        std::string regname;
-        if(get_pair(pairs, "reg", regname))
+        if(get_pair(pairs, "reg", info->regname))
         {
-            info->device->reg_interested.insert(std::make_pair(regname, info.get()));
-            IFDBG(1, "Attach to %s", regname.c_str());
+            info->device->reg_interested.insert(std::make_pair(info->regname, info.get()));
+            IFDBG(1, "Attach to %s", info->regname.c_str());
 
-            Device::reg_by_name_t::iterator it(info->device->reg_by_name.find(regname));
+            Device::reg_by_name_t::iterator it(info->device->reg_by_name.find(info->regname));
             if(it!=info->device->reg_by_name.end() && it->second->bootstrap) {
                 // bootstrap registers connected immediately and perpetually
                 info->reg = it->second;
                 it->second->interested.push_back(info.get());
-                IFDBG(1, "Attach to bootstrap");
+                IFDBG(2, "Attach to bootstrap");
             }
-        } else IFDBG(1, "No register named in: %s", lstr);
+        } else IFDBG(2, "No register named in: %s", lstr);
+
+        if(get_pair(pairs, "signal", info->signal))
+        {
+            RecInfo::signals_t::iterator it(RecInfo::signals.find(info->signal));
+
+            if(it!=RecInfo::signals.end()) {
+                fprintf(stderr, "%s: error : signal name already used by %s\n",
+                        prec->name, it->second->prec->name);
+                info->signal.clear();
+
+            } else {
+                RecInfo::signals[info->signal] = info.get();
+                IFDBG(1, "is signal %s", info->signal.c_str());
+            }
+        } else IFDBG(2, "No signal");
 
         prec->dpvt = info.release();
         return 0;
@@ -182,6 +198,13 @@ RecInfo::RecInfo(dbCommon *prec, Device *device)
     ,step(1)
     ,autocommit(true), wait(true)
 {}
+
+RecInfo::~RecInfo()
+{
+    if(!signal.empty()) {
+        signals.erase(signal);
+    }
+}
 
 void RecInfo::configure(const pairs_t& pairs) {
     get_pair(pairs, "offset", offset);

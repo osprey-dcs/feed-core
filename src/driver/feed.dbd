@@ -25,6 +25,10 @@ device(aai, INST_IO, devAaiFEEDWriteReg, "FEED Register Read")
 # register special
 device(bo, INST_IO, devBoFEEDWatchReg, "FEED Register Watch")
 
+# signal special
+device(longout, INST_IO, devLoFEEDSigOffset, "FEED Signal Offset")
+device(longout, INST_IO, devLoFEEDSigStep, "FEED Signal Step")
+
 driver(drvFEED)
 registrar(feedRegistrar)
 variable(feedTimeout, double)
