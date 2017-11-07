@@ -3,7 +3,7 @@
 dbLoadDatabase("../../dbd/feedioc.dbd",0,0)
 feedioc_registerRecordDeviceDriver(pdbbase) 
 
-var(feedNumInFlight, 8)
+var(feedNumInFlight, 1)
 
 epicsEnvSet("EPICS_DB_INCLUDE_PATH", ".:../../db")
 

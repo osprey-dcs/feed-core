@@ -14,4 +14,12 @@ file "feed_wf_acquire_signal.template"
 {BASE="$(P)", BIT=0, LETTER=C, SIZE=8192, PREF="$(P)ch1:"}
 {BASE="$(P)", BIT=0, LETTER=D, SIZE=8192, PREF="$(P)ch2:"}
 {BASE="$(P)", BIT=0, LETTER=E, SIZE=8192, PREF="$(P)ch3:"}
+{BASE="$(P)", BIT=0, LETTER=F, SIZE=8192, PREF="$(P)ch4:"}
+{BASE="$(P)", BIT=0, LETTER=G, SIZE=8192, PREF="$(P)ch5:"}
+{BASE="$(P)", BIT=0, LETTER=H, SIZE=8192, PREF="$(P)ch6:"}
+{BASE="$(P)", BIT=0, LETTER=I, SIZE=8192, PREF="$(P)ch7:"}
+{BASE="$(P)", BIT=0, LETTER=J, SIZE=8192, PREF="$(P)ch8:"}
+{BASE="$(P)", BIT=0, LETTER=K, SIZE=8192, PREF="$(P)ch9:"}
+{BASE="$(P)", BIT=0, LETTER=L, SIZE=8192, PREF="$(P)ch10:"}
+{BASE="$(P)", BIT=0, LETTER=M, SIZE=8192, PREF="$(P)ch11:"}
 }
