@@ -231,11 +231,11 @@ long read_register_aai(aaiRecord *prec)
 } // namespace
 
 // register writes
-DSET(devLoFEEDWriteReg, longout, init_common<RecInfo>, NULL, write_register_lo)
-DSET(devAoFEEDWriteReg, ao, init_common<RecInfo>, NULL, write_register_ao)
-DSET(devAaoFEEDWriteReg, aao, init_common<RecInfo>, NULL, write_register_aao)
+DSET(devLoFEEDWriteReg, longout, init_common<RecInfo>::fn, NULL, write_register_lo)
+DSET(devAoFEEDWriteReg, ao, init_common<RecInfo>::fn, NULL, write_register_ao)
+DSET(devAaoFEEDWriteReg, aao, init_common<RecInfo>::fn, NULL, write_register_aao)
 
 // register reads
-DSET(devLiFEEDWriteReg, longin, init_common<RecInfo>, get_reg_changed_intr, read_register_li)
-DSET(devAiFEEDWriteReg, ai, init_common<RecInfo>, get_reg_changed_intr, read_register_ai)
-DSET(devAaiFEEDWriteReg, aai, init_common<RecInfo>, get_reg_changed_intr, read_register_aai)
+DSET(devLiFEEDWriteReg, longin, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_li)
+DSET(devAiFEEDWriteReg, ai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_ai)
+DSET(devAaiFEEDWriteReg, aai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_aai)

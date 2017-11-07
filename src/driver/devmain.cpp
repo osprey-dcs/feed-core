@@ -194,15 +194,15 @@ long read_jblob(aaiRecord *prec)
 } // namespace
 
 // device-wide settings
-DSET(devSoFEEDDebug, longout, init_common<RecInfo>, NULL, write_debug)
-DSET(devSoFEEDAddress, stringout, init_common<RecInfo>, NULL, write_address)
-DSET(devBoFEEDCommit, bo, init_common<RecInfo>, NULL, write_commit)
+DSET(devSoFEEDDebug, longout, init_common<RecInfo>::fn, NULL, write_debug)
+DSET(devSoFEEDAddress, stringout, init_common<RecInfo>::fn, NULL, write_address)
+DSET(devBoFEEDCommit, bo, init_common<RecInfo>::fn, NULL, write_commit)
 
 // device-wide status
-DSET(devMbbiFEEDDevState, mbbi, init_common<RecInfo>, get_dev_changed_intr, read_dev_state)
-DSET(devLiFEEDCounter, longin, init_common<RecInfo>, get_dev_changed_intr, read_counter)
-DSET(devAaiFEEDError, aai, init_common<RecInfo>, get_dev_changed_intr, read_error)
-DSET(devAaiFEEDJBlob, aai, init_common<RecInfo>, get_dev_changed_intr, read_jblob)
+DSET(devMbbiFEEDDevState, mbbi, init_common<RecInfo>::fn, get_dev_changed_intr, read_dev_state)
+DSET(devLiFEEDCounter, longin, init_common<RecInfo>::fn, get_dev_changed_intr, read_counter)
+DSET(devAaiFEEDError, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_error)
+DSET(devAaiFEEDJBlob, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_jblob)
 
 // register status
-DSET(devMbbiFEEDRegState, mbbi, init_common<RecInfo>, get_reg_changed_intr, read_reg_state)
+DSET(devMbbiFEEDRegState, mbbi, init_common<RecInfo>::fn, get_reg_changed_intr, read_reg_state)

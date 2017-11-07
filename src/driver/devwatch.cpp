@@ -154,4 +154,4 @@ long write_test_mask(boRecord *prec)
 } // namespace
 
 // register special
-DSET(devBoFEEDWatchReg, bo, init_common<WaitInfo>, NULL, write_test_mask)
+DSET(devBoFEEDWatchReg, bo, init_common<WaitInfo>::fn, NULL, write_test_mask)
