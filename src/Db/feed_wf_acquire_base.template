@@ -53,7 +53,24 @@ record(aSub, "$(BASE)Mask3_") {
 
 # acquisition trigger logic
 
-# TODO: Single vs. Normal trigger mode (with holdoff)
+record(bo, "$(BASE)Mode-Sel") {
+    field(ZNAM, "Single")
+    field(ONAM, "Normal")
+    field(VAL , "0")
+    field(PINI, "YES")
+    field(FLNK, "$(BASE)Acq-Cmd")
+}
+
+record(ao, "$(BASE)HldOff-SP") {
+    field(DESC, "re-arm holdoff time")
+    field(OUT , "$(BASE)AcqDly_.ODLY NPP")
+    field(DRVH, "5.0")
+    field(DRVL, "0.1")
+    field(VAL , "1.0")
+    field(EGU , "s")
+    field(PREC, "2")
+    field(PINI, "YES")
+}
 
 record(bo, "$(BASE)Acq-Cmd") {
     field(DESC, "Start aquisition")
@@ -109,6 +126,8 @@ record(calc, "$(BASE)AcqCnt-I") {
     field(DISV, "-42")
     field(INPA, "$(BASE)AcqCnt-I")
     field(CALC, "A+1")
+    field(FLNK, "$(BASE)AcqDly_")
+    field(TPRO, "$(TPRO=0)")
 }
 
 record(calc, "$(BASE)AcqRate-I") {
@@ -117,4 +136,13 @@ record(calc, "$(BASE)AcqRate-I") {
     field(CALC, "C:=A-B;B:=A;C/10")
     field(EGU , "Hz")
     field(PREC, "2")
+}
+
+record(calcout, "$(BASE)AcqDly_") {
+    field(SDIS, "$(BASE)Mode-Sel")
+    field(DISV, "0") # disable when Single
+    field(CALC, "0")
+    field(ODLY, "1.0")
+    field(OUT , "$(BASE)Acq-Cmd PP")
+    field(TPRO, "$(TPRO=0)")
 }
