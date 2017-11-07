@@ -21,6 +21,7 @@ namespace {
     errlogPrintf("%s: Error %s\n", prec->name, e.what()); info->cleanup(); return 0; }
 
 #define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define ERR(FMT, ...) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 struct WaitInfo : public RecInfo
 {
@@ -64,13 +65,14 @@ struct WaitInfo : public RecInfo
         try {
             Guard G(device->lock);
             if(reg && reg->state==DevReg::InSync) {
-
+                // had successful reply
 
                 epicsUInt32 val(ntohl(reg->mem[offset]));
 
                 if((val & mask) == value)
                 {
-                    IFDBG(1, "Match");
+                    IFDBG(1, "Match %08x & %08x != %08x",
+                          (unsigned)val, (unsigned)mask, (unsigned)value);
 
                 } else {
                     IFDBG(1, "No match %08x & %08x != %08x",
@@ -78,11 +80,12 @@ struct WaitInfo : public RecInfo
 
                     callbackRequestDelayed(&cb, retry);
                     done = false;
+                    cb_inprogress = true;
                 }
 
             } else IFDBG(1, "Lost attachment  %p  %u", reg, reg ? reg->state : -1);
         }catch(std::exception& e){
-            errlogPrintf("%s: error in complete() : %s\n", prec->name, e.what());
+            ERR("error in complete() : %s\n", e.what());
             done = true;
         }
 
@@ -105,10 +108,11 @@ struct WaitInfo : public RecInfo
         void *raw;
         callbackGetUser(raw, cb);
         WaitInfo *self = (WaitInfo*)raw;
+        dbCommon *prec = self->prec;
         try {
             self->done();
         }catch(std::exception& e){
-            errlogPrintf("%s : Error in timer callback : %s\n", self->prec->name, e.what());
+            ERR("Error in timer callback : %s\n", e.what());
         }
     }
 };
@@ -132,8 +136,11 @@ long write_test_mask(boRecord *prec)
             if(!prec->pact) {
                 IFDBG(1, "Start Watch of %s", info->reg->info.name.c_str());
 
+                // queue read request
                 info->reg->queue(false);
+                // ensure our complete() is called after reply (or timeout)
                 info->reg->records.push_back(info);
+                // begin async
                 prec->pact = 1;
 
             } else {
