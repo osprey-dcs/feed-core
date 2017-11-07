@@ -10,7 +10,8 @@ DB += feed_reg_rw_array.template
 DB += feed_reg_rw_scalar.template
 DB += feed_reg_w_array.template
 
-DB += feed_wf_acquire.template
+DB += feed_wf_acquire_base.template
+DB += feed_wf_acquire_signal.template
 
 include $(TOP)/configure/RULES
 #----------------------------------------

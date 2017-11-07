@@ -71,7 +71,7 @@ struct WaitInfo : public RecInfo
 
                 if((val & mask) == value)
                 {
-                    IFDBG(1, "Match %08x & %08x != %08x",
+                    IFDBG(1, "Match %08x & %08x == %08x",
                           (unsigned)val, (unsigned)mask, (unsigned)value);
 
                 } else {

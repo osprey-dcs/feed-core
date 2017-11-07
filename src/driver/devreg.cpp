@@ -181,8 +181,8 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
                 }
 
                 (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                IFDBG(1, "Copy in %zu words.  sevr=%u\n",
-                                 nreq, info->reg->sevr);
+                IFDBG(1, "Copy in %zu words.  sevr=%u offset=%u step=%u\n",
+                                 nreq, info->reg->sevr, (unsigned)info->offset, (unsigned)info->step);
 
             } else {
                 if(!info->reg->queue(false)) {

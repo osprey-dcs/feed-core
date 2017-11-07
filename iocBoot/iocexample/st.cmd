@@ -14,8 +14,7 @@ epicsEnvSet("EPICS_DB_INCLUDE_PATH", ".:../../db")
 dbLoadTemplate("example.substitutions","P=TST:,NAME=device,REGSCAN=Passive,DEBUG=0")
 
 # LLRF waveform acquisition demo
-#dbLoadRecords("feed_wf_acquire.template","PREF=TST:ch:0:,NAME=device,BIT=0,MASK=1,TPRO=0")
-#dbLoadRecords("feed_wf_acquire.template","PREF=TST:ch:1:,NAME=device,BIT=1,MASK=2,TPRO=0")
+#dbLoadTemplate("acquire.substitutions", "P=TST:acq:,NAME=device,TPRO=0")
 
 iocInit()
 

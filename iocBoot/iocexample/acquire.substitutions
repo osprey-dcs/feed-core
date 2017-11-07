@@ -1,0 +1,17 @@
+# needs macros
+#
+#  P - record prefix
+#  NAME - device name
+
+file "feed_wf_acquire_base.template"
+{
+{BASE="$(P)", BIT=0, MASK=1, SIZE=8192}
+}
+
+file "feed_wf_acquire_signal.template"
+{
+{BASE="$(P)", BIT=0, LETTER=B, SIZE=8192, PREF="$(P)ch0:"}
+{BASE="$(P)", BIT=0, LETTER=C, SIZE=8192, PREF="$(P)ch1:"}
+{BASE="$(P)", BIT=0, LETTER=D, SIZE=8192, PREF="$(P)ch2:"}
+{BASE="$(P)", BIT=0, LETTER=E, SIZE=8192, PREF="$(P)ch3:"}
+}

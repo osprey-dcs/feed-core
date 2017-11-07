@@ -1,5 +1,6 @@
 #include <errno.h>
 
+#include <errlog.h>
 #include <recGbl.h>
 #include <alarm.h>
 #include <menuFtype.h>
@@ -13,7 +14,7 @@
 /* Fill in VALA with sequence
  *  [first, first+step, first+step*2, ...]
  *
- * result length is min(limit, .NEVA)
+ * result length is min(limit, .NOVA)
  *
 record(asub, "$(N)") {
     field(SNAM, "asub_feed_timebase")
@@ -21,7 +22,7 @@ record(asub, "$(N)") {
     field(FTB , "DOUBLE") # step size
     field(FTC , "ULONG")  # max element count limit
     field(FTVA, "DOUBLE") # output array
-    field(NEVA, "100")    # max output length
+    field(NOVA, "100")    # max output length
 }
  */
 static
@@ -35,7 +36,8 @@ long asub_feed_timebase(aSubRecord *prec)
 
     if(limit > prec->nova)
         limit = prec->nova;
-
+    if(prec->tpro>1)
+        errlogPrintf("%s nova=%u\n", prec->name, (unsigned)prec->nova);
     if(prec->fta!=menuFtypeDOUBLE
         || prec->ftb!=menuFtypeDOUBLE
         || prec->ftc!=menuFtypeULONG
@@ -48,7 +50,7 @@ long asub_feed_timebase(aSubRecord *prec)
         out[i] = val;
     }
 
-    prec->nova = limit;
+    prec->neva = limit;
     return 0;
 }
 
@@ -106,19 +108,18 @@ long asub_split_bits(aSubRecord *prec)
              **outputs = (epicsInt32**)&prec->valb;
 
     epicsUInt32 *outcnt = &prec->nevb;
-    const epicsUInt32 *outlim = &prec->novb;
 
     unsigned i;
     const epicsEnum16* outtype = &prec->ftvb;
 
     *bitcnt = 0;
 
-    for(i=0; mask && i<nout; mask>>=1, i++) {
-        if(outtype[i]!=menuFtypeLONG || outlim[i]==0u)
+    for(i=0; i<nout; mask>>=1, i++) {
+        if(outtype[i]!=menuFtypeLONG)
             continue;
 
         if(mask&1) {
-            *outputs[i] = *bitcnt++;
+            *outputs[i] = (*bitcnt)++;
 
         } else {
             *outputs[i] = -1;
@@ -126,6 +127,8 @@ long asub_split_bits(aSubRecord *prec)
 
         outcnt[i] = 1u;
     }
+
+    prec->neva = 1;
 
     return 0;
 }

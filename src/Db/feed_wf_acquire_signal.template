@@ -1,0 +1,97 @@
+# waveform buffer signal handling
+#
+# Write channel select mask to shell_#_dsp_chan_keep
+#
+# Write one to bit N in circle_buf_flip to enable acquisition of channel N
+#
+# Wait for bit N in llrf_circle_ready to be set
+#
+# Macros
+#  PREF - Record name prefix
+#  NAME - FEED Device name
+#  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
+#  REG  - array register name
+#  LETTER - letter of mask field (B -> N)
+#  SIZE - Max signal length (eg. 8192)
+
+# configuration logic
+
+record(longin, "$(PREF)Config_") {
+    # monitor offset computed in feed_wf_acquire_base.template
+    field(INP , "$(BASE)Mask3_.VAL$(LETTER) CP MSI")
+    field(TPRO, "$(TPRO=0)")
+    field(FLNK, "$(PREF)Off-SP")
+}
+
+record(longout, "$(PREF)Off-SP") {
+    # scan disable when this signal is not selected
+    field(SDIS, "$(PREF)Config_")
+    field(DISV, "-1")
+
+    field(DTYP, "FEED Signal Offset")
+    field(OUT , "@signal=$(PREF)")
+    field(OMSL, "closed_loop")
+    field(DOL , "$(BASE)Mask3_.VAL$(LETTER) MSI")
+    field(FLNK, "$(PREF)Step-SP")
+}
+
+record(longout, "$(PREF)Step-SP") {
+    field(DTYP, "FEED Signal Step")
+    field(OUT , "@signal=$(PREF)")
+    field(OMSL, "closed_loop")
+    field(DOL , "$(BASE)Mask3_.VALA MSI")
+    field(FLNK, "")
+}
+
+# waveform update logic
+
+record(longin, "$(PREF)Trg_") {
+    # scan disable when this signal is not selected
+    field(SDIS, "$(PREF)Config_")
+    field(DISV, "-1")
+
+    # monitor acquisition count in feed_wf_acquire_base.template
+    field(INP , "$(BASE)AcqCnt-I CP MSI")
+    field(FLNK, "$(PREF)I-I")
+}
+
+record(aai, "$(PREF)I-I") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "$(DESC=Reg $(NAME))")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data signal=$(PREF) wait=false")
+    field(FTVL, "LONG")
+    field(NELM, "$(SIZE)")
+    field(TSE , "-2")
+    field(FLNK, "$(PREF)I-NORD")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# workaround for bug in aaiRecord.  doesn't post monitors on NORD
+record(longin, "$(PREF)I-NORD") {
+    field(INP , "$(PREF)I-I.NORD")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(aSub, "$(PREF)T-I_") {
+    field(SNAM, "asub_feed_timebase")
+    # first value
+    field(FTA , "DOUBLE")
+    field(INPA, "0.0")
+    # step size
+    field(FTB , "DOUBLE")
+    field(INPB, "$(PREF)Step-SP CP MSI")
+    # max element count limit
+    # TODO: calulate real step size
+    field(FTC , "ULONG")
+    field(INPC, "$(PREF)I-NORD CP MSI")
+    # output array
+    field(FTVA, "DOUBLE")
+    field(NOVA, "$(SIZE)")
+    field(OUTA, "$(PREF)T-I PP MSI")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(aai, "$(PREF)T-I") {
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
+}
