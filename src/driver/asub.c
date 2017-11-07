@@ -77,7 +77,7 @@ long sub_count_bits(subRecord *prec)
 /* parse 16-bit mask.
  * For each bit I write output either -1 if not set
  * or N if set.
- * N = the number of set bits <= I
+ * N = the number of set bits >= I
  *
  * eg. A="0x5" (0b101) sets
  *  VALA = 2  # number of bits set
@@ -114,11 +114,11 @@ long asub_split_bits(aSubRecord *prec)
 
     *bitcnt = 0;
 
-    for(i=0; i<nout; mask>>=1, i++) {
+    for(i=0; i<nout; mask<<=1, i++) {
         if(outtype[i]!=menuFtypeLONG)
             continue;
 
-        if(mask&1) {
+        if(mask&(1u<<(nout-1))) {
             *outputs[i] = (*bitcnt)++;
 
         } else {
