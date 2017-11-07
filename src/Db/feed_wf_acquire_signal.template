@@ -79,7 +79,7 @@ record(aSub, "$(PREF)T-I_") {
     field(INPA, "0.0")
     # step size
     field(FTB , "DOUBLE")
-    field(INPB, "$(PREF)Step-SP CP MSI")
+    field(INPB, "$(BASE)Per-I CP MSI")
     # max element count limit
     # TODO: calulate real step size
     field(FTC , "ULONG")

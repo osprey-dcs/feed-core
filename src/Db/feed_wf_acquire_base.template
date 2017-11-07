@@ -13,6 +13,28 @@
 #  MASK - Channel bit mask (1 is first channel)
 #  SIZE - Max signal length (eg. 8192)
 
+# timebase logic
+
+record(longout, "$(BASE)Dec-SP") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_wave_samp_per")
+    field(PINI, "YES")
+    field(VAL , "1")
+    field(DRVH, "0xff")
+    field(DRVL, "1")
+    field(HOPR, "0xff")
+    field(LOPR, "1")
+    field(FLNK, "$(BASE)Per-I")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(calc, "$(BASE)Per-I") {
+    field(INPA, "$(BASE)Dec-SP")
+    field(INPB, "33") # cic_base_period
+    field(INPC, "94.29e6") # samp/sec
+    field(CALC, "B*2*A/C")
+}
+
 # channel mask logic
 
 record(mbboDirect, "$(BASE)Mask-SP") {
