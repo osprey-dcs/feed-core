@@ -133,6 +133,19 @@ record(bo, "...") {
 }
 ```
 
+### Sync
+
+The special DTYP="FEED Sync" support exists to allow sequencing during (re)connection.
+This asynchronous record will complete processing after every in-progress register read/write
+can completed (or timed out).
+
+```
+record(longin, "$(BASE)Init3_") {
+    field(DTYP, "FEED Sync")
+    field(INP , "@name=$(NAME)")
+}
+```
+
 ### Signals
 
 The Signals device supports allow some parameters specified in

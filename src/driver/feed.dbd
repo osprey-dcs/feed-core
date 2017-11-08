@@ -10,6 +10,9 @@ device(aai, INST_IO, devAaiFEEDError, "FEED Error")
 device(aai, INST_IO, devAaiFEEDJBlob, "FEED JBlob")
 device(longin, INST_IO, devLiFEEDConnect, "FEED On Connect")
 
+# device-wide special
+device(longin, INST_IO, devLiFEEDSync, "FEED Sync")
+
 # register status
 device(mbbi, INST_IO, devMbbiFEEDRegState, "FEED Register State")
 

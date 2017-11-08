@@ -48,7 +48,6 @@ record(ao, "$(PREF)Scale-SP") {
     field(OUT , "@signal=$(PREF)")
     field(VAL , "1.0")
     field(PREC, "3")
-    field(PINI, "YES")
 }
 
 # waveform update logic

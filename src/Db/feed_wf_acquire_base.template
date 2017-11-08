@@ -13,12 +13,42 @@
 #  MASK - Channel bit mask (1 is first channel)
 #  SIZE - Max signal length (eg. 8192)
 
+# local (re)initialization
+
+record(longin, "$(BASE)Init1_") {
+    field(DTYP, "FEED On Connect")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(FLNK, "$(BASE)Init2_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# push out channel mask and decimation factor
+record(fanout, "$(BASE)Init2_") {
+    field(LNK1, "$(BASE)Dec-SP")
+    field(LNK2, "$(BASE)Mask-SP")
+    field(LNK3, "")
+    field(LNK4, "")
+    field(LNK5, "")
+    field(LNK6, "$(BASE)Mode-Sel")
+    field(FLNK, "$(BASE)Init3_")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# wait for write completion before triggering first acquisition
+record(longin, "$(BASE)Init3_") {
+    field(DTYP, "FEED Sync")
+    field(INP , "@name=$(NAME)")
+    field(FLNK, "$(BASE)Mode-Sel")
+    field(TPRO, "$(TPRO=0)")
+}
+
 # timebase logic
 
 record(longout, "$(BASE)Dec-SP") {
     field(DTYP, "FEED Register Write")
     field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_wave_samp_per")
-    field(PINI, "YES")
     field(VAL , "1")
     field(DRVH, "0xff")
     field(DRVL, "1")
@@ -26,6 +56,7 @@ record(longout, "$(BASE)Dec-SP") {
     field(LOPR, "1")
     field(FLNK, "$(BASE)Per-I")
     field(TPRO, "$(TPRO=0)")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(calc, "$(BASE)Per-I") {
@@ -41,6 +72,7 @@ record(mbboDirect, "$(BASE)Mask-SP") {
     field(DESC, "Channel selection bitmask")
     field(OUT,  "$(BASE)Mask2_ PP")
     field(TPRO, "$(TPRO=0)")
+    info(autosaveFields_pass0, "VAL B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 BA BB")
 }
 
 record(longout, "$(BASE)Mask2_") {
@@ -67,8 +99,7 @@ record(aSub, "$(BASE)Mask3_") {
     field(FTVK, "LONG")
     field(FTVL, "LONG")
     field(FTVM, "LONG")
-    field(FTVN, "LONG")
-    # individual signals monitor one of VALB -> VALN
+    # individual signals monitor one of VALB -> VALM
     # to detect config changes
     field(EFLG, "ALWAYS")
 }
@@ -79,8 +110,8 @@ record(bo, "$(BASE)Mode-Sel") {
     field(ZNAM, "Single")
     field(ONAM, "Normal")
     field(VAL , "0")
-    field(PINI, "YES")
     field(FLNK, "$(BASE)Acq-Cmd")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(ao, "$(BASE)HldOff-SP") {
@@ -91,7 +122,7 @@ record(ao, "$(BASE)HldOff-SP") {
     field(VAL , "1.0")
     field(EGU , "s")
     field(PREC, "2")
-    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
 }
 
 record(bo, "$(BASE)Acq-Cmd") {

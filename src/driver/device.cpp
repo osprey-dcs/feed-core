@@ -66,8 +66,12 @@ DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
 
 void DevReg::process()
 {
+    // regular read/writes
     dev->records.splice(dev->records.end(),
                         records);
+    // syncs
+    dev->records.splice(dev->records.end(),
+                        records2);
 }
 
 void DevReg::scan_interested()
@@ -914,6 +918,15 @@ void DevReg::show(std::ostream& strm, int lvl) const
           ;
 
     for(DevReg::records_t::const_iterator it2 = this->records.begin(), end2 = this->records.end();
+        it2 != end2; ++it2)
+    {
+        RegInterest * const reg = *it2;
+        strm<<"    ";
+        reg->show(strm, lvl);
+        strm<<"\n";
+    }
+
+    for(DevReg::records_t::const_iterator it2 = this->records2.begin(), end2 = this->records2.end();
         it2 != end2; ++it2)
     {
         RegInterest * const reg = *it2;

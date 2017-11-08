@@ -38,6 +38,7 @@
 #include <epicsExport.h>
 
 #define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define ERR(FMT, ...) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 long get_on_connect_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
@@ -206,6 +207,91 @@ long read_jblob(aaiRecord *prec)
     }CATCH()
 }
 
+#undef TRY
+#define TRY SyncInfo *info = (SyncInfo*)prec->dpvt; if(!info) { \
+    (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
+    Device *device=info->device; (void)device; try
+
+
+struct SyncInfo : public RecInfo
+{
+    unsigned wait_for;
+
+    SyncInfo(dbCommon *prec, Device *dev)
+        :RecInfo(prec, dev)
+        ,wait_for(0u)
+    {}
+
+    void complete() {
+        bool done = true;
+        try {
+            Guard G(device->lock);
+
+            if(wait_for==0) {
+                throw std::logic_error("SyncInfo too many completes");
+            } else {
+                wait_for--;
+                if(wait_for!=0) {
+                    done = false;
+                    IFDBG(1, "%u remaining", wait_for);
+                } IFDBG(1, "Sync'd");
+            }
+
+        }catch(std::exception& e){
+            ERR("error in complete() : %s\n", e.what());
+            done = true;
+        }
+
+        if(done)
+            RecInfo::complete();
+    }
+
+    void cleanup() {
+        RecInfo::cleanup();
+        wait_for = 0u;
+    }
+};
+
+long read_sync(longinRecord *prec)
+{
+    TRY {
+        if(!prec->pact) {
+            if(device->reg_send.empty())
+                IFDBG(1, "Send queue empty");
+
+            info->wait_for = 0u;
+
+            // add to completion list of all queued registers
+            for(Device::reg_send_t::iterator it(device->reg_send.begin()), end(device->reg_send.end());
+                it != end; ++it)
+            {
+                DevReg *reg = *it;
+
+                // use records2 list so that we complete() after
+                // regular read/writes
+                reg->records2.push_back(info);
+                info->wait_for++;
+
+                prec->pact = 1;
+            }
+
+            if(prec->pact)
+                IFDBG(1, "Wait for %u registers", info->wait_for);
+
+        } else {
+            if(device->current!=Device::Running || info->wait_for)
+                (void)(recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM));
+
+            info->wait_for = 0u;
+            prec->pact = 0;
+            prec->val++;
+            IFDBG(1, "Complete");
+        }
+
+        return 0;
+    }CATCH()
+}
+
 } // namespace
 
 // device-wide settings
@@ -222,3 +308,6 @@ DSET(devLiFEEDConnect, longin, init_common<RecInfo>::fn, get_on_connect_intr, re
 
 // register status
 DSET(devMbbiFEEDRegState, mbbi, init_common<RecInfo>::fn, get_reg_changed_intr, read_reg_state)
+
+// device-wide special
+DSET(devLiFEEDSync, longin, init_common<SyncInfo>::fn, NULL, read_sync)

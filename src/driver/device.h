@@ -87,7 +87,8 @@ struct DevReg
     // async. record processing waiting on this register
     short stat, sevr;
     typedef std::list<RegInterest*> records_t;
-    records_t records;
+    records_t records,
+              records2;
 
     void process();
 
