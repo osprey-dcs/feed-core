@@ -5,21 +5,34 @@
 
 file "feed_wf_acquire_base.template"
 {
-{BASE="$(P)", BIT=0, MASK=1, SIZE=8192}
+{BASE="$(P)dev0:", BIT=0, MASK=1, SIZE=8192}
+{BASE="$(P)dev1:", BIT=1, MASK=2, SIZE=8192}
 }
 
 file "feed_wf_acquire_signal.template"
 {
-{BASE="$(P)", BIT=0, LETTER=B, SIZE=8192, PREF="$(P)ch0:"}
-{BASE="$(P)", BIT=0, LETTER=C, SIZE=8192, PREF="$(P)ch1:"}
-{BASE="$(P)", BIT=0, LETTER=D, SIZE=8192, PREF="$(P)ch2:"}
-{BASE="$(P)", BIT=0, LETTER=E, SIZE=8192, PREF="$(P)ch3:"}
-{BASE="$(P)", BIT=0, LETTER=F, SIZE=8192, PREF="$(P)ch4:"}
-{BASE="$(P)", BIT=0, LETTER=G, SIZE=8192, PREF="$(P)ch5:"}
-{BASE="$(P)", BIT=0, LETTER=H, SIZE=8192, PREF="$(P)ch6:"}
-{BASE="$(P)", BIT=0, LETTER=I, SIZE=8192, PREF="$(P)ch7:"}
-{BASE="$(P)", BIT=0, LETTER=J, SIZE=8192, PREF="$(P)ch8:"}
-{BASE="$(P)", BIT=0, LETTER=K, SIZE=8192, PREF="$(P)ch9:"}
-{BASE="$(P)", BIT=0, LETTER=L, SIZE=8192, PREF="$(P)ch10:"}
-{BASE="$(P)", BIT=0, LETTER=M, SIZE=8192, PREF="$(P)ch11:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=B, SIZE=8192, PREF="$(P)dev0:ch0:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=C, SIZE=8192, PREF="$(P)dev0:ch1:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=D, SIZE=8192, PREF="$(P)dev0:ch2:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=E, SIZE=8192, PREF="$(P)dev0:ch3:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=F, SIZE=8192, PREF="$(P)dev0:ch4:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=G, SIZE=8192, PREF="$(P)dev0:ch5:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=H, SIZE=8192, PREF="$(P)dev0:ch6:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=I, SIZE=8192, PREF="$(P)dev0:ch7:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=J, SIZE=8192, PREF="$(P)dev0:ch8:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=K, SIZE=8192, PREF="$(P)dev0:ch9:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=L, SIZE=8192, PREF="$(P)dev0:ch10:"}
+{BASE="$(P)dev0:", BIT=0, LETTER=M, SIZE=8192, PREF="$(P)dev0:ch11:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=B, SIZE=8192, PREF="$(P)dev1:ch0:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=C, SIZE=8192, PREF="$(P)dev1:ch1:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=D, SIZE=8192, PREF="$(P)dev1:ch2:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=E, SIZE=8192, PREF="$(P)dev1:ch3:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=F, SIZE=8192, PREF="$(P)dev1:ch4:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=G, SIZE=8192, PREF="$(P)dev1:ch5:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=H, SIZE=8192, PREF="$(P)dev1:ch6:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=I, SIZE=8192, PREF="$(P)dev1:ch7:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=J, SIZE=8192, PREF="$(P)dev1:ch8:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=K, SIZE=8192, PREF="$(P)dev1:ch9:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=L, SIZE=8192, PREF="$(P)dev1:ch10:"}
+{BASE="$(P)dev1:", BIT=0, LETTER=M, SIZE=8192, PREF="$(P)dev1:ch11:"}
 }
