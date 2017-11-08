@@ -28,6 +28,8 @@ struct RecInfo : public RegInterest
     epicsUInt32 offset, // offset of first element (in words)
                 step;   // increment between elements (in words)
 
+    double scale;
+
     bool autocommit;
     bool wait;
 

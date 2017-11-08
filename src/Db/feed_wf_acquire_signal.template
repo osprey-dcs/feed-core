@@ -11,7 +11,7 @@
 #  NAME - FEED Device name
 #  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
 #  REG  - array register name
-#  LETTER - letter of mask field (B -> N)
+#  LETTER - letter of mask field (B -> M)
 #  SIZE - Max signal length (eg. 8192)
 
 # configuration logic
@@ -43,6 +43,14 @@ record(longout, "$(PREF)Step-SP") {
     field(FLNK, "")
 }
 
+record(ao, "$(PREF)Scale-SP") {
+    field(DTYP, "FEED Signal Scale")
+    field(OUT , "@signal=$(PREF)")
+    field(VAL , "1.0")
+    field(PREC, "3")
+    field(PINI, "YES")
+}
+
 # waveform update logic
 
 record(longin, "$(PREF)Trg_") {
@@ -59,7 +67,7 @@ record(aai, "$(PREF)I-I") {
     field(DTYP, "FEED Register Read")
     field(DESC, "$(DESC=Reg $(NAME))")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data signal=$(PREF) wait=false")
-    field(FTVL, "LONG")
+    field(FTVL, "DOUBLE")
     field(NELM, "$(SIZE)")
     field(TSE , "-2")
     field(FLNK, "$(PREF)I-NORD")

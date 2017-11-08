@@ -8,6 +8,7 @@
 #include <devSup.h>
 
 #include <longoutRecord.h>
+#include <aoRecord.h>
 
 #include "device.h"
 #include "dev.h"
@@ -84,6 +85,14 @@ long init_signal(dbCommon *prec)
     }
 }
 
+static long init_signal2(dbCommon *prec)
+{
+    long ret = init_signal(prec);
+    if(ret==0)
+        ret = 2;
+    return ret;
+}
+
 static
 long write_signal_offset(longoutRecord *prec)
 {
@@ -120,7 +129,26 @@ long write_signal_step(longoutRecord *prec)
     }CATCH()
 }
 
+static
+long write_signal_slope(aoRecord *prec)
+{
+    TRY {
+        if(prec->val<=0) {
+            (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
+            return EINVAL;
+        }
+
+        Guard G(device->lock);
+
+        info->siginfo->scale = prec->val;
+        IFDBG(1, "set step=%u", (unsigned)info->siginfo->step);
+
+        return 0;
+    }CATCH()
+}
+
 } // namespace
 
 DSET(devLoFEEDSigOffset, longout, init_signal, NULL, write_signal_offset)
 DSET(devLoFEEDSigStep, longout, init_signal, NULL, write_signal_step)
+DSET(devAoFEEDSigScale, ao, init_signal2, NULL, write_signal_slope)

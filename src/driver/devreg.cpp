@@ -72,12 +72,13 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, unsign
                 for(size_t i=info->offset, N = info->reg->mem.size();
                     i<N && out+valsize<=end; i+=info->step, out+=valsize)
                 {
-                    epicsUInt32 val;
+                    epicsUInt32 val = 0u;
 
                     switch(valsize) {
                     case 1: val = *(const epicsUInt8*)raw; break;
                     case 2: val = *(const epicsUInt16*)raw; break;
                     case 4: val = *(const epicsUInt32*)raw; break;
+                    case 8: val = (*(const double*)raw) / info->scale; break;
                     }
 
                     info->reg->mem[i] = htonl(val);
@@ -167,6 +168,12 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
                     case 1: *(epicsUInt8*)out = val; break;
                     case 2: *(epicsUInt16*)out = val; break;
                     case 4: *(epicsUInt32*)out = val; break;
+                    case 8:
+                        if(signmask)
+                            *(double*)out = epicsInt32(val) * info->scale;
+                        else
+                            *(double*)out = val * info->scale;
+                        break;
                     }
                 }
 
