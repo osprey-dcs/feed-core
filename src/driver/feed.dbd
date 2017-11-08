@@ -8,6 +8,7 @@ device(mbbi, INST_IO, devMbbiFEEDDevState, "FEED State")
 device(longin, INST_IO, devLiFEEDCounter, "FEED Counter")
 device(aai, INST_IO, devAaiFEEDError, "FEED Error")
 device(aai, INST_IO, devAaiFEEDJBlob, "FEED JBlob")
+device(longin, INST_IO, devLiFEEDConnect, "FEED On Connect")
 
 # register status
 device(mbbi, INST_IO, devMbbiFEEDRegState, "FEED Register State")

@@ -164,6 +164,7 @@ Device::Device(const std::__cxx11::string &name, osiSockAddr &ep)
     // pseudo-random initial sequence number
     send_seq = now.nsec;
 
+    scanIoInit(&on_connect);
     scanIoInit(&current_changed);
     last_message = "Startup";
 
@@ -644,6 +645,8 @@ void Device::handle_state()
     case Inspecting:
         if(reg_rom->state==DevReg::InSync) {
             handle_inspect();
+            IFDBG(3, "Request on_connect scan");
+            scanIoRequest(on_connect);
             current = Running;
         }
         break;

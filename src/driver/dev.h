@@ -76,6 +76,8 @@ struct init_common {
     }
 };
 
+// attach to Device::on_connect
+long get_on_connect_intr(int dir, dbCommon *prec, IOSCANPVT *scan);
 // attach to Device::current_changed
 long get_dev_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan);
 // attach to DevReg::changed

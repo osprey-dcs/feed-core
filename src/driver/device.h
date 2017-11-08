@@ -159,7 +159,7 @@ struct epicsShareClass Device : public epicsThreadRunable
 
     inline bool active() const { return current!=Error && current!=Idle; }
 
-    IOSCANPVT current_changed;
+    IOSCANPVT current_changed, on_connect;
 
     // optimization. time at which current loop iteration "starts"
     // eg. worker thread start, or poll() returns

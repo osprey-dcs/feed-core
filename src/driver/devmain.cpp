@@ -39,6 +39,14 @@
 
 #define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
+long get_on_connect_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
+{
+    RecInfo *info = (RecInfo*)prec->dpvt;
+    if(info)
+        *scan = info->device->on_connect;
+    return scan ? 0 : ENODEV;
+}
+
 long get_dev_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
     RecInfo *info = (RecInfo*)prec->dpvt;
@@ -101,6 +109,13 @@ long read_dev_state(mbbiRecord *prec)
         prec->rval = (int)device->current;
         return 0;
     }CATCH()
+}
+
+// something to go with get_on_connect_intr()
+long read_inc(longinRecord *prec)
+{
+    prec->val++;
+    return 0;
 }
 
 long read_reg_state(mbbiRecord *prec)
@@ -203,6 +218,7 @@ DSET(devMbbiFEEDDevState, mbbi, init_common<RecInfo>::fn, get_dev_changed_intr, 
 DSET(devLiFEEDCounter, longin, init_common<RecInfo>::fn, get_dev_changed_intr, read_counter)
 DSET(devAaiFEEDError, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_error)
 DSET(devAaiFEEDJBlob, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_jblob)
+DSET(devLiFEEDConnect, longin, init_common<RecInfo>::fn, get_on_connect_intr, read_inc)
 
 // register status
 DSET(devMbbiFEEDRegState, mbbi, init_common<RecInfo>::fn, get_reg_changed_intr, read_reg_state)
