@@ -71,6 +71,7 @@ Allowed keys are:
 * mask=
 * value=
 * retry=
+* scale=  (only for aai/aao w/ FTVL=DOUBLE)
 
 All INP/OUT links must specify a Device name with 'name='.
 Use of other keys is described in the following.
@@ -131,6 +132,37 @@ record(bo, "...") {
     #  offset=0  Index in register from which a (first) value taken
 }
 ```
+
+### Signals
+
+The Signals device supports allow some parameters specified in
+an INP/OUT link to be changed after initialization via
+a different record.
+
+The association between two records is made with the 'signal=' parameter.
+Which is a IOC wide unique identifier (unique to one of the  Register Read/Write DTYPs).
+
+Signal names may be selected arbitrarily.
+It is suggeste to use a combination of record name prefix,
+device name, and/or register name.
+
+In this example, the "$(P)Off-SP" controls, and overrides, the offset=
+paramter for "$(P)-I".
+
+```
+record(aai, "$(P)-I") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=<devicename> reg=<regname> signal=$(P):<regname>")
+    ...
+}
+register(longout, "$(P)Off-SP") {
+    field(DTYP, "FEED Signal Offset")
+    field(OUT , "@signal=$(P):<regname>")
+    ...
+}
+```
+
+Currently only the offset, step=, and scale= parameters may be override via the Signals mechanism.
 
 Status Monitoring
 -----------------
