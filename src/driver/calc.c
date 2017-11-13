@@ -104,10 +104,8 @@ long update_expr(aSubRecord* prec, calcPriv *priv)
         strcpy(priv->prev, "0");
 
     if(postfix(priv->prev, priv->postfix, &err)) {
-        int junk;
+        (void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
 
-        junk=recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
-        junk=4; /* quiet warning */
         errlogPrintf("%s: Expression error: %s from '%s'\n",
                      prec->name, calcErrorStr(err), priv->prev);
         return -1;
@@ -210,7 +208,7 @@ long gen_waveform(aSubRecord* prec)
         // calculate
 	if (calcPerform(priv->stack, &val, priv->postfix)) {
 	    recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
-	} else prec->udf = isnan(prec->val);
+    } else prec->udf = isnan(val);
 
         // update outputs from stack
         for(i=0; i<CALCPERFORM_NARGS; ++i) {
@@ -277,13 +275,13 @@ long convert_iq2ap(aSubRecord* prec)
             if(ft[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
                 errlogPrintf("%s: FT%c must be DOUBLE\n",
-                             prec->name, 'A'+i);
+                             prec->name, 'A'+(char)i);
                 return 1;
 
             } else if(ftv[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
                 errlogPrintf("%s: FTV%c must be DOUBLE\n",
-                             prec->name, 'A'+i);
+                             prec->name, 'A'+(char)i);
                 return 1;
 
             }
@@ -347,13 +345,13 @@ long convert_ap2iq(aSubRecord* prec)
             if(ft[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
                 errlogPrintf("%s: FT%c must be DOUBLE\n",
-                             prec->name, 'A'+i);
+                             prec->name, 'A'+(char)i);
                 return 1;
 
             } else if(ftv[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
                 errlogPrintf("%s: FTV%c must be DOUBLE\n",
-                             prec->name, 'A'+i);
+                             prec->name, 'A'+(char)i);
                 return 1;
 
             }
@@ -428,7 +426,7 @@ long wf_stats(aSubRecord* prec)
             if(ft[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
                 errlogPrintf("%s: FT%c must be DOUBLE\n",
-                             prec->name, 'A'+i);
+                             prec->name, 'A'+(char)i);
                 return 1;
 
             }
@@ -437,7 +435,7 @@ long wf_stats(aSubRecord* prec)
             if(ftv[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
                 errlogPrintf("%s: FTV%c must be DOUBLE\n",
-                             prec->name, 'A'+i);
+                             prec->name, 'A'+(char)i);
                 return 1;
 
             }
@@ -564,10 +562,10 @@ static registryFunctionRef asub_seq[] = {
 };
 
 static
-void calcRegister(void) {
+void rfcalcRegister(void) {
     registryFunctionRefAdd(asub_seq, NELEMENTS(asub_seq));
 }
 
 #include <epicsExport.h>
 
-epicsExportRegistrar(calcRegister);
+epicsExportRegistrar(rfcalcRegister);

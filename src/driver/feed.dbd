@@ -41,3 +41,4 @@ variable(feedNumInFlight, int)
 
 # utilities
 registrar(asubFEEDRegistrar)
+registrar(rfcalcRegister)
