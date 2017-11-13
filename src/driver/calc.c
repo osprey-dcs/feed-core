@@ -72,9 +72,9 @@ struct calcPriv {
     unsigned long val; // output used for the expression result
 
     double *curin[CALCPERFORM_NARGS],
-           *lastin[CALCPERFORM_NARGS],
-           *curout[CALCPERFORM_NARGS],
-           *lastout[CALCPERFORM_NARGS];
+    *lastin[CALCPERFORM_NARGS],
+    *curout[CALCPERFORM_NARGS],
+    *lastout[CALCPERFORM_NARGS];
 };
 typedef struct calcPriv calcPriv;
 
@@ -206,9 +206,9 @@ long gen_waveform(aSubRecord* prec)
         }
 
         // calculate
-	if (calcPerform(priv->stack, &val, priv->postfix)) {
-	    recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
-    } else prec->udf = isnan(val);
+        if (calcPerform(priv->stack, &val, priv->postfix)) {
+            recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+        } else prec->udf = isnan(val);
 
         // update outputs from stack
         for(i=0; i<CALCPERFORM_NARGS; ++i) {
@@ -262,7 +262,7 @@ long convert_iq2ap(aSubRecord* prec)
 {
     size_t i;
     epicsEnum16 *ft = &prec->fta,
-                *ftv= &prec->ftva;
+            *ftv= &prec->ftva;
     // actual length of inputs, and max length of outputs
     epicsUInt32 lens[4] = { prec->nea, prec->neb, prec->nova, prec->novb };
     epicsUInt32 len = lens[0];
@@ -293,9 +293,9 @@ long convert_iq2ap(aSubRecord* prec)
         len = MIN(len, lens[i]);
 
     double *I = (double*)prec->a,
-           *Q = (double*)prec->b,
-           *A = (double*)prec->vala,
-           *P = (double*)prec->valb;
+            *Q = (double*)prec->b,
+            *A = (double*)prec->vala,
+            *P = (double*)prec->valb;
 
     for(i=0; i<len; i++) {
         A[i] = sqrt(I[i]*I[i] + Q[i]*Q[i]);
@@ -331,7 +331,7 @@ long convert_ap2iq(aSubRecord* prec)
 {
     size_t i;
     epicsEnum16 *ft = &prec->fta,
-                *ftv= &prec->ftva;
+            *ftv= &prec->ftva;
     // actual length of inputs, and max length of outputs
     epicsUInt32 lens[4] = { prec->nea, prec->neb, prec->nova, prec->novb };
     epicsUInt32 len = lens[0];
@@ -363,9 +363,9 @@ long convert_ap2iq(aSubRecord* prec)
         len = MIN(len, lens[i]);
 
     double *I = (double*)prec->vala,
-           *Q = (double*)prec->valb,
-           *A = (double*)prec->a,
-           *P = (double*)prec->b;
+            *Q = (double*)prec->valb,
+            *A = (double*)prec->a,
+            *P = (double*)prec->b;
 
     for(i=0; i<len; i++) {
         I[i] = A[i] * cos(P[i] * PI / 180.0);
@@ -406,16 +406,16 @@ long wf_stats(aSubRecord* prec)
 {
     size_t i, N=0;
     epicsEnum16 *ft = &prec->fta,
-                *ftv= &prec->ftva;
+            *ftv= &prec->ftva;
     // actual length of inputs
     epicsUInt32 len = MIN(prec->nea, prec->neb);
 
     double *data = prec->a,
-           *time = prec->b,
-           sum   = 0.0,
-           sum2  = 0.0,
-           start = *(double*)prec->c,
-           width = *(double*)prec->d;
+            *time = prec->b,
+            sum   = 0.0,
+            sum2  = 0.0,
+            start = *(double*)prec->c,
+            width = *(double*)prec->d;
 
 
     if(prec->dpvt==BADMAGIC)
@@ -496,8 +496,8 @@ long unwrap(aSubRecord* prec)
 {
     size_t i;
     double *in = (double*)prec->a,
-           *out= (double*)prec->vala,
-           delta, thres;
+            *out= (double*)prec->vala,
+            delta, thres;
     epicsUInt32 len=MIN(prec->nea, prec->nova);
 
     if(prec->dpvt==BADMAGIC)
@@ -505,7 +505,7 @@ long unwrap(aSubRecord* prec)
     if(prec->dpvt!=MAGIC) {
         // Only do type checks in not already passed
         if(prec->fta!=menuFtypeDOUBLE &&
-           prec->ftb!=menuFtypeDOUBLE) {
+                prec->ftb!=menuFtypeDOUBLE) {
             prec->dpvt=BADMAGIC;
             errlogPrintf("%s: FTA and FTB must be DOUBLE\n",
                          prec->name);
