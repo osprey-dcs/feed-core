@@ -43,8 +43,8 @@ record(longout, "$(PREF)Step-SP") {
     field(FLNK, "")
 }
 
-record(calc, "$(PREF)Scale-Calc_") {
-    field(INPA, "$(BASE)AmpCalc CP MSI")
+record(calcout, "$(PREF)Scale-Calc_") {
+    field(INPA, "$(BASE)AmpCalc.VALB CP MSI")
     # take the full scale value and compute our scaling factor
     field(CALC, "1/A")
     # if for some reason we get a junk (INVALID) scaling factor, default to 1.0
@@ -57,7 +57,7 @@ record(ao, "$(PREF)Scale-SP") {
     field(DTYP, "FEED Signal Scale")
     field(OUT , "@signal=$(PREF)")
     field(VAL , "1.0")
-    field(PREC, "3")
+    field(PREC, "9")
 }
 
 # waveform update logic

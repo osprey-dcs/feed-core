@@ -83,7 +83,7 @@ record(aSub, "$(BASE)AmpCalc") {
 record(longout, "$(BASE)WaveShift-SP") {
     field(DTYP, "FEED Register Write")
     field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_wave_shift")
-    field(DRVL, "1")
+    field(DRVL, "0")
     field(DRVH, "255")
 }
 
