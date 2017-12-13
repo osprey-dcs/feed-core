@@ -1,3 +1,4 @@
+#include <stdexcept>
 
 #include <errlog.h>
 #include <epicsMath.h>
@@ -23,7 +24,7 @@ double testApproxEqual(const char *pv, double expected, double max_delta)
 
     status = dbGetField(&addr, DBF_DOUBLE, &ret, 0, 0, 0);
     if (status) {
-        testFail("dbGetField(\"%s\", %d, ...) -> %#lx (%s)", pv, DBF_DOUBLE, status, errSymMsg(status));
+        testFail("dbGetField(\"%s\", %d, ...) -> 0x%lx", pv, DBF_DOUBLE, status);
         return epicsNAN;
     }
     testOk(fabs(expected-ret)<=max_delta, "%s -> %g ~= %g (max_delta %g)",
