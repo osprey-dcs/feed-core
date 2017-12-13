@@ -4,6 +4,7 @@
 #include <recGbl.h>
 #include <alarm.h>
 #include <menuFtype.h>
+#include <epicsMath.h>
 
 #include <subRecord.h>
 #include <aSubRecord.h>
@@ -133,11 +134,47 @@ long asub_split_bits(aSubRecord *prec)
     return 0;
 }
 
+/* calculate shift and Y scaling factor
+ * record(asub, "$(N)") {
+ *   field(SNAM, "asub_yscale")
+ *   field(FTA , "ULONG") # wave_samp_per register
+ *   field(FTB , "ULONG") # cic_period
+ *   field(FTVA, "ULONG") # wave_shift
+ *   field(FTVB, "DOUBLE") # yscale
+ * }
+ */
+static
+long asub_yscale(aSubRecord *prec)
+{
+    const long shift_base = 4;
+    const epicsUInt32 wave_samp_per = *(const epicsUInt32*)prec->a,
+                      cic_period    = *(const epicsUInt32*)prec->b;
+    epicsUInt32 *wave_shift = (epicsUInt32*)prec->vala;
+    double *yscale = (double*)prec->valb;
+
+    const double lo_cheat = (74694*1.646760258)/pow(2, 17);
+    const long   cic_n    = wave_samp_per * cic_period;
+    const double shift_min= log2(cic_n*cic_n * lo_cheat)-12;
+
+    epicsInt32 wave_shift_temp = ceil(shift_min/2);
+    if(wave_shift_temp<0)
+        *wave_shift = 0;
+    else
+        *wave_shift = wave_shift_temp;
+
+    *yscale = lo_cheat * (33 * wave_samp_per)*(33 * wave_samp_per) * pow(4, (8 - *wave_shift))/512.0/pow(2, shift_base);
+
+    prec->udf = isnan(*yscale);
+
+    return 0;
+}
+
 static
 void asubFEEDRegistrar(void)
 {
     registryFunctionAdd("asub_feed_timebase", (REGISTRYFUNCTION)&asub_feed_timebase);
     registryFunctionAdd("asub_split_bits", (REGISTRYFUNCTION)&asub_split_bits);
     registryFunctionAdd("sub_count_bits", (REGISTRYFUNCTION)&sub_count_bits);
+    registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
 }
 epicsExportRegistrar(asubFEEDRegistrar);

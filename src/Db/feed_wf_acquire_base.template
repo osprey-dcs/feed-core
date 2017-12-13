@@ -64,6 +64,27 @@ record(calc, "$(BASE)Per-I") {
     field(INPB, "33") # cic_base_period
     field(INPC, "94.29e6") # samp/sec
     field(CALC, "B*2*A/C")
+    field(FLNK, "$(BASE)AmpCalc")
+}
+
+# amplitude
+
+record(aSub, "$(BASE)AmpCalc") {
+    field(SNAM, "asub_yscale")
+    field(FTA , "ULONG") # wave_samp_per register
+    field(INPA, "$(BASE)Dec-SP MSI NPP")
+    field(FTB , "ULONG") # cic_period
+    field(INPB, "33")
+    field(FTVA, "ULONG") # wave_shift
+    field(OUTA, "$(BASE)WaveShift-SP MSI PP")
+    field(FTVB, "DOUBLE") # yscale  (referenced in feed_wf_acquire_signal.template)
+}
+
+record(longout, "$(BASE)WaveShift-SP") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_wave_shift")
+    field(DRVL, "1")
+    field(DRVH, "255")
 }
 
 # channel mask logic

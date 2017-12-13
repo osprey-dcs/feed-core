@@ -37,6 +37,11 @@ testdevice_SRCS += testdevice.cpp
 testdevice_SRCS += testfeed_registerRecordDeviceDriver.cpp
 TESTS += testdevice
 
+TESTPROD_HOST += testsub
+testsub_SRCS += testsub.cpp
+testsub_SRCS += testfeed_registerRecordDeviceDriver.cpp
+TESTS += testsub
+
 TESTSCRIPTS_HOST += $(TESTS:%=%.t)
 
 #===========================

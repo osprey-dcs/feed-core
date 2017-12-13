@@ -1,0 +1,7 @@
+record(aSub, "yscale") {
+    field(SNAM, "asub_yscale")
+    field(FTA , "ULONG") # wave_samp_per register
+    field(FTB , "ULONG") # cic_period
+    field(FTVA, "ULONG") # wave_shift
+    field(FTVB, "DOUBLE") # yscale
+}
