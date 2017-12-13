@@ -17,7 +17,7 @@ void zdeflate(std::vector<char>& out, const char *in, size_t inlen, int lvl)
         throw std::runtime_error(SB()<<"deflateInit() -> "<<err);
 
     try {
-        strm.next_in = (z_const Bytef*)in;
+        strm.next_in = (Bytef*)in;
         strm.avail_in = inlen;
 
         while(true) {
@@ -26,7 +26,7 @@ void zdeflate(std::vector<char>& out, const char *in, size_t inlen, int lvl)
 
             out.resize(strm.total_out+inc);
 
-            strm.next_out = (z_const Bytef*)&out[strm.total_out];
+            strm.next_out = (Bytef*)&out[strm.total_out];
             strm.avail_out = inc;
 
             err = deflate(&strm, strm.avail_in ? Z_NO_FLUSH : Z_FINISH);
@@ -64,7 +64,7 @@ void zinflate(std::vector<char>& out, const char *in, size_t inlen)
         throw std::runtime_error(SB()<<"inflateInit() -> "<<err);
 
     try {
-        strm.next_in = (z_const Bytef*)in;
+        strm.next_in = (Bytef*)in;
         strm.avail_in = inlen;
 
         while(true) {
@@ -73,7 +73,7 @@ void zinflate(std::vector<char>& out, const char *in, size_t inlen)
 
             out.resize(strm.total_out+inc);
 
-            strm.next_out = (z_const Bytef*)&out[strm.total_out];
+            strm.next_out = (Bytef*)&out[strm.total_out];
             strm.avail_out = inc;
 
             err = inflate(&strm, strm.avail_in ? Z_NO_FLUSH : Z_FINISH);
