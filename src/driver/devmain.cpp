@@ -188,17 +188,25 @@ long read_jblob(aaiRecord *prec)
             throw std::runtime_error("Need NELM>=16");
         Guard G(device->lock);
 
-        if(device->dev_infos.empty()) {
+        std::vector<char> *blob;
+        switch(info->offset) {
+        case 0: blob = &device->dev_infos; break;
+        case 1: blob = &device->raw_infos; break;
+        default:
+            throw std::runtime_error("invalid jblob offset");
+        }
+
+        if(blob->empty()) {
             IFDBG(1, "Not connected");
-        } else if(device->dev_infos.size() > prec->nelm) {
+        } else if(blob->size() > prec->nelm) {
             IFDBG(1, "blob size %zu exceeds NELM=%u",
-                  device->dev_infos.size(), (unsigned)prec->nelm);
+                  blob->size(), (unsigned)prec->nelm);
         } else {
             memcpy(prec->bptr,
-                   &device->dev_infos[0],
-                   device->dev_infos.size());
+                   &(*blob)[0],
+                   blob->size());
 
-            prec->nord = device->dev_infos.size();
+            prec->nord = blob->size();
             return 0;
         }
         (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);

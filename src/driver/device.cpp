@@ -542,6 +542,8 @@ void Device::handle_inspect()
     JBlob blob;
     blob.parse(json.c_str());
 
+    zdeflate(raw_infos, json.c_str(), json.size(), 9);
+
     RegInterest::infos_t infos;
 
     // iterate registeres and find interested

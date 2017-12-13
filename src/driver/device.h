@@ -166,8 +166,8 @@ struct epicsShareClass Device : public epicsThreadRunable
     // eg. worker thread start, or poll() returns
     epicsTime loop_time;
 
-    // compressed json blob of our info.
-    std::vector<char> dev_infos;
+    std::vector<char> dev_infos, // compressed json blob of our info.
+                      raw_infos; // compressed json blob of raw info.
 
     epicsUInt32 cnt_sent,
                 cnt_recv,

@@ -110,8 +110,18 @@ record(calc, "$(PREF)RateErr-I") {
 
 record(aai, "$(PREF)JInfo-I") {
     field(DTYP, "FEED JBlob")
-    field(DESC, "zlib compressed JSON")
-    field(INP , "@name=$(NAME)")
+    field(DESC, "zlib compressed IOC JSON")
+    field(INP , "@name=$(NAME) offset=0")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "CHAR")
+    field(NELM, "16000")
+    field(FLNK, "$(PREF)JSON-I")
+}
+
+record(aai, "$(PREF)JSON-I") {
+    field(DTYP, "FEED JBlob")
+    field(DESC, "zlib compressed Device JSON")
+    field(INP , "@name=$(NAME) offset=1")
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "16000")
