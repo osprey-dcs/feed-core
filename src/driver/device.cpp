@@ -1,4 +1,4 @@
-
+#include <stdexcept>
 #include <iostream>
 #include <sstream>
 #include <algorithm>
@@ -140,7 +140,7 @@ static void feed_shutdown(void *raw)
 
 #define IFDBG(N, FMT, ...) if(debug&(1u<<(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), myname.c_str(), ##__VA_ARGS__)
 
-Device::Device(const std::__cxx11::string &name, osiSockAddr &ep)
+Device::Device(const std::string &name, osiSockAddr &ep)
     :sock(AF_INET, SOCK_DGRAM, 0)
     ,myname(name)
     ,debug(0xffffffff)
@@ -641,7 +641,7 @@ void Device::handle_state()
             current = Inspecting;
 
         }else if(!reg_id->inprogress()) {
-            // request again
+            // Timeout.  request again
             reg_id->queue(false);
         }
         break;

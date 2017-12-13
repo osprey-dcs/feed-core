@@ -1,3 +1,5 @@
+#include <stdexcept>
+
 #include <fstream>
 
 #include <unistd.h>
