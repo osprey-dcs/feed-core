@@ -22,6 +22,9 @@
 # Build variables that are NOT used in paths should be set in
 # the CONFIG_SITE file.
 
+# Required
+#BUSY = /path/to/busy
+
 # EPICS_BASE should appear last so earlier modules can override stuff:
 #EPICS_BASE = /usr/lib/epics
 
