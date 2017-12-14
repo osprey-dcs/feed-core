@@ -125,6 +125,39 @@ record(aSub, "$(BASE)Mask3_") {
     field(EFLG, "ALWAYS")
 }
 
+# tag handling
+# we manage the tag.  Clients may increment on request
+# as part of acqusition update sequencing
+
+record(busy, "$(BASE)TagInc-Cmd") {
+    field(OUT , "$(BASE)TagInc-Calc_.PROC PP")
+    info(feed:info:increment, "$(BASE)TagInc-Cmd")
+}
+
+record(calcout, "$(BASE)TagInc-Calc_") {
+    # prevent inc on cancel/complete
+    field(SDIS, "$(BASE)TagInc-Cmd")
+    field(DISV, "0")
+
+    field(INPA, "$(BASE)TagInc-Calc_")
+    field(INPB, "255")
+    field(CALC, "A+1<=B?A+1:1") # 8 bit counter, overflows to 1 (0 means HW un-initialized)
+    field(OUT , "$(BASE)Tag-RB PP")
+}
+
+record(longout, "$(BASE)Tag-RB") {
+    field(DTYP, "FEED Register Write")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_tag")
+    field(FLNK, "$(BASE)TagDone-Cmd_")
+    info(feed:info:input, "$(BASE)Tag-RB")
+}
+
+# Complete TagInc
+record(longout, "$(BASE)TagDone-Cmd_") {
+    field(VAL, "0")
+    field(OUT, "$(BASE)TagInc-Cmd PP")
+}
+
 # acquisition trigger logic
 
 record(bo, "$(BASE)Mode-Sel") {
@@ -172,26 +205,32 @@ record(bo, "$(BASE)Rdy-I_") {
 }
 
 # actual readback of sample buffer
-record(longin, "$(BASE)CircRaw_") {
+record(aai, "$(BASE)CircRaw_") {
     field(SDIS, "$(BASE)Rdy-I_ MSI")
     field(DISV, "-42")
 
     field(DTYP, "FEED Register Read")
     field(DESC, "$(DESC=Reg $(NAME))")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
     field(TSE , "-2")
     field(FLNK, "$(BASE)SlowRaw_")
     field(TPRO, "$(TPRO=0)")
+    info(feed:info:rawinput, "$(BASE)CircRaw_")
 }
 
 # actual readback of aggregated data block
-record(longin, "$(BASE)SlowRaw_") {
+record(aai, "$(BASE)SlowRaw_") {
     field(DTYP, "FEED Register Read")
     field(DESC, "$(DESC=Reg $(NAME))")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data")
+    field(FTVL, "DOUBLE")
+    field(NELM, "$(SIZE)")
     field(TSE , "-2")
     field(FLNK, "$(BASE)AcqCnt-I")
     field(TPRO, "$(TPRO=0)")
+    info(feed:info:rawinput, "$(BASE)SlowRaw_")
 }
 
 # individual signals monitor this to detect new data
