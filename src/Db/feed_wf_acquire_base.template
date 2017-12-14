@@ -131,7 +131,6 @@ record(aSub, "$(BASE)Mask3_") {
 
 record(busy, "$(BASE)TagInc-Cmd") {
     field(OUT , "$(BASE)TagInc-Calc_.PROC PP")
-    info(feed:info:increment, "$(BASE)TagInc-Cmd")
 }
 
 record(calcout, "$(BASE)TagInc-Calc_") {
@@ -150,6 +149,7 @@ record(longout, "$(BASE)Tag-RB") {
     field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_tag")
     field(FLNK, "$(BASE)TagDone-Cmd_")
     info(feed:info:input, "$(BASE)Tag-RB")
+    info(feed:info:increment, "$(BASE)TagInc-Cmd")
 }
 
 # Complete TagInc
