@@ -67,18 +67,18 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, unsign
         } else {
             if(!prec->pact) {
 
-                const char *out = raw, *end = raw+count*valsize;
+                const char *in = raw, *end = raw+count*valsize;
 
                 for(size_t i=info->offset, N = info->reg->mem.size();
-                    i<N && out+valsize<=end; i+=info->step, out+=valsize)
+                    i<N && in+valsize<=end; i+=info->step, in+=valsize)
                 {
                     epicsUInt32 val = 0u;
 
                     switch(valsize) {
-                    case 1: val = *(const epicsUInt8*)raw; break;
-                    case 2: val = *(const epicsUInt16*)raw; break;
-                    case 4: val = *(const epicsUInt32*)raw; break;
-                    case 8: val = (*(const double*)raw) / info->scale; break;
+                    case 1: val = *(const epicsUInt8*)in; break;
+                    case 2: val = *(const epicsUInt16*)in; break;
+                    case 4: val = *(const epicsUInt32*)in; break;
+                    case 8: val = (*(const double*)in) / info->scale; break;
                     }
 
                     info->reg->mem[i] = htonl(val);
