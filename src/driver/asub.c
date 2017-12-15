@@ -162,7 +162,7 @@ long asub_yscale(aSubRecord *prec)
     else
         *wave_shift = wave_shift_temp;
 
-    *yscale = lo_cheat * (33 * wave_samp_per)*(33 * wave_samp_per) * pow(4, (8 - *wave_shift))/512.0/pow(2, shift_base);
+    *yscale = 16 * lo_cheat * (33 * wave_samp_per)*(33 * wave_samp_per) * pow(4, (8 - *wave_shift))/512.0/pow(2, shift_base);
 
     prec->udf = isnan(*yscale);
 
