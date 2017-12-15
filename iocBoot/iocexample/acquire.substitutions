@@ -16,8 +16,8 @@ file "feed_wf_acquire_base.template"
     LNK7="$(P)dev0:ch7:I-I",
     LNK8="$(P)dev0:ch8:I-I",
     LNK9="$(P)dev0:ch9:I-I",
-    LNK10="$(P)dev0:ch10:I-I",
-    LNK11="$(P)dev0:ch11:I-I"
+    LNKA="$(P)dev0:ch10:I-I",
+    LNKB="$(P)dev0:ch11:I-I"
 }
 {BASE="$(P)dev1:", BIT=1, MASK=2, SIZE=8192,
     LNK0="$(P)dev1:ch0:I-I",
@@ -30,8 +30,8 @@ file "feed_wf_acquire_base.template"
     LNK7="$(P)dev1:ch7:I-I",
     LNK8="$(P)dev1:ch8:I-I",
     LNK9="$(P)dev1:ch9:I-I",
-    LNK10="$(P)dev1:ch10:I-I",
-    LNK11="$(P)dev1:ch11:I-I"
+    LNKA="$(P)dev1:ch10:I-I",
+    LNKB="$(P)dev1:ch11:I-I"
 }
 }
 
