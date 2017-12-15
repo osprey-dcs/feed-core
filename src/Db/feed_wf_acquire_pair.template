@@ -1,0 +1,54 @@
+# processing of a pair of _signal.template as an I/Q pair
+#
+# Macros:
+#  PREF - Prefix of our records
+#  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
+#  SIGI - Prefix of I records (see _signal.template)
+#  SIGQ - Prefix of Q records (see _signal.template)
+#  BITI - Bit field letter for I (in _base.template)
+#  BITQ - Bit field letter for Q (in _base.template)
+#  SIZE - Max signal length (eg. 8192)
+#
+
+record(bo, "$(PREF)Ena-Sel") {
+  field(ZNAM, "Disable")
+  field(ONAM, "Enable")
+  field(OUT , "$(PREF)Ena-FOut_ PP MSI")
+}
+
+record(dfanout, "$(PREF)Ena-FOut_") {
+  field(OUTA, "$(BASE)Mask-SP.B$(BITI) PP MSI")
+  field(OUTB, "$(BASE)Mask-SP.B$(BITQ) PP MSI")
+}
+
+# alias records in _signal.template
+alias("$(SIGI)T-I", "$(PREF)T-I")
+alias("$(SIGI)I-I", "$(PREF)I-I")
+alias("$(SIGQ)I-I", "$(PREF)Q-I")
+
+# FLNK'd from _signal.template of SIGQ
+record(aSub, "$(PREF)AP-Calc_") {
+  field(SNAM, "IQ2AP")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
+  field(NOVA, "$(SIZE)")
+  field(NOVB, "$(SIZE)")
+  field(INPA, "$(PREF)I-I MSI NPP")
+  field(INPB, "$(PREF)Q-I MSI NPP")
+  field(OUTA, "$(PREF)Amp-I MSI PP")
+  field(OUTB, "$(PREF)Pha-I MSI PP")
+}
+
+record(aai, "$(PREF)Amp-I") {
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+}
+
+record(aai, "$(PREF)Pha-I") {
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+}

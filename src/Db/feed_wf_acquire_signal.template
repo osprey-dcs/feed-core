@@ -62,17 +62,12 @@ record(ao, "$(PREF)Scale-SP") {
 
 # waveform update logic
 
-record(longin, "$(PREF)Trg_") {
+# FLNK'd from feed_wf_acquire_base.template
+record(aai, "$(PREF)I-I") {
     # scan disable when this signal is not selected
     field(SDIS, "$(PREF)Config_")
     field(DISV, "-1")
 
-    # monitor acquisition count in feed_wf_acquire_base.template
-    field(INP , "$(BASE)AcqCnt-I CP MSI")
-    field(FLNK, "$(PREF)I-I")
-}
-
-record(aai, "$(PREF)I-I") {
     field(DTYP, "FEED Register Read")
     field(DESC, "$(DESC=Reg $(NAME))")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data signal=$(PREF) wait=false")
@@ -86,6 +81,7 @@ record(aai, "$(PREF)I-I") {
 # workaround for bug in aaiRecord.  doesn't post monitors on NORD
 record(longin, "$(PREF)I-NORD") {
     field(INP , "$(PREF)I-I.NORD")
+    field(FLNK, "$(FLNK=)") # connect to external (eg. _pair.template)
     field(TPRO, "$(TPRO=0)")
 }
 

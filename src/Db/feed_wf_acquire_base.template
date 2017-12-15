@@ -239,7 +239,7 @@ record(calc, "$(BASE)AcqCnt-I") {
     field(DISV, "-42")
     field(INPA, "$(BASE)AcqCnt-I")
     field(CALC, "A+1")
-    field(FLNK, "$(BASE)AcqDly_")
+    field(FLNK, "$(BASE)AcqNext-FOut_")
     field(TPRO, "$(TPRO=0)")
 }
 
@@ -249,6 +249,22 @@ record(calc, "$(BASE)AcqRate-I") {
     field(CALC, "C:=A-B;B:=A;C/10")
     field(EGU , "Hz")
     field(PREC, "2")
+}
+
+record(fanout, "$(BASE)AcqNext-FOut_") {
+    field(LNK0, "$(LNK0=)")
+    field(LNK1, "$(LNK1=)")
+    field(LNK2, "$(LNK2=)")
+    field(LNK3, "$(LNK3=)")
+    field(LNK4, "$(LNK4=)")
+    field(LNK5, "$(LNK5=)")
+    field(LNK6, "$(LNK6=)")
+    field(LNK7, "$(LNK7=)")
+    field(LNK8, "$(LNK8=)")
+    field(LNK9, "$(LNK9=)")
+    field(LNKA, "$(LNKA=)")
+    field(LNKB, "$(LNKB=)")
+    field(FLNK, "$(BASE)AcqDly_")
 }
 
 record(calcout, "$(BASE)AcqDly_") {
