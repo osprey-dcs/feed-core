@@ -3,6 +3,10 @@
 #  P - record prefix
 #  NAME - device name
 
+# acqusition SCAN starts with _base.template
+# LNK# then trigger the logic in _signal.template
+# then on to _pair.template
+
 file "feed_wf_acquire_base.template"
 {
 {BASE="$(P)dev0:", BIT=0, MASK=1, SIZE=8192,
@@ -38,25 +42,25 @@ file "feed_wf_acquire_base.template"
 file "feed_wf_acquire_signal.template"
 {
 {BASE="$(P)dev0:", BIT=0, LETTER=B, SIZE=8192, PREF="$(P)dev0:ch0:"}
-{BASE="$(P)dev0:", BIT=0, LETTER=C, SIZE=8192, PREF="$(P)dev0:ch1:", FLNK="$(P)dev0:sig0:AP-Calc_"}
+{BASE="$(P)dev0:", BIT=0, LETTER=C, SIZE=8192, PREF="$(P)dev0:ch1:", FLNK="$(P)dev0:loop:AP-Calc_"}
 {BASE="$(P)dev0:", BIT=0, LETTER=D, SIZE=8192, PREF="$(P)dev0:ch2:"}
-{BASE="$(P)dev0:", BIT=0, LETTER=E, SIZE=8192, PREF="$(P)dev0:ch3:", FLNK="$(P)dev0:sig1:AP-Calc_"}
+{BASE="$(P)dev0:", BIT=0, LETTER=E, SIZE=8192, PREF="$(P)dev0:ch3:", FLNK="$(P)dev0:fwd:AP-Calc_"}
 {BASE="$(P)dev0:", BIT=0, LETTER=F, SIZE=8192, PREF="$(P)dev0:ch4:"}
-{BASE="$(P)dev0:", BIT=0, LETTER=G, SIZE=8192, PREF="$(P)dev0:ch5:", FLNK="$(P)dev0:sig2:AP-Calc_"}
+{BASE="$(P)dev0:", BIT=0, LETTER=G, SIZE=8192, PREF="$(P)dev0:ch5:", FLNK="$(P)dev0:rev:AP-Calc_"}
 {BASE="$(P)dev0:", BIT=0, LETTER=H, SIZE=8192, PREF="$(P)dev0:ch6:"}
-{BASE="$(P)dev0:", BIT=0, LETTER=I, SIZE=8192, PREF="$(P)dev0:ch7:", FLNK="$(P)dev0:sig3:AP-Calc_"}
+{BASE="$(P)dev0:", BIT=0, LETTER=I, SIZE=8192, PREF="$(P)dev0:ch7:", FLNK="$(P)dev0:cav:AP-Calc_"}
 {BASE="$(P)dev0:", BIT=0, LETTER=J, SIZE=8192, PREF="$(P)dev0:ch8:"}
 {BASE="$(P)dev0:", BIT=0, LETTER=K, SIZE=8192, PREF="$(P)dev0:ch9:", FLNK="$(P)dev0:sig4:AP-Calc_"}
 {BASE="$(P)dev0:", BIT=0, LETTER=L, SIZE=8192, PREF="$(P)dev0:ch10:"}
 {BASE="$(P)dev0:", BIT=0, LETTER=M, SIZE=8192, PREF="$(P)dev0:ch11:", FLNK="$(P)dev0:sig5:AP-Calc_"}
 {BASE="$(P)dev1:", BIT=1, LETTER=B, SIZE=8192, PREF="$(P)dev1:ch0:"}
-{BASE="$(P)dev1:", BIT=1, LETTER=C, SIZE=8192, PREF="$(P)dev1:ch1:", FLNK="$(P)dev1:sig0:AP-Calc_"}
+{BASE="$(P)dev1:", BIT=1, LETTER=C, SIZE=8192, PREF="$(P)dev1:ch1:", FLNK="$(P)dev1:loop:AP-Calc_"}
 {BASE="$(P)dev1:", BIT=1, LETTER=D, SIZE=8192, PREF="$(P)dev1:ch2:"}
-{BASE="$(P)dev1:", BIT=1, LETTER=E, SIZE=8192, PREF="$(P)dev1:ch3:", FLNK="$(P)dev1:sig1:AP-Calc_"}
+{BASE="$(P)dev1:", BIT=1, LETTER=E, SIZE=8192, PREF="$(P)dev1:ch3:", FLNK="$(P)dev1:fwd:AP-Calc_"}
 {BASE="$(P)dev1:", BIT=1, LETTER=F, SIZE=8192, PREF="$(P)dev1:ch4:"}
-{BASE="$(P)dev1:", BIT=1, LETTER=G, SIZE=8192, PREF="$(P)dev1:ch5:", FLNK="$(P)dev1:sig2:AP-Calc_"}
+{BASE="$(P)dev1:", BIT=1, LETTER=G, SIZE=8192, PREF="$(P)dev1:ch5:", FLNK="$(P)dev1:rev:AP-Calc_"}
 {BASE="$(P)dev1:", BIT=1, LETTER=H, SIZE=8192, PREF="$(P)dev1:ch6:"}
-{BASE="$(P)dev1:", BIT=1, LETTER=I, SIZE=8192, PREF="$(P)dev1:ch7:", FLNK="$(P)dev1:sig3:AP-Calc_"}
+{BASE="$(P)dev1:", BIT=1, LETTER=I, SIZE=8192, PREF="$(P)dev1:ch7:", FLNK="$(P)dev1:cav:AP-Calc_"}
 {BASE="$(P)dev1:", BIT=1, LETTER=J, SIZE=8192, PREF="$(P)dev1:ch8:"}
 {BASE="$(P)dev1:", BIT=1, LETTER=K, SIZE=8192, PREF="$(P)dev1:ch9:", FLNK="$(P)dev1:sig4:AP-Calc_"}
 {BASE="$(P)dev1:", BIT=1, LETTER=L, SIZE=8192, PREF="$(P)dev1:ch10:"}
@@ -65,16 +69,16 @@ file "feed_wf_acquire_signal.template"
 
 file "feed_wf_acquire_pair.template"
 {
-{BASE="$(P)dev0:", SIGI="$(P)dev0:ch0:", SIGQ="$(P)dev0:ch1:", BITI="B", BITQ="A", SIZE=8192, PREF="$(P)dev0:sig0:"}
-{BASE="$(P)dev0:", SIGI="$(P)dev0:ch2:", SIGQ="$(P)dev0:ch3:", BITI="9", BITQ="8", SIZE=8192, PREF="$(P)dev0:sig1:"}
-{BASE="$(P)dev0:", SIGI="$(P)dev0:ch4:", SIGQ="$(P)dev0:ch5:", BITI="7", BITQ="6", SIZE=8192, PREF="$(P)dev0:sig2:"}
-{BASE="$(P)dev0:", SIGI="$(P)dev0:ch6:", SIGQ="$(P)dev0:ch7:", BITI="5", BITQ="4", SIZE=8192, PREF="$(P)dev0:sig3:"}
+{BASE="$(P)dev0:", SIGI="$(P)dev0:ch0:", SIGQ="$(P)dev0:ch1:", BITI="B", BITQ="A", SIZE=8192, PREF="$(P)dev0:loop:"}
+{BASE="$(P)dev0:", SIGI="$(P)dev0:ch2:", SIGQ="$(P)dev0:ch3:", BITI="9", BITQ="8", SIZE=8192, PREF="$(P)dev0:fwd:"}
+{BASE="$(P)dev0:", SIGI="$(P)dev0:ch4:", SIGQ="$(P)dev0:ch5:", BITI="7", BITQ="6", SIZE=8192, PREF="$(P)dev0:rev:"}
+{BASE="$(P)dev0:", SIGI="$(P)dev0:ch6:", SIGQ="$(P)dev0:ch7:", BITI="5", BITQ="4", SIZE=8192, PREF="$(P)dev0:cav:"}
 {BASE="$(P)dev0:", SIGI="$(P)dev0:ch8:", SIGQ="$(P)dev0:ch9:", BITI="3", BITQ="2", SIZE=8192, PREF="$(P)dev0:sig4:"}
 {BASE="$(P)dev0:", SIGI="$(P)dev0:ch10:",SIGQ="$(P)dev0:ch11:",BITI="1", BITQ="0", SIZE=8192, PREF="$(P)dev0:sig5:"}
-{BASE="$(P)dev1:", SIGI="$(P)dev1:ch0:", SIGQ="$(P)dev1:ch1:", BITI="B", BITQ="A", SIZE=8192, PREF="$(P)dev1:sig0:"}
-{BASE="$(P)dev1:", SIGI="$(P)dev1:ch2:", SIGQ="$(P)dev1:ch3:", BITI="9", BITQ="8", SIZE=8192, PREF="$(P)dev1:sig1:"}
-{BASE="$(P)dev1:", SIGI="$(P)dev1:ch4:", SIGQ="$(P)dev1:ch5:", BITI="7", BITQ="6", SIZE=8192, PREF="$(P)dev1:sig2:"}
-{BASE="$(P)dev1:", SIGI="$(P)dev1:ch6:", SIGQ="$(P)dev1:ch7:", BITI="5", BITQ="4", SIZE=8192, PREF="$(P)dev1:sig3:"}
+{BASE="$(P)dev1:", SIGI="$(P)dev1:ch0:", SIGQ="$(P)dev1:ch1:", BITI="B", BITQ="A", SIZE=8192, PREF="$(P)dev1:loop:"}
+{BASE="$(P)dev1:", SIGI="$(P)dev1:ch2:", SIGQ="$(P)dev1:ch3:", BITI="9", BITQ="8", SIZE=8192, PREF="$(P)dev1:fwd:"}
+{BASE="$(P)dev1:", SIGI="$(P)dev1:ch4:", SIGQ="$(P)dev1:ch5:", BITI="7", BITQ="6", SIZE=8192, PREF="$(P)dev1:rev:"}
+{BASE="$(P)dev1:", SIGI="$(P)dev1:ch6:", SIGQ="$(P)dev1:ch7:", BITI="5", BITQ="4", SIZE=8192, PREF="$(P)dev1:cav:"}
 {BASE="$(P)dev1:", SIGI="$(P)dev1:ch8:", SIGQ="$(P)dev1:ch9:", BITI="3", BITQ="2", SIZE=8192, PREF="$(P)dev1:sig4:"}
 {BASE="$(P)dev1:", SIGI="$(P)dev1:ch10:",SIGQ="$(P)dev1:ch11:",BITI="1", BITQ="0", SIZE=8192, PREF="$(P)dev1:sig5:"}
 }

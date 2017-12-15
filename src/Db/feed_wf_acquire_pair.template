@@ -42,14 +42,18 @@ record(aSub, "$(PREF)AP-Calc_") {
   field(INPB, "$(PREF)Q-I MSI NPP")
   field(OUTA, "$(PREF)Amp-I MSI PP")
   field(OUTB, "$(PREF)Pha-I MSI PP")
+  field(FLNK, "$(FLNK=)")
+  field(TSEL, "$(PREF)I-I.TIME")
 }
 
 record(aai, "$(PREF)Amp-I") {
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
+  field(TSEL, "$(PREF)I-I.TIME")
 }
 
 record(aai, "$(PREF)Pha-I") {
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
+  field(TSEL, "$(PREF)I-I.TIME")
 }
