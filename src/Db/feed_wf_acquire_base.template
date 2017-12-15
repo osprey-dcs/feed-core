@@ -276,3 +276,17 @@ record(calcout, "$(BASE)AcqDly_") {
     field(OUT , "$(BASE)Acq-Cmd PP")
     field(TPRO, "$(TPRO=0)")
 }
+
+# common window for all waveform stats
+
+record(ao, "$(BASE)Stat:Start-SP") {
+    field(PREC, "6")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(BASE)Stat:Width-SP") {
+    field(PREC, "6")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}

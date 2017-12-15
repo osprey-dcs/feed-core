@@ -55,7 +55,7 @@ record(aSub, "$(PREF)AP-Calc_") {
   field(OUTA, "$(PREF)Amp-I MSI PP")
   field(OUTB, "$(PREF)Pha-I MSI PP")
   field(OUTC, "$(PREF)Pwr-I MSI PP")
-  field(FLNK, "$(FLNK=)")
+  field(FLNK, "$(FLNK=)") # to external logic, eg. waveform stats
   field(TSEL, "$(PREF)I-I.TIME")
 }
 

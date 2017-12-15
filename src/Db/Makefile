@@ -13,6 +13,7 @@ DB += feed_reg_w_array.template
 DB += feed_wf_acquire_base.template
 DB += feed_wf_acquire_signal.template
 DB += feed_wf_acquire_pair.template
+DB += feed_wf_acquire_stats.template
 
 DB += prc_logic.substitutions
 DB += prc_registers.substitutions

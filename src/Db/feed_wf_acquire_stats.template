@@ -1,0 +1,42 @@
+# Waveform statistics
+#
+# Macros:
+#  PREF - Prefix of our records
+#  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
+#  TIME - Record name of timebase
+#  SIG  - Record name of signal
+#  SIZE - Max signal length (eg. 8192)
+#
+
+# external db FLNK's here
+record(aSub, "$(PREF)Stat-Calc_") {
+  field(SNAM, "Wf Stats")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
+  field(FTD , "DOUBLE")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(NOA , "128")
+  field(NOB , "128")
+  field(INPA, "$(SIG) NPP MSI")
+  field(INPB, "$(TIME) NPP MSI")
+  field(INPC, "$(BASE)Stat:Start-SP") # window start
+  field(INPD, "$(BASE)Stat:Width-SP") # window width
+  field(OUTA, "$(PREF)Mean-I PP")
+  field(OUTB, "$(PREF)Std-I PP")
+  field(FLNK, "$(FLNK=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)Mean-I") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)Std-I") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
