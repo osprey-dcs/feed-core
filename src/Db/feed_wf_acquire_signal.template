@@ -18,7 +18,7 @@
 
 record(longin, "$(PREF)Config_") {
     # monitor offset computed in feed_wf_acquire_base.template
-    field(INP , "$(BASE)Mask3_.VAL$(LETTER) CP MSI")
+    field(INP , "$(BASE)Mask3_.VAL$(LETTER) CP")
     field(TPRO, "$(TPRO=0)")
     field(FLNK, "$(PREF)Off-SP")
 }
@@ -31,7 +31,7 @@ record(longout, "$(PREF)Off-SP") {
     field(DTYP, "FEED Signal Offset")
     field(OUT , "@signal=$(PREF)")
     field(OMSL, "closed_loop")
-    field(DOL , "$(BASE)Mask3_.VAL$(LETTER) MSI")
+    field(DOL , "$(BASE)Mask3_.VAL$(LETTER)")
     field(FLNK, "$(PREF)Step-SP")
 }
 

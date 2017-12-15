@@ -91,7 +91,8 @@ record(longout, "$(BASE)WaveShift-SP") {
 
 record(mbboDirect, "$(BASE)Mask-SP") {
     field(DESC, "Channel selection bitmask")
-    field(OUT,  "$(BASE)Mask2_ PP")
+    field(OUT , "$(BASE)Mask2_ PP")
+    field(PINI, "YES")
     field(TPRO, "$(TPRO=0)")
     info(autosaveFields_pass0, "VAL B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 BA BB")
 }
@@ -106,7 +107,7 @@ record(longout, "$(BASE)Mask2_") {
 record(aSub, "$(BASE)Mask3_") {
     field(SNAM, "asub_split_bits")
     field(FTA , "LONG")
-    field(INPA, "$(BASE)Mask2_ NPP MSI")
+    field(INPA, "$(BASE)Mask2_ NPP")
     field(FTVA, "LONG")
     field(FTVB, "LONG")
     field(FTVC, "LONG")

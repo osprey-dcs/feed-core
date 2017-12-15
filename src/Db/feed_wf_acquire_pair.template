@@ -13,12 +13,13 @@
 record(bo, "$(PREF)Ena-Sel") {
   field(ZNAM, "Disable")
   field(ONAM, "Enable")
-  field(OUT , "$(PREF)Ena-FOut_ PP MSI")
+  field(OUT , "$(PREF)Ena-FOut_ PP")
 }
 
 record(dfanout, "$(PREF)Ena-FOut_") {
-  field(OUTA, "$(BASE)Mask-SP.B$(BITI) PP MSI")
-  field(OUTB, "$(BASE)Mask-SP.B$(BITQ) PP MSI")
+  # Mask-SP is async, so only PP after setting the second bit
+  field(OUTA, "$(BASE)Mask-SP.B$(BITI)")
+  field(OUTB, "$(BASE)Mask-SP.B$(BITQ) PP")
 }
 
 # alias records in _signal.template
