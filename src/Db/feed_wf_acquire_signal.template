@@ -43,17 +43,29 @@ record(longout, "$(PREF)Step-SP") {
     field(FLNK, "")
 }
 
+# User scaling factor, applied along with full scale
+# computed for decimation (wave_samp_per)
+record(ao, "$(PREF)Scale-SP") {
+    field(VAL , "1.0")
+    field(PREC, "9")
+    field(PINI, "YES")
+    field(FLNK, "$(PREF)Scale-SP")
+    info(autosaveFields_pass0, "VAL")
+}
+
 record(calcout, "$(PREF)Scale-Calc_") {
-    field(INPA, "$(BASE)AmpCalc.VALB CP MSI")
+    field(INPA, "$(PREF)Scale-SP NPP MSI")
+    field(INPB, "$(BASE)AmpCalc.VALB CP MSI")
     # take the full scale value and compute our scaling factor
-    field(CALC, "1/A")
+    field(CALC, "A/B")
     # if for some reason we get a junk (INVALID) scaling factor, default to 1.0
     field(IVOA, "Set output to IVOV")
     field(IVOV, "1.0")
-    field(OUT , "$(PREF)Scale-SP PP")
+    field(OUT , "$(PREF)Scale-RB PP")
 }
 
-record(ao, "$(PREF)Scale-SP") {
+# readback of actual scaling factor used
+record(ao, "$(PREF)Scale-RB") {
     field(DTYP, "FEED Signal Scale")
     field(OUT , "@signal=$(PREF)")
     field(VAL , "1.0")

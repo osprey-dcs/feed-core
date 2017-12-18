@@ -27,21 +27,34 @@ alias("$(SIGI)T-I", "$(PREF)T-I")
 alias("$(SIGI)I-I", "$(PREF)I-I")
 alias("$(SIGQ)I-I", "$(PREF)Q-I")
 
+# scaling factor from amplitude squared to power
+#  (use I/Q scaling to determine amplitude scaling)
+record(ao, "$(PREF)PwrScl-SP") {
+    field(VAL , "1.0")
+    field(PREC, "9")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
 # FLNK'd from _signal.template of SIGQ
 record(aSub, "$(PREF)AP-Calc_") {
   field(SNAM, "IQ2AP")
   field(FTA , "DOUBLE")
   field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
   field(FTVA ,"DOUBLE")
   field(FTVB ,"DOUBLE")
   field(NOA , "$(SIZE)")
   field(NOB , "$(SIZE)")
   field(NOVA, "$(SIZE)")
   field(NOVB, "$(SIZE)")
+  field(NOVC, "$(SIZE)")
   field(INPA, "$(PREF)I-I MSI NPP")
   field(INPB, "$(PREF)Q-I MSI NPP")
+  field(INPC, "$(PREF)PwrScl-SP MSI NPP")
   field(OUTA, "$(PREF)Amp-I MSI PP")
   field(OUTB, "$(PREF)Pha-I MSI PP")
+  field(OUTC, "$(PREF)Pwr-I MSI PP")
   field(FLNK, "$(FLNK=)")
   field(TSEL, "$(PREF)I-I.TIME")
 }
@@ -52,7 +65,14 @@ record(aai, "$(PREF)Amp-I") {
   field(TSEL, "$(PREF)I-I.TIME")
 }
 
+record(aai, "$(PREF)Pwr-I") {
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(PREF)I-I.TIME")
+}
+
 record(aai, "$(PREF)Pha-I") {
+  field(EGU , "deg.")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
   field(TSEL, "$(PREF)I-I.TIME")
