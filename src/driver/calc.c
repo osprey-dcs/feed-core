@@ -241,22 +241,28 @@ long gen_waveform(aSubRecord* prec)
     return 0;
 }
 
-/* I/Q to amplitude/phase converter
+/* I/Q to amplitude/phase converter.
+ * Also provide amplitude squared (power)
  *
  * record(aSub, "$(N)") {
  *  field(SNAM, "IQ2AP")
  *  field(FTA , "DOUBLE")
  *  field(FTB , "DOUBLE")
+ *  field(FTC , "DOUBLE")
  *  field(FTVA ,"DOUBLE")
  *  field(FTVB ,"DOUBLE")
+ *  field(FTVC ,"DOUBLE")
  *  field(NOA , "128")
  *  field(NOB , "128")
  *  field(NOVA, "128")
  *  field(NOVB, "128")
+ *  field(NOVC, "128")
  *  field(INPA, "I")
  *  field(INPB, "Q")
+ *  field(INPC, "POWSCALE") # scaling of AMP squared (Optional)
  *  field(OUTA, "AMP PP")
- *  field(OUTB, "PHA PP")
+ *  field(OUTB, "PHA PP") # in degrees
+ *  field(OUTC, "POW PP") # AMP squared (Optional)
  * }
  */
 #define MAGIC ((void*)&convert_iq2ap)
@@ -266,51 +272,51 @@ static
 long convert_iq2ap(aSubRecord* prec)
 {
     size_t i;
-    epicsEnum16 *ft = &prec->fta,
-            *ftv= &prec->ftva;
-    // actual length of inputs, and max length of outputs
-    epicsUInt32 lens[4] = { prec->nea, prec->neb, prec->nova, prec->novb };
-    epicsUInt32 len = lens[0];
-
-    if(prec->dpvt==BADMAGIC) {
-        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
-        return 1;
-    } else if(prec->dpvt!=MAGIC) {
-        // Only do type checks in not already passed
-        for(i=0; i<2; i++) {
-            if(ft[i]!=menuFtypeDOUBLE) {
-                prec->dpvt=BADMAGIC;
-                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
-                errlogPrintf("%s: FT%c must be DOUBLE\n",
-                             prec->name, 'A'+(char)i);
-                return 1;
-
-            } else if(ftv[i]!=menuFtypeDOUBLE) {
-                prec->dpvt=BADMAGIC;
-                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
-                errlogPrintf("%s: FTV%c must be DOUBLE\n",
-                             prec->name, 'A'+(char)i);
-                return 1;
-
-            }
-        }
-        prec->dpvt = MAGIC;
-    }
-
-    for(i=0; i<4; i++)
-        len = MIN(len, lens[i]);
+    epicsUInt32 len = prec->nea; /* actual output length */
+    unsigned pow_out = prec->ftvc==menuFtypeDOUBLE;
+    double pow_scale = 1.0;
 
     double *I = (double*)prec->a,
-            *Q = (double*)prec->b,
-            *A = (double*)prec->vala,
-            *P = (double*)prec->valb;
+           *Q = (double*)prec->b,
+           *A = (double*)prec->vala,
+           *P = (double*)prec->valb,
+           *PW= pow_out ? (double*)prec->valc : NULL;
+
+    if(prec->fta!=menuFtypeDOUBLE
+            || prec->ftb!=menuFtypeDOUBLE
+            || prec->ftva!=menuFtypeDOUBLE
+            || prec->ftvb!=menuFtypeDOUBLE)
+    {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
+        return 1;
+    }
+
+    if(prec->ftc==menuFtypeDOUBLE) {
+        pow_scale = *(double*)prec->c;
+    }
+    if(pow_scale==0.0) {
+        pow_scale = 1.0;
+    }
+
+    if(len > prec->neb)
+        len = prec->neb;
+    if(len > prec->nova)
+        len = prec->nova;
+    if(len > prec->novb)
+        len = prec->novb;
+    if(pow_out && len > prec->novc)
+        len = prec->novc;
 
     for(i=0; i<len; i++) {
         A[i] = sqrt(I[i]*I[i] + Q[i]*Q[i]);
         P[i] = atan2(Q[i], I[i]) * 180 / PI;
+        if(PW)
+            PW[i] = pow_scale * A[i] * A[i];
     }
 
     prec->neva = prec->nevb = len;
+    if(pow_out)
+        prec->nevc = len;
 
     return 0;
 }
