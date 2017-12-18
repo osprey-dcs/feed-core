@@ -225,14 +225,14 @@ void Simulator::exec()
 
                         if(cmd_addr&0x10000000) {
                             // read
-                            if(reg.readable) {
-                                data = reg.storage[offset];
-                                if(debug)
-                                    errlogPrintf("%s: read %s[%u] (%06x) -> %08x\n",
-                                                 addr.c_str(),
-                                                 reg.name.c_str(), unsigned(offset),
-                                                 unsigned(cmd_addr), unsigned(data));
-                            } else {
+                            data = reg.storage[offset];
+                            if(debug)
+                                errlogPrintf("%s: read %s[%u] (%06x) -> %08x\n",
+                                             addr.c_str(),
+                                             reg.name.c_str(), unsigned(offset),
+                                             unsigned(cmd_addr), unsigned(data));
+
+                            if(!reg.readable) {
                                 errlogPrintf("%s: read of unreadable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
                                 data = 0xdeadbeef;
                             }
@@ -240,15 +240,14 @@ void Simulator::exec()
                         } else {
                             // write
                             // echo back value written
-                            if(reg.writable) {
-                                reg.storage[offset] = data & reg.mask;
-                                if(debug)
-                                    errlogPrintf("%s: write %s[%u] (%06x) <- %08x\n",
-                                                 addr.c_str(),
-                                                 reg.name.c_str(), unsigned(offset),
-                                                 unsigned(cmd_addr), unsigned(reg.storage[offset]));
+                            reg.storage[offset] = data & reg.mask;
+                            if(debug)
+                                errlogPrintf("%s: write %s[%u] (%06x) <- %08x\n",
+                                             addr.c_str(),
+                                             reg.name.c_str(), unsigned(offset),
+                                             unsigned(cmd_addr), unsigned(reg.storage[offset]));
 
-                            } else {
+                            if(!reg.writable) {
                                 errlogPrintf("%s: write of unwriteable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
 
                             }
