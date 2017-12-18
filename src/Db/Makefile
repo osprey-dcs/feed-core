@@ -14,6 +14,9 @@ DB += feed_wf_acquire_base.template
 DB += feed_wf_acquire_signal.template
 DB += feed_wf_acquire_pair.template
 
+DB += prc_logic.substitutions
+DB += prc_registers.substitutions
+
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE

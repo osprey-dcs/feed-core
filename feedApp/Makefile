@@ -13,6 +13,7 @@ PROD_IOC += feedioc
 DBD += feedioc.dbd
 
 feedioc_DBD += base.dbd
+feedioc_DBD += system.dbd
 feedioc_DBD += feed.dbd
 
 feedioc_SRCS += feedMain.cpp
