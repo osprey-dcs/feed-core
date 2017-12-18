@@ -25,6 +25,7 @@
 #include <longinRecord.h>
 #include <longoutRecord.h>
 #include <mbbiRecord.h>
+#include <mbboRecord.h>
 #include <biRecord.h>
 #include <boRecord.h>
 #include <aiRecord.h>
@@ -118,6 +119,11 @@ long write_register_lo(longoutRecord *prec)
 }
 
 long write_register_ao(aoRecord *prec)
+{
+    return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, sizeof(prec->val));
+}
+
+long write_register_mbbo(mbboRecord *prec)
 {
     return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, sizeof(prec->val));
 }
@@ -227,6 +233,11 @@ long read_register_ai(aiRecord *prec)
     return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, sizeof(prec->rval));
 }
 
+long read_register_mbbi(mbbiRecord *prec)
+{
+    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, sizeof(prec->rval));
+}
+
 long read_register_aai(aaiRecord *prec)
 {
     size_t cnt = prec->nelm * dbValueSize(prec->ftvl) /4u;
@@ -240,9 +251,11 @@ long read_register_aai(aaiRecord *prec)
 // register writes
 DSET(devLoFEEDWriteReg, longout, init_common<RecInfo>::fn, NULL, write_register_lo)
 DSET(devAoFEEDWriteReg, ao, init_common<RecInfo>::fn, NULL, write_register_ao)
+DSET(devMbboFEEDWriteReg, mbbo, init_common<RecInfo>::fn, NULL, write_register_mbbo)
 DSET(devAaoFEEDWriteReg, aao, init_common<RecInfo>::fn, NULL, write_register_aao)
 
 // register reads
 DSET(devLiFEEDWriteReg, longin, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_li)
 DSET(devAiFEEDWriteReg, ai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_ai)
+DSET(devMbbiFEEDWriteReg, mbbi, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_mbbi)
 DSET(devAaiFEEDWriteReg, aai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_aai)
