@@ -129,12 +129,15 @@ long init_waveform(aSubRecord* prec)
 
     if(prec->fta != menuFtypeSTRING && prec->fta!=menuFtypeCHAR) {
         errlogPrintf("%s: FTA must be STRING or CHAR\n", prec->name);
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return -1;
     }
 
     priv = calloc(1, sizeof(calcPriv));
-    if(!priv)
+    if(!priv) {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return -1;
+    }
     strcpy(priv->prev, "Something highly unlikely");
 
     for(i=0; i<CALCPERFORM_NARGS; i++) {
@@ -163,11 +166,13 @@ long gen_waveform(aSubRecord* prec)
     epicsUInt32 nelem=0, nin=0;
     calcPriv* priv=prec->dpvt;
     if(!priv) {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         errlogPrintf("%s: Not initialized\n",prec->name);
         return -1;
     }
 
     if(update_expr(prec, priv)) {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return -1;
     }
 
@@ -267,19 +272,22 @@ long convert_iq2ap(aSubRecord* prec)
     epicsUInt32 lens[4] = { prec->nea, prec->neb, prec->nova, prec->novb };
     epicsUInt32 len = lens[0];
 
-    if(prec->dpvt==BADMAGIC)
+    if(prec->dpvt==BADMAGIC) {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return 1;
-    if(prec->dpvt!=MAGIC) {
+    } else if(prec->dpvt!=MAGIC) {
         // Only do type checks in not already passed
         for(i=0; i<2; i++) {
             if(ft[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
+                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
                 errlogPrintf("%s: FT%c must be DOUBLE\n",
                              prec->name, 'A'+(char)i);
                 return 1;
 
             } else if(ftv[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
+                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
                 errlogPrintf("%s: FTV%c must be DOUBLE\n",
                              prec->name, 'A'+(char)i);
                 return 1;
@@ -337,19 +345,22 @@ long convert_ap2iq(aSubRecord* prec)
     epicsUInt32 len = lens[0];
 
 
-    if(prec->dpvt==BADMAGIC)
+    if(prec->dpvt==BADMAGIC) {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return 1;
-    if(prec->dpvt!=MAGIC) {
+    } else if(prec->dpvt!=MAGIC) {
         // Only do type checks in not already passed
         for(i=0; i<2; i++) {
             if(ft[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
+                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
                 errlogPrintf("%s: FT%c must be DOUBLE\n",
                              prec->name, 'A'+(char)i);
                 return 1;
 
             } else if(ftv[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
+                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
                 errlogPrintf("%s: FTV%c must be DOUBLE\n",
                              prec->name, 'A'+(char)i);
                 return 1;
@@ -418,13 +429,15 @@ long wf_stats(aSubRecord* prec)
             width = *(double*)prec->d;
 
 
-    if(prec->dpvt==BADMAGIC)
+    if(prec->dpvt==BADMAGIC) {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return 1;
-    if(prec->dpvt!=MAGIC) {
+    } else if(prec->dpvt!=MAGIC) {
         // Only do type checks in not already passed
         for(i=0; i<4; i++) {
             if(ft[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
+                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
                 errlogPrintf("%s: FT%c must be DOUBLE\n",
                              prec->name, 'A'+(char)i);
                 return 1;
@@ -434,6 +447,7 @@ long wf_stats(aSubRecord* prec)
         for(i=0; i<2; i++) {
             if(ftv[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
+                (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
                 errlogPrintf("%s: FTV%c must be DOUBLE\n",
                              prec->name, 'A'+(char)i);
                 return 1;
@@ -500,13 +514,15 @@ long unwrap(aSubRecord* prec)
             delta, thres;
     epicsUInt32 len=MIN(prec->nea, prec->nova);
 
-    if(prec->dpvt==BADMAGIC)
+    if(prec->dpvt==BADMAGIC) {
+        (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return 1;
-    if(prec->dpvt!=MAGIC) {
+    } else if(prec->dpvt!=MAGIC) {
         // Only do type checks in not already passed
         if(prec->fta!=menuFtypeDOUBLE &&
                 prec->ftb!=menuFtypeDOUBLE) {
             prec->dpvt=BADMAGIC;
+            (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
             errlogPrintf("%s: FTA and FTB must be DOUBLE\n",
                          prec->name);
             return 1;
@@ -514,6 +530,7 @@ long unwrap(aSubRecord* prec)
         }
         if(prec->ftva!=menuFtypeDOUBLE) {
             prec->dpvt=BADMAGIC;
+            (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
             errlogPrintf("%s: FTVA must be DOUBLE\n",
                          prec->name);
             return 1;
