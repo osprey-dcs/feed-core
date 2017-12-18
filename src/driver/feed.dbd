@@ -5,6 +5,7 @@ device(bo, INST_IO, devBoFEEDCommit, "FEED Commit")
 
 # device-wide status
 device(mbbi, INST_IO, devMbbiFEEDDevState, "FEED State")
+device(aai, INST_IO, devAaiFEEDInfo, "FEED ROM Info")
 device(longin, INST_IO, devLiFEEDCounter, "FEED Counter")
 device(aai, INST_IO, devAaiFEEDError, "FEED Error")
 device(aai, INST_IO, devAaiFEEDJBlob, "FEED JBlob")

@@ -21,6 +21,7 @@
 #include <callback.h>
 #include <menuScan.h>
 #include <dbCommon.h>
+#include <menuFtype.h>
 #include <stringoutRecord.h>
 #include <longinRecord.h>
 #include <longoutRecord.h>
@@ -131,6 +132,41 @@ long read_reg_state(mbbiRecord *prec)
     }CATCH()
 }
 
+long read_jsoninfo(aaiRecord *prec)
+{
+    TRY {
+        if(prec->ftvl!=menuFtypeCHAR) {
+            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            return -1;
+        }
+        char *buf = (char*)prec->bptr;
+
+        Guard G(device->lock);
+        const std::string *str;
+
+        switch(info->offset) {
+        case 0: str = &device->description; break;
+        case 1: str = &device->jsonhash; break;
+        case 2: str = &device->codehash; break;
+        default:
+            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            return -1;
+        }
+
+        // len includes trailing nil
+        const size_t len  = std::min(str->size()+1, size_t(prec->nelm));
+        if(len==0) {
+            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            return -1;
+        }
+
+        memcpy(buf, str->c_str(), len);
+        buf[len-1] = '\0';
+
+        prec->nord = len;
+        return 0;
+    } CATCH()
+}
 
 long read_counter(longinRecord *prec)
 {
@@ -309,6 +345,7 @@ DSET(devBoFEEDCommit, bo, init_common<RecInfo>::fn, NULL, write_commit)
 
 // device-wide status
 DSET(devMbbiFEEDDevState, mbbi, init_common<RecInfo>::fn, get_dev_changed_intr, read_dev_state)
+DSET(devAaiFEEDInfo, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_jsoninfo)
 DSET(devLiFEEDCounter, longin, init_common<RecInfo>::fn, get_dev_changed_intr, read_counter)
 DSET(devAaiFEEDError, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_error)
 DSET(devAaiFEEDJBlob, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_jblob)

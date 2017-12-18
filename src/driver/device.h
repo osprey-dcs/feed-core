@@ -178,6 +178,9 @@ struct epicsShareClass Device : public epicsThreadRunable
 
     std::string last_message;
 
+    // non-JSON info extracted from ROM
+    std::string description, jsonhash, codehash;
+
     typedef std::map<std::string, DevReg*> reg_by_name_t;
     reg_by_name_t reg_by_name;
 

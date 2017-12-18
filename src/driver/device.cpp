@@ -244,6 +244,9 @@ void Device::reset()
 
     last_message.clear();
     dev_infos.clear();
+    description.clear();
+    jsonhash.clear();
+    codehash.clear();
 
     for(reg_interested_t::const_iterator it = reg_interested.begin(), end = reg_interested.end();
         it != end; ++it)
@@ -523,8 +526,14 @@ void Device::handle_inspect()
             break;
         case ROMDescriptor::Text:
             IFDBG(2, "ROM desc \"%s\"", desc.value.c_str());
+            if(description.empty())
+                description = desc.value;
             break;
         case ROMDescriptor::BigInt:
+            if(jsonhash.empty())
+                jsonhash = desc.value;
+            else if(codehash.empty())
+                codehash = desc.value;
             break; // ignore
         case ROMDescriptor::JSON:
             if(json.empty())

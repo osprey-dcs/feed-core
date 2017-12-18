@@ -125,6 +125,26 @@ record(aai, "$(PREF)JSON-I") {
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "16000")
+    field(FLNK, "$(PREF)Desc-I")
+}
+
+record(aai, "$(PREF)Desc-I") {
+    field(DTYP, "FEED ROM Info")
+    field(DESC, "FW description")
+    field(INP , "@name=$(NAME) offset=0")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(FLNK, "$(PREF)CodeHash-I")
+}
+
+record(aai, "$(PREF)CodeHash-I") {
+    field(DTYP, "FEED ROM Info")
+    field(DESC, "FW Git rev.")
+    field(INP , "@name=$(NAME) offset=2")
+    field(SCAN, "I/O Intr")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
 }
 
 record(aai, "$(PREF)ROM-I") {
