@@ -408,6 +408,8 @@ long convert_ap2iq(aSubRecord* prec)
  *  field(FTD , "DOUBLE")
  *  field(FTVA ,"DOUBLE")
  *  field(FTVB ,"DOUBLE")
+ *  field(FTVC ,"DOUBLE")
+ *  field(FTVD ,"DOUBLE")
  *  field(NOA , "128")
  *  field(NOB , "128")
  *  field(INPA, "Waveform Y")
@@ -416,6 +418,8 @@ long convert_ap2iq(aSubRecord* prec)
  *  field(INPD, "Width X") # window width
  *  field(OUTA, "Mean PP")
  *  field(OUTB, "Std PP")
+ *  field(OUTC, "Min PP")
+ *  field(OUTD, "Max PP")
  */
 
 static
@@ -423,7 +427,7 @@ long wf_stats(aSubRecord* prec)
 {
     size_t i, N=0;
     epicsEnum16 *ft = &prec->fta,
-            *ftv= &prec->ftva;
+                *ftv= &prec->ftva;
     // actual length of inputs
     epicsUInt32 len = MIN(prec->nea, prec->neb);
 
@@ -433,6 +437,7 @@ long wf_stats(aSubRecord* prec)
             sum2  = 0.0,
             start = *(double*)prec->c,
             width = *(double*)prec->d;
+    double  min = epicsNAN, max = epicsNAN;
 
 
     if(prec->dpvt==BADMAGIC) {
@@ -450,7 +455,7 @@ long wf_stats(aSubRecord* prec)
 
             }
         }
-        for(i=0; i<2; i++) {
+        for(i=0; i<4; i++) {
             if(ftv[i]!=menuFtypeDOUBLE) {
                 prec->dpvt=BADMAGIC;
                 (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
@@ -474,6 +479,11 @@ long wf_stats(aSubRecord* prec)
         if(time[i]>=start+width)
             break;
 
+        if(min > data[i] || N==0)
+            min = data[i];
+        if(max < data[i] || N==0)
+            max = data[i];
+
         sum  += data[i];
         sum2 += data[i] * data[i];
         N++;
@@ -491,6 +501,10 @@ long wf_stats(aSubRecord* prec)
     prec->neva=1;
     *(double*)prec->valb = sqrt(sum2 - sum*sum);
     prec->nevb=1;
+    *(double*)prec->valc = min;
+    prec->nevc=1;
+    *(double*)prec->vald = max;
+    prec->nevd=1;
 
     return 0;
 }

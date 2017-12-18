@@ -23,8 +23,10 @@ record(aSub, "$(PREF)Stat-Calc_") {
   field(INPB, "$(TIME) NPP MSI")
   field(INPC, "$(BASE)Stat:Start-SP") # window start
   field(INPD, "$(BASE)Stat:Width-SP") # window width
-  field(OUTA, "$(PREF)Mean-I PP")
-  field(OUTB, "$(PREF)Std-I PP")
+  field(OUTA, "$(PREF)Mean-I PP MSI")
+  field(OUTB, "$(PREF)Std-I PP MSI")
+  field(OUTC, "$(PREF)Min-I PP MSI")
+  field(OUTD, "$(PREF)Max-I PP MSI")
   field(FLNK, "$(FLNK=)")
   field(TSEL, "$(SIG).TIME")
 }
@@ -36,6 +38,18 @@ record(ai, "$(PREF)Mean-I") {
 }
 
 record(ai, "$(PREF)Std-I") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)Min-I") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)Max-I") {
   field(PREC, "$(PREC=3)")
   field(EGU , "$(EGU=)")
   field(TSEL, "$(SIG).TIME")
