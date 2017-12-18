@@ -92,6 +92,7 @@ def gentemplate(args, dev):
     files.sort(key=lambda i:i[0])
 
     out = tempfile.NamedTemporaryFile('r+')
+    out.write('# Generated from\n# FW: %s\n# JSON: %s\n# Code: %s\n\n'%(dev.descript, dev.jsonhash, dev.codehash))
 
     out.write('file "feed_base.template"\n{\n{PREF="$(P)ctrl:"}\n}\n\n')
 
@@ -216,13 +217,17 @@ class Device(object):
         return ret
 
     def _readrom(self):
+        self.descript = None
+        self.codehash = None
+        self.jsonhash = None
+        self.json = None
+
         values = self.exchange(range(0x800, 0x1000))
 
         values = numpy.frombuffer(values, be16)
         _log.debug("ROM[0] %08x", values[0])
         values = values[1::2] # discard upper bytes
 
-        self.json = None
         while len(values):
             type = values[0]>>14
             size = values[0]&0x3fff
@@ -237,12 +242,24 @@ class Device(object):
 
             if type==1:
                 blob = blob.tostring()
-                _log.info("ROM Text '%s'", blob)
+                if self.descript is None:
+                    self.descript = blob
+                else:
+                    _log.info("Extra ROM Text '%s'", blob)
             elif type==2:
                 blob = ''.join(["%04x"%b for b in blob])
-                _log.info("ROM Hash %s", blob)
+                if self.jsonhash is None:
+                    self.jsonhash = blob
+                elif self.codehash is None:
+                    self.codehash = blob
+                else:
+                    _log.info("Extra ROM Hash %s", blob)
+
             elif type==3:
-                self.json = json.loads(zlib.decompress(blob.tostring()).decode('ascii'))
+                if self.json is not None:
+                    _log.error("Ignoring additional JSON blob in ROM")
+                else:
+                    self.json = json.loads(zlib.decompress(blob.tostring()).decode('ascii'))
 
         if self.json is None:
             raise RuntimeError('ROM contains no JSON')
