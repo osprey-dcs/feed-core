@@ -393,7 +393,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
             do_timeout(off);
             continue;
 
-        }else if((ibuf[j*2 + 2]&0xfffffff0)!=msg.buf[j*2+2]) {
+        }else if((ibuf[j*2 + 2]&htonl(0xf0ffffff))!=msg.buf[j*2+2]) {
             // we don't expect re-ordering or change in command type
             // but allow 4 bits don't-care as future status bits.
             IFDBG(0, "response type doesn't match request (%08x %08x)",
@@ -555,7 +555,7 @@ void Device::handle_inspect()
 
     RegInterest::infos_t infos;
 
-    // iterate registeres and find interested
+    // iterate registers and find interested
     for(JBlob::const_iterator it = blob.begin(), end = blob.end(); it != end; ++it)
     {
         const JRegister& reg = it->second;
