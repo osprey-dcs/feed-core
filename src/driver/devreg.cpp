@@ -79,7 +79,7 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
             IFDBG(1, "Array bounds violation offset=%u size=%zu not within size=%zu",
                   (unsigned)info->offset, count, info->reg->mem.size());
         } else if(info->reg->inprogress()) {
-            IFDBG(1, "Busy");
+            IFDBG(1, "Ignoring write request while write already in progress");
         } else {
             if(!prec->pact) {
 
@@ -181,8 +181,8 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
         } else if(info->offset >= info->reg->mem.size()) {
             IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
                   (unsigned)info->offset, info->reg->mem.size());
-        } else if(info->reg->inprogress()) {
-            IFDBG(1, "Busy");
+        } else if(info->reg->state == DevReg::Writing) {
+            IFDBG(1, "Ignoring read while writing");
         } else {
             if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact) {
                 // I/O Intr scan, use cached, or async completion
@@ -237,13 +237,8 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                                  nreq, info->reg->sevr, (unsigned)info->offset, (unsigned)info->step);
 
             } else {
-                if(!info->reg->queue(false)) {
-                    (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
-                    IFDBG(1, "failed to queue\n");
-                    return ENODEV;
-                } else {
-                    info->reg->records.push_back(info);
-                }
+                info->reg->queue(false);
+                info->reg->records.push_back(info);
 
                 prec->pact = 1;
                 if(count)

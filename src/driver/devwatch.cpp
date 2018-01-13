@@ -130,8 +130,8 @@ long write_test_mask(boRecord *prec)
         } else if(info->offset >= info->reg->mem.size()) {
             IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
                   (unsigned)info->offset, info->reg->mem.size());
-        } else if(info->reg->inprogress()) {
-            IFDBG(1, "Busy");
+        } else if(info->reg->state == DevReg::Writing) {
+            IFDBG(1, "Ignoring read/watch while writing");
         } else {
             if(!prec->pact) {
                 IFDBG(1, "Start Watch of %s", info->reg->info.name.c_str());
