@@ -16,10 +16,6 @@ static inline double deg2rad(double deg) {
     return deg * TWOPI_360;
 }
 
-static inline double rad2deg(double deg) {
-    return deg / TWOPI_360;
-}
-
 Simulator_RFS::Simulator_RFS(const osiSockAddr& ep,
               const JBlob& blob,
               const values_t& initial)
@@ -82,12 +78,12 @@ void Simulator_RFS::acquire(unsigned instance)
 
     for(i=0, T=0.0; i < N; T+=Tinc)
     {
-        const double mod = 1 - T * 0.5 / (2*PI*5);
-        epicsInt32 I = amp * mod * sin(T);
-        if(I<min || T==0.0)
-            min = I;
-        if(I>max || T==0.0)
-            max = I;
+        const double mod = fabs(1 - T * 0.5 / (2*PI*5));
+        epicsInt32 adc = amp * mod * sin(T);
+        if(adc<min || T==0.0)
+            min = adc;
+        if(adc>max || T==0.0)
+            max = adc;
 
         // each pair is phase shifted to give visual difference
         double pha = phase;
