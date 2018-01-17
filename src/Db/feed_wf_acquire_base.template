@@ -287,6 +287,7 @@ record(ao, "$(BASE)Stat:Start-SP") {
 
 record(ao, "$(BASE)Stat:Width-SP") {
     field(PREC, "6")
+    field(VAL , "1") # default to a large value to include entire period
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
 }

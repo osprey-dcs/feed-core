@@ -26,10 +26,12 @@ record(dfanout, "$(PREF)Ena-FOut_") {
 alias("$(SIGI)T-I", "$(PREF)T-I")
 alias("$(SIGI)I-I", "$(PREF)I-I")
 alias("$(SIGQ)I-I", "$(PREF)Q-I")
+alias("$(SIGI)Scale-SP", "$(PREF)ScaleI-SP")
+alias("$(SIGQ)Scale-SP", "$(PREF)ScaleQ-SP")
 
 # scaling factor from amplitude squared to power
 #  (use I/Q scaling to determine amplitude scaling)
-record(ao, "$(PREF)PwrScl-SP") {
+record(ao, "$(PREF)ScaleP-SP") {
     field(VAL , "1.0")
     field(PREC, "9")
     field(PINI, "YES")
@@ -51,7 +53,7 @@ record(aSub, "$(PREF)AP-Calc_") {
   field(NOVC, "$(SIZE)")
   field(INPA, "$(PREF)I-I MSI NPP")
   field(INPB, "$(PREF)Q-I MSI NPP")
-  field(INPC, "$(PREF)PwrScl-SP MSI NPP")
+  field(INPC, "$(PREF)ScaleP-SP MSI NPP")
   field(OUTA, "$(PREF)Amp-I MSI PP")
   field(OUTB, "$(PREF)Pha-I MSI PP")
   field(OUTC, "$(PREF)Pwr-I MSI PP")
