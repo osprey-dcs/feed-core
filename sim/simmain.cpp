@@ -15,7 +15,7 @@ namespace {
 
 void usage(const char* exe)
 {
-    std::cout<<"Usage: "<<exe<<" [-hd] [-H <iface>[:<port>]] <json_file> [initials_file]\n";
+    std::cout<<"Usage: "<<exe<<" [-hd] [-H <iface>[:<port>]] [-L none|rfs] <json_file> [initials_file]\n";
 }
 
 Simulator* volatile current;
@@ -33,13 +33,14 @@ int main(int argc, char *argv[])
     try {
         int opt;
         bool debug = false;
+        std::string logic("none");
         osiSockAddr endpoint;
         memset(&endpoint, 0, sizeof(endpoint));
         endpoint.ia.sin_family = AF_INET;
         endpoint.ia.sin_addr.s_addr = htonl(INADDR_ANY);
         endpoint.ia.sin_port = htons(50006);
 
-        while((opt=getopt(argc, argv, "hH:d"))!=-1) {
+        while((opt=getopt(argc, argv, "hH:dL:"))!=-1) {
             switch(opt) {
             case 'H':
                 if(aToIPAddr(optarg, 50006, &endpoint.ia))
@@ -48,8 +49,12 @@ int main(int argc, char *argv[])
             case 'd':
                 debug = true;
                 break;
+            case 'L':
+                logic = optarg;
+                break;
             default:
                 std::cerr<<"Unknown option '"<<opt<<"'\n\n";
+                // fall through
             case 'h':
                 usage(argv[0]);
                 return 2;
@@ -111,19 +116,26 @@ int main(int argc, char *argv[])
         rom.push_back(ROMDescriptor::BigInt, "0000000000000000000000000000000000000000");
         rom.push_back(ROMDescriptor::JSON, json);
 
-        Simulator sim(endpoint, blob, initial);
-        sim.debug = debug;
+        feed::auto_ptr<Simulator> sim;
+        if(logic=="none") {
+            sim.reset(new Simulator(endpoint, blob, initial));
+        } else if(logic=="rfs") {
+            sim.reset(new Simulator_RFS(endpoint, blob, initial));
+        } else {
+            throw std::runtime_error(SB()<<"Unknown logic name: -L "<<logic);
+        }
+        sim->debug = debug;
 
         // copy in ROM image
         {
-            SimReg& reg = sim["ROM"];
+            SimReg& reg = (*sim)["ROM"];
             size_t len = rom.prepare(&reg.storage[0], reg.storage.size());
             std::cout<<"ROM contents "<<len<<"/"<<reg.storage.size()<<"\n";
         }
 
         if(debug) {
             std::cout<<"Registers:\n";
-            for(Simulator::iterator it=sim.begin(), end=sim.end(); it!=end; ++it)
+            for(Simulator::iterator it=sim->begin(), end=sim->end(); it!=end; ++it)
             {
                 SimReg& reg = it->second;
                 std::cout<<"  "<<reg.name<<"\t"
@@ -138,8 +150,8 @@ int main(int argc, char *argv[])
         signal(SIGTERM, &handler);
 
         // time to run now...
-        current = &sim;
-        sim.exec();
+        current = sim.get();
+        sim->exec();
         current = 0;
 
         return 0;

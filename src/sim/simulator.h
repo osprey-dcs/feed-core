@@ -20,6 +20,7 @@ struct SimReg {
     epicsUInt32 mask; // data bit mask
     bool readable, writable;
 
+    // simulate storage is in host byte order
     typedef std::vector<epicsUInt32> storage_t;
     storage_t storage;
 
@@ -39,7 +40,7 @@ public:
     Simulator(const osiSockAddr& ep,
               const JBlob& blob,
               const values_t& initial);
-    ~Simulator();
+    virtual ~Simulator();
 
     // manually add a register (in addition to those defined in JBlob)
     void add(const SimReg& reg);
@@ -62,6 +63,9 @@ public:
     bool debug;
     // guard access  to register values
     epicsMutex lock;
+protected:
+    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval);
+
 private:
     bool running;
 
@@ -79,6 +83,30 @@ public:
     typedef reg_by_name_t::iterator iterator;
     iterator begin() { return reg_by_name.begin(); }
     iterator end() { return reg_by_name.end(); }
+};
+
+class epicsShareClass Simulator_RFS : public Simulator
+{
+public:
+    Simulator_RFS(const osiSockAddr& ep,
+                  const JBlob& blob,
+                  const values_t& initial);
+    virtual ~Simulator_RFS();
+
+private:
+    // registers use by logic
+    SimReg& circle_buf_flip;
+    SimReg& llrf_circle_ready;
+    SimReg* shell_X_dsp_chan_keep[2];
+    SimReg* shell_X_dsp_tag[2];
+    SimReg* shell_X_circle_data[2];
+    SimReg* shell_X_slow_data[2];
+
+    double phase;
+    epicsUInt16 circle_count;
+
+    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval);
+    void acquire(unsigned instance);
 };
 
 #endif // SIMULATOR_H

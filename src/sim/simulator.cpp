@@ -240,7 +240,7 @@ void Simulator::exec()
                         } else {
                             // write
                             // echo back value written
-                            reg.storage[offset] = data & reg.mask;
+                            reg_write(reg, offset, data & reg.mask);
                             if(debug)
                                 errlogPrintf("%s: write %s[%u] (%06x) <- %08x\n",
                                              addr.c_str(),
@@ -268,6 +268,11 @@ void Simulator::exec()
         running = false;
         throw;
     }
+}
+
+void Simulator::reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval)
+{
+    reg.storage[offset] = newval & reg.mask;
 }
 
 void Simulator::interrupt()
