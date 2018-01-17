@@ -67,7 +67,7 @@ record(calc, "$(PREF)RateTx-I") {
 record(longin, "$(PREF)CntRx-I") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=1")
-    field(FLNK, "$(PREF)RateTx-I")
+    field(FLNK, "$(PREF)RateRx-I")
 }
 record(calc, "$(PREF)RateRx-I") {
     field(INPA, "$(PREF)CntRx-I")
@@ -78,34 +78,40 @@ record(calc, "$(PREF)RateRx-I") {
 record(longin, "$(PREF)CntIgnore-I") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=2")
-    field(FLNK, "$(PREF)RateTx-I")
+    field(FLNK, "$(PREF)RateIgnore-I")
 }
 record(calc, "$(PREF)RateIgnore-I") {
     field(INPA, "$(PREF)CntIgnore-I")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
+    field(HIGH, "0.0001") # small non-zero
+    field(HSB , "MAJOR")
     field(FLNK, "$(PREF)CntTimo-I")
 }
 record(longin, "$(PREF)CntTimo-I") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=3")
-    field(FLNK, "$(PREF)RateTx-I")
+    field(FLNK, "$(PREF)RateTimo-I")
 }
 record(calc, "$(PREF)RateTimo-I") {
     field(INPA, "$(PREF)CntTimo-I")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
+    field(HIGH, "0.0001") # small non-zero
+    field(HSB , "MAJOR")
     field(FLNK, "$(PREF)CntErr-I")
 }
 record(longin, "$(PREF)CntErr-I") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=4")
-    field(FLNK, "$(PREF)RateTx-I")
+    field(FLNK, "$(PREF)RateErr-I")
 }
 record(calc, "$(PREF)RateErr-I") {
     field(INPA, "$(PREF)CntErr-I")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
+    field(HIGH, "0.0001") # small non-zero
+    field(HSB , "MAJOR")
 }
 
 record(aai, "$(PREF)JInfo-I") {
