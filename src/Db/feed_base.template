@@ -85,7 +85,7 @@ record(calc, "$(PREF)RateIgnore-I") {
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
     field(HIGH, "0.0001") # small non-zero
-    field(HSB , "MAJOR")
+    field(HSV , "MAJOR")
     field(FLNK, "$(PREF)CntTimo-I")
 }
 record(longin, "$(PREF)CntTimo-I") {
@@ -98,7 +98,7 @@ record(calc, "$(PREF)RateTimo-I") {
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
     field(HIGH, "0.0001") # small non-zero
-    field(HSB , "MAJOR")
+    field(HSV , "MAJOR")
     field(FLNK, "$(PREF)CntErr-I")
 }
 record(longin, "$(PREF)CntErr-I") {
@@ -111,7 +111,7 @@ record(calc, "$(PREF)RateErr-I") {
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
     field(HIGH, "0.0001") # small non-zero
-    field(HSB , "MAJOR")
+    field(HSV , "MAJOR")
 }
 
 record(aai, "$(PREF)JInfo-I") {
@@ -159,6 +159,16 @@ record(aai, "$(PREF)ROM-I") {
     field(SCAN, "I/O Intr")
     field(FTVL, "LONG")
     field(NELM, "2048")
+}
+
+# aggregate basic alarm status
+record(calc, "$(PREF)BaseSts_") {
+    field(INPA, "$(PREF)State-Sts.SEVR CP MSS")
+    field(INPB, "$(PREF)RateIgnore-I.SEVR CP MSS")
+    field(INPC, "$(PREF)RateTimo-I.SEVR CP MSS")
+    field(INPD, "$(PREF)RateErr-I.SEVR CP MSS")
+    # do something with the values so that the links are actual read
+    field(CALC, "A+B+C+D")
 }
 
 # Background poll to ensure the device is still there
