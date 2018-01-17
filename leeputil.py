@@ -160,7 +160,7 @@ class Device(object):
 
         msg = numpy.zeros(2+2*len(addrs), dtype=be32)
         msg[0] = random.randint(0,0xffffffff)
-        msg[1] = msg[0]&0xffffffff
+        msg[1] = msg[0]^0xffffffff
 
         for i,(A, V) in enumerate(zip(addrs, values), 1):
             A &= 0x00ffffff
