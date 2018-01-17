@@ -82,6 +82,7 @@ record(aai, "$(PREF)I-I") {
 
     field(DTYP, "FEED Register Read")
     field(DESC, "$(DESC=Reg $(NAME))")
+    # wait=false uses values previously readback in feed_wf_acquire_base.template
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data signal=$(PREF) wait=false")
     field(FTVL, "DOUBLE")
     field(NELM, "$(SIZE)")

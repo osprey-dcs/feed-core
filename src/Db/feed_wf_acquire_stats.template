@@ -17,8 +17,8 @@ record(aSub, "$(PREF)Stat-Calc_") {
   field(FTD , "DOUBLE")
   field(FTVA ,"DOUBLE")
   field(FTVB ,"DOUBLE")
-  field(NOA , "128")
-  field(NOB , "128")
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
   field(INPA, "$(SIG) NPP MSI")
   field(INPB, "$(TIME) NPP MSI")
   field(INPC, "$(BASE)Stat:Start-SP") # window start

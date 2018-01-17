@@ -172,6 +172,7 @@ record(bo, "$(BASE)Mode-Sel") {
 record(ao, "$(BASE)HldOff-SP") {
     field(DESC, "re-arm holdoff time")
     field(OUT , "$(BASE)AcqDly_.ODLY NPP")
+    field(PINI, "YES")
     field(DRVH, "5.0")
     field(DRVL, "0.1")
     field(VAL , "1.0")
@@ -200,38 +201,46 @@ record(longout, "$(BASE)Acq-Cmd_") {
 # wait for value & $(MASK) == $(MASK) for reg llrf_circle_ready
 record(bo, "$(BASE)Rdy-I_") {
     field(DTYP, "FEED Register Watch")
-    field(OUT , "@name=$(NAME) retry=0.1 reg=llrf_circle_ready mask=$(MASK) value=$(MASK)")
+    field(OUT , "@name=$(NAME) retry=$(RETRY=0.1) reg=llrf_circle_ready mask=$(MASK) value=$(MASK)")
     field(FLNK, "$(BASE)CircRaw_")
     field(TPRO, "$(TPRO=0)")
 }
 
 # actual readback of sample buffer
-record(aai, "$(BASE)CircRaw_") {
+# only first element is used, but all are read in
+record(ai, "$(BASE)CircRaw_") {
     field(SDIS, "$(BASE)Rdy-I_ MSI")
     field(DISV, "-42")
 
     field(DTYP, "FEED Register Read")
     field(DESC, "$(DESC=Reg $(NAME))")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_circle_data")
-    field(FTVL, "DOUBLE")
-    field(NELM, "$(SIZE)")
     field(TSE , "-2")
-    field(FLNK, "$(BASE)SlowRaw_")
+    field(FLNK, "$(BASE)Tag1-I")
     field(TPRO, "$(TPRO=0)")
     info(feed:info:rawinput, "$(BASE)CircRaw_")
 }
 
-# actual readback of aggregated data block
-record(aai, "$(BASE)SlowRaw_") {
+# actual readback of slow buffer
+record(longin, "$(BASE)Tag1-I") {
     field(DTYP, "FEED Register Read")
-    field(DESC, "$(DESC=Reg $(NAME))")
-    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data")
-    field(FTVL, "DOUBLE")
-    field(NELM, "$(SIZE)")
-    field(TSE , "-2")
+    field(DESC, "Tag at start of acq.")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=34")
+    # cheating a little here.
+    # use reception time of circle_data as the "acquisition time"
+    # ignore reception time of slow_data
+    field(TSEL, "$(BASE)CircRaw_.TIME")
+    field(FLNK, "$(BASE)Tag2-I")
+    field(TPRO, "$(TPRO=0)")
+}
+
+record(longin, "$(BASE)Tag2-I") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "Tag at end of acq.")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=33 wait=false")
+    field(TSEL, "$(BASE)CircRaw_.TIME")
     field(FLNK, "$(BASE)AcqCnt-I")
     field(TPRO, "$(TPRO=0)")
-    info(feed:info:rawinput, "$(BASE)SlowRaw_")
 }
 
 # individual signals monitor this to detect new data
@@ -272,7 +281,7 @@ record(calcout, "$(BASE)AcqDly_") {
     field(SDIS, "$(BASE)Mode-Sel")
     field(DISV, "0") # disable when Single
     field(CALC, "0")
-    field(ODLY, "1.0")
+    field(ODLY, "1.0") # overwritten by $(BASE)HldOff-SP
     field(OUT , "$(BASE)Acq-Cmd PP")
     field(TPRO, "$(TPRO=0)")
 }
