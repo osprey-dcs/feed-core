@@ -29,6 +29,10 @@ alias("$(SIGQ)I-I", "$(PREF)Q-I")
 alias("$(SIGI)Scale-SP", "$(PREF)ScaleI-SP")
 alias("$(SIGQ)Scale-SP", "$(PREF)ScaleQ-SP")
 
+# alias our records for use like _signal.template
+alias("$(PREF)Ena-Sel", "$(SIGI)Ena-Sel")
+alias("$(PREF)Ena-Sel", "$(SIGQ)Ena-Sel")
+
 # scaling factor from amplitude squared to power
 #  (use I/Q scaling to determine amplitude scaling)
 record(ao, "$(PREF)ScaleP-SP") {
