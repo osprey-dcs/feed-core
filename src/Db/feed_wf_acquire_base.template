@@ -74,7 +74,7 @@ record(aSub, "$(BASE)AmpCalc") {
     field(FTA , "ULONG") # wave_samp_per register
     field(INPA, "$(BASE)Dec-SP MSI NPP")
     field(FTB , "ULONG") # cic_period
-    field(INPB, "33")
+    field(INPB, "33") # cic_base_period
     field(FTVA, "ULONG") # wave_shift
     field(OUTA, "$(BASE)WaveShift-SP MSI PP")
     field(FTVB, "DOUBLE") # yscale  (referenced in feed_wf_acquire_signal.template)

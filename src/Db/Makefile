@@ -16,8 +16,14 @@ DB += feed_wf_acquire_pair.template
 DB += feed_wf_acquire_stats.template
 
 DB += rfs_base.template
+
+# install expanded and unexpanded
+
 DB += rfs_logic.substitutions
 DB += rfs_registers.substitutions
+
+DB += rfs_logic.db
+DB += rfs_registers.db
 
 include $(TOP)/configure/RULES
 #----------------------------------------
