@@ -69,7 +69,7 @@ Simulator::Simulator(const osiSockAddr& ep, const JBlob& blob, const values_t &i
     {
         reg_by_addr_t::iterator rit = reg_by_addr.find(it->first);
         if(rit==reg_by_addr.end()) {
-            std::cout<<"Can't initialize non-existant register "<<std::hex<<it->first;
+            std::cout<<"Can't initialize non-existant register "<<std::hex<<it->first<<"\n";
             continue;
         }
         SimReg& reg = *rit->second;
