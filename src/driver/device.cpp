@@ -394,6 +394,8 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
         if(!msg.reg[j] || !msg.reg[j]->inprogress())
             continue;
 
+        DevReg * const reg = msg.reg[j];
+
         if(j*2+3 >= ilen) {
             IFDBG(0, "reply truncated %zu expected %zu", ilen*4, msg.buf.size()*4);
             do_timeout(off);
@@ -411,37 +413,40 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
         epicsUInt32 cmd_addr = ntohl(ibuf[j*2 + 2]),
                 data     = ibuf[j*2 + 3];
 
-        epicsUInt32 offset = (cmd_addr&0x00ffffff) - msg.reg[j]->info.base_addr;
+        epicsUInt32 offset = (cmd_addr&0x00ffffff) - reg->info.base_addr;
 
         if(cmd_addr&0x10000000) {
-            msg.reg[j]->mem.at(offset) = data;
+            reg->mem.at(offset) = data;
         } else {
             // writes simply echo written value, ignore data
         }
 
-        if(!msg.reg[j]->received.at(offset)) {
-            msg.reg[j]->received.at(offset) = true;
-            msg.reg[j]->nremaining--;
+        if(!reg->received.at(offset)) {
+            reg->received.at(offset) = true;
+            reg->nremaining--;
         }
 
-        if(!msg.reg[j]->nremaining)
+        if(!reg->nremaining)
         {
-            assert(std::find(msg.reg[j]->received.begin(),
-                             msg.reg[j]->received.end(),
-                             false) == msg.reg[j]->received.end());
+            assert(std::find(reg->received.begin(),
+                             reg->received.end(),
+                             false) == reg->received.end());
 
             // all addresses received
-            msg.reg[j]->state = DevReg::InSync;
+            reg->state = DevReg::InSync;
 
             // register timestamp is the time when this last packet is received.
-            msg.reg[j]->rx = loop_time;
+            reg->rx = loop_time;
 
-            msg.reg[j]->stat = 0;
-            msg.reg[j]->sevr = 0;
-            msg.reg[j]->process();
+            reg->stat = 0;
+            reg->sevr = 0;
+            reg->process();
 
-            msg.reg[j]->scan_interested();
-            IFDBG(1, "complete %s", msg.reg[j]->info.name.c_str());
+            reg->scan_interested();
+            IFDBG(1, "complete %s", reg->info.name.c_str());
+
+
+
         }
 
         msg.reg[j] = 0;
