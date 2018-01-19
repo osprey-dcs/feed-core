@@ -8,12 +8,14 @@ Building
 
 Requires:
 
-* EPICS Base >=3.15.1
+* EPICS Base >=3.15.1 https://epics.anl.gov/
+* Busy https://github.com/epics-modules/busy
 * zlib
 
 ```sh
 sudo apt-get install libz-dev
 cat <<EOF > configure/RELEASE.local
+BUSY=/path/to/epics/busy
 EPICS_BASE=/path/to/epics/base
 EOF
 make

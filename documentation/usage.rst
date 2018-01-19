@@ -83,7 +83,7 @@ The sequence for waveform acquistion is ::
   dev.set_channel_mask([0, 1])
   while True:
     dev.wait_for_acq()
-    ch0, ch1 = dev.get_channels()
+    ch0, ch1 = dev.get_channels([0, 1])
     ...
 
 When it is desired to coordinate acquistion with changes to
@@ -94,5 +94,5 @@ setting registers, then ::
   while True:
     dev.reg_write([('foo', 42)])
     dev.wait_for_acq(tag=True)
-    ch0, ch1 = dev.get_channels()
+    ch0, ch1 = dev.get_channels([0, 1])
     ...
