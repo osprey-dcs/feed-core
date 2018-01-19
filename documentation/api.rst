@@ -22,3 +22,7 @@ API
    .. automethod:: get_channels
 
    .. automethod:: get_timebase
+
+   .. automethod:: load_xxx
+
+   .. automethod:: assemble_xxx
