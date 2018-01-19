@@ -49,6 +49,7 @@ record(aai, "$(PREF)LastError-I") {
     field(DTYP, "FEED Error")
     field(INP , "@name=$(NAME)")
     field(SCAN, "I/O Intr")
+    field(FTVL, "CHAR")
     field(NELM, "256")
 }
 
