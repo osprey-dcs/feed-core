@@ -227,6 +227,12 @@ void Device::reset()
     {
         DevReg *reg = it->second;
 
+        // put all register contents into a known state
+        // on disconnect.
+        std::fill(reg->mem.begin(),
+                  reg->mem.end(),
+                  0);
+
         // complete any in-progress async
         reg->process();
 
