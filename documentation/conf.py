@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# FPGA Embedded Ethernet Driver (FEED) documentation build configuration file, created by
+# LBNL Embedded Ethernet Protocol (LEEP) documentation build configuration file, created by
 # sphinx-quickstart on Thu Jan 18 18:36:56 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -16,9 +16,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../src/python'))
 
 # -- General configuration ------------------------------------------------
 
@@ -52,7 +52,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'FPGA Embedded Ethernet Driver (FEED)'
+project = u'LBNL Embedded Ethernet Protocol (LEEP)'
 copyright = u'2018, Michael Davidsaver'
 author = u'Michael Davidsaver'
 
@@ -137,7 +137,7 @@ html_theme = 'alabaster'
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
 #
-# html_title = u'FPGA Embedded Ethernet Driver (FEED) v0.1'
+# html_title = u'LBNL Embedded Ethernet Protocol (LEEP) v0.1'
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #
@@ -263,7 +263,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'FPGAEmbeddedEthernetDriverFEED.tex', u'FPGA Embedded Ethernet Driver (FEED) Documentation',
+    (master_doc, 'FPGAEmbeddedEthernetDriverFEED.tex', u'LBNL Embedded Ethernet Protocol (LEEP) Documentation',
      u'Michael Davidsaver', 'manual'),
 ]
 
@@ -305,7 +305,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'fpgaembeddedethernetdriverfeed', u'FPGA Embedded Ethernet Driver (FEED) Documentation',
+    (master_doc, 'fpgaembeddedethernetdriverfeed', u'LBNL Embedded Ethernet Protocol (LEEP) Documentation',
      [author], 1)
 ]
 
@@ -320,7 +320,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'FPGAEmbeddedEthernetDriverFEED', u'FPGA Embedded Ethernet Driver (FEED) Documentation',
+    (master_doc, 'FPGAEmbeddedEthernetDriverFEED', u'LBNL Embedded Ethernet Protocol (LEEP) Documentation',
      author, 'FPGAEmbeddedEthernetDriverFEED', 'One line description of project.',
      'Miscellaneous'),
 ]
