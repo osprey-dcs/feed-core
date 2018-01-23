@@ -75,6 +75,8 @@ By method level instance ::
 
 These three are equivalent.
 
+An exception will be raised unless a search matches exactly one register name.
+
 Waveform Acquisition
 --------------------
 
