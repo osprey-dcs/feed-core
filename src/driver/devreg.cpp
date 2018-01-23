@@ -21,6 +21,7 @@
 #include <callback.h>
 #include <menuScan.h>
 #include <dbCommon.h>
+#include <menuFtype.h>
 #include <stringoutRecord.h>
 #include <longinRecord.h>
 #include <longoutRecord.h>
@@ -50,9 +51,23 @@ namespace {
     errlogPrintf("%s: Error %s\n", prec->name, e.what()); info->cleanup(); return 0; }
 
 
-long write_register_common(dbCommon *prec, const char *raw, size_t count, unsigned valsize)
+long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFtype ftvl)
 {
+    const unsigned valsize = dbValueSize(ftvl);
     TRY {
+        switch(ftvl) {
+        case menuFtypeCHAR:
+        case menuFtypeUCHAR:
+        case menuFtypeSHORT:
+        case menuFtypeUSHORT:
+        case menuFtypeLONG:
+        case menuFtypeULONG:
+        case menuFtypeDOUBLE:
+            break;
+        default:
+            throw std::logic_error("Unsupported FTVL");
+        }
+
         Guard G(device->lock);
 
         if(!info->reg) {
@@ -75,11 +90,16 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, unsign
                 {
                     epicsUInt32 val = 0u;
 
-                    switch(valsize) {
-                    case 1: val = *(const epicsUInt8*)in; break;
-                    case 2: val = *(const epicsUInt16*)in; break;
-                    case 4: val = *(const epicsUInt32*)in; break;
-                    case 8: val = (*(const double*)in) / info->scale; break;
+                    switch(ftvl) {
+                    case menuFtypeCHAR:
+                    case menuFtypeUCHAR: val = *(const epicsUInt8*)in; break;
+                    case menuFtypeSHORT:
+                    case menuFtypeUSHORT: val = *(const epicsUInt16*)in; break;
+                    case menuFtypeLONG:
+                    case menuFtypeULONG: val = *(const epicsUInt32*)in; break;
+                    case menuFtypeDOUBLE: val = (*(const double*)in) / info->scale; break;
+                    default:
+                        break;
                     }
 
                     info->reg->mem[i] = htonl(val);
@@ -115,28 +135,42 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, unsign
 
 long write_register_lo(longoutRecord *prec)
 {
-    return write_register_common((dbCommon*)prec, (const char*)&prec->val, 1, sizeof(prec->val));
+    return write_register_common((dbCommon*)prec, (const char*)&prec->val, 1, menuFtypeLONG);
 }
 
 long write_register_ao(aoRecord *prec)
 {
-    return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, sizeof(prec->val));
+    return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, menuFtypeLONG);
 }
 
 long write_register_mbbo(mbboRecord *prec)
 {
-    return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, sizeof(prec->val));
+    return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, menuFtypeULONG);
 }
 
 long write_register_aao(aaoRecord *prec)
 {
-    return write_register_common((dbCommon*)prec, (const char*)prec->bptr, prec->nord, dbValueSize(prec->ftvl));
+    return write_register_common((dbCommon*)prec, (const char*)prec->bptr, prec->nord, (menuFtype)prec->ftvl);
 }
 
-long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned valsize)
+long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ftvl)
 {
+    const unsigned valsize = dbValueSize(ftvl);
     TRY {
         size_t nreq = count ? *count : 1;
+
+        switch(ftvl) {
+        case menuFtypeCHAR:
+        case menuFtypeUCHAR:
+        case menuFtypeSHORT:
+        case menuFtypeUSHORT:
+        case menuFtypeLONG:
+        case menuFtypeULONG:
+        case menuFtypeDOUBLE:
+            break;
+        default:
+            throw std::logic_error("Unsupported FTVL");
+        }
 
         Guard G(device->lock);
 
@@ -151,7 +185,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
             IFDBG(1, "Busy");
         } else {
             if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact) {
-                // I/O Intr scan, use current, or async completion
+                // I/O Intr scan, use cached, or async completion
 
                 // mask for sign extension
                 epicsUInt32 signmask = 0;
@@ -170,15 +204,20 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
                     if(val & signmask)
                         val |= signmask;
 
-                    switch(valsize) {
-                    case 1: *(epicsUInt8*)out = val; break;
-                    case 2: *(epicsUInt16*)out = val; break;
-                    case 4: *(epicsUInt32*)out = val; break;
-                    case 8:
+                    switch(ftvl) {
+                    case menuFtypeCHAR:
+                    case menuFtypeUCHAR: *(epicsUInt8*)out = val; break;
+                    case menuFtypeSHORT:
+                    case menuFtypeUSHORT: *(epicsUInt16*)out = val; break;
+                    case menuFtypeLONG:
+                    case menuFtypeULONG: *(epicsUInt32*)out = val; break;
+                    case menuFtypeDOUBLE:
                         if(signmask)
                             *(double*)out = epicsInt32(val) * info->scale;
                         else
                             *(double*)out = val * info->scale;
+                        break;
+                    default:
                         break;
                     }
                 }
@@ -225,23 +264,23 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, unsigned val
 
 long read_register_li(longinRecord *prec)
 {
-    return read_register_common((dbCommon*)prec, (char*)&prec->val, 0, sizeof(prec->val));
+    return read_register_common((dbCommon*)prec, (char*)&prec->val, 0, menuFtypeLONG);
 }
 
 long read_register_ai(aiRecord *prec)
 {
-    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, sizeof(prec->rval));
+    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, menuFtypeLONG);
 }
 
 long read_register_mbbi(mbbiRecord *prec)
 {
-    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, sizeof(prec->rval));
+    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, menuFtypeULONG);
 }
 
 long read_register_aai(aaiRecord *prec)
 {
     size_t cnt = prec->nelm * dbValueSize(prec->ftvl) /4u;
-    long ret = read_register_common((dbCommon*)prec, (char*)prec->bptr, &cnt, dbValueSize(prec->ftvl));
+    long ret = read_register_common((dbCommon*)prec, (char*)prec->bptr, &cnt, (menuFtype)prec->ftvl);
     prec->nord = cnt;
     return ret;
 }
