@@ -58,20 +58,26 @@ DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
     ,info(info)
     ,bootstrap(bootstrap)
     ,state(Invalid)
-    ,mem(1u<<info.addr_width, 0)
+    ,read_queued(false)
+    ,write_queued(false)
+    ,mem_rx(1u<<info.addr_width, 0)
+    ,mem_tx(1u<<info.addr_width, 0)
     ,received(1u<<info.addr_width, false)
     ,nremaining(0u)
-    ,next_send(mem.size())
+    ,next_send(mem_rx.size())
 {}
+
+void DevReg::reset()
+{
+    state = DevReg::Invalid;
+    read_queued = write_queued = false;
+}
 
 void DevReg::process()
 {
     // regular read/writes
     dev->records.splice(dev->records.end(),
-                        records);
-    // syncs
-    dev->records.splice(dev->records.end(),
-                        records2);
+                        records_inprog);
 }
 
 void DevReg::scan_interested()
@@ -86,32 +92,62 @@ void DevReg::scan_interested()
     }
 }
 
-bool DevReg::queue(bool write)
+void DevReg::queue(bool write, RegInterest *action)
 {
-    if(inprogress())
-        return false;
+    switch(state) {
+    case Invalid:
+    case InSync:
+        // Idle, queue immediately
+        std::fill(received.begin(),
+                  received.end(),
+                  false);
+        nremaining = received.size();
+        next_send = 0;
 
-    std::fill(received.begin(),
-              received.end(),
-              false);
-    nremaining = received.size();
-    next_send = 0;
+        if((!write && !info.readable)
+                || (write && !info.writable))
+            throw std::runtime_error("Register does not support requested operation");
 
-    if((!write && !info.readable)
-            || (write && !info.writable))
-        throw std::runtime_error("Register does not support requested operation");
+        dev->reg_send.push_back(this);
 
-    dev->reg_send.push_back(this);
+        state = write ? Writing : Reading;
 
-    state = write ? Writing : Reading;
+        if(action)
+            records_inprog.push_back(action);
 
-    IFDBG(1, "queue %s for %s from %06x",
-                 info.name.c_str(),
-                 write ? "write" : "read",
-                 (unsigned)next_send);
+        dev->poke_runner();
 
-    dev->poke_runner();
-    return true;
+        IFDBG(5, "queue %s for %s from %06x",
+                     info.name.c_str(),
+                     write ? "write" : "read",
+                     (unsigned)next_send);
+        break;
+    case Writing:
+        // write in progress, flag to re-queue on completion
+        if(write) {
+            if(action)
+                records_write.push_back(action);
+            write_queued = true;
+        } else {
+            if(action)
+                records_read.push_back(action);
+            read_queued = true;
+        }
+        break;
+    case Reading:
+        // read in progress
+        if(write) {
+            // flag to queue write after read completes
+            if(action)
+                records_write.push_back(action);
+            write_queued = true;
+        } else {
+            // merge this read request with the inprogress op
+            if(action)
+                records_inprog.push_back(action);
+        }
+        break;
+    }
 }
 
 #undef IFDBG
@@ -231,8 +267,11 @@ void Device::reset()
 
         // put all register contents into a known state
         // on disconnect.
-        std::fill(reg->mem.begin(),
-                  reg->mem.end(),
+        std::fill(reg->mem_rx.begin(),
+                  reg->mem_rx.end(),
+                  0);
+        std::fill(reg->mem_tx.begin(),
+                  reg->mem_tx.end(),
                   0);
 
         // complete any in-progress async
@@ -243,7 +282,7 @@ void Device::reset()
         if(!reg->bootstrap) {
             delete reg;
         } else {
-            reg->state = DevReg::Invalid;
+            reg->reset();
         }
     }
 
@@ -287,9 +326,9 @@ void Device::handle_send(Guard& G)
         DevReg *R = reg_send.front();
 
         assert(R->inprogress());
-        assert(R->next_send < R->mem.size() );
+        assert(R->next_send < R->mem_tx.size() );
 
-        for(unsigned j=0; j<DevMsg::nreg && R->next_send < R->mem.size(); j++) {
+        for(unsigned j=0; j<DevMsg::nreg && R->next_send < R->mem_tx.size(); j++) {
             if(msg.reg[j])
                 continue;
             // found available address slot in message
@@ -304,7 +343,7 @@ void Device::handle_send(Guard& G)
                 addr |= 0x10000000;
 
             } else {
-                val = R->mem.at(offset);
+                val = R->mem_tx.at(offset);
             }
 
             msg.reg[j] = R;
@@ -312,7 +351,7 @@ void Device::handle_send(Guard& G)
             msg.buf[2*j + 3] = val;
         }
 
-        if(R->next_send>=R->mem.size()) {
+        if(R->next_send>=R->mem_tx.size()) {
             // all addresses of this register have been sent
             reg_send.pop_front();
         }
@@ -420,7 +459,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
         epicsUInt32 offset = (cmd_addr&0x00ffffff) - reg->info.base_addr;
 
         if(cmd_addr&0x10000000) {
-            reg->mem.at(offset) = data;
+            reg->mem_rx.at(offset) = data;
         } else {
             // writes simply echo written value, ignore data
         }
@@ -447,9 +486,22 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
             reg->process();
 
             reg->scan_interested();
-            IFDBG(1, "complete %s", reg->info.name.c_str());
+            IFDBG(5, "complete %s", reg->info.name.c_str());
 
+            if(reg->write_queued) {
+                reg->write_queued = false;
+                reg->records_inprog.splice(reg->records_inprog.end(),
+                                           reg->records_write);
+                reg->queue(true);
+                IFDBG(5, "start queued write %s", reg->info.name.c_str());
 
+            } else if(reg->read_queued) {
+                reg->read_queued = false;
+                reg->records_inprog.splice(reg->records_inprog.end(),
+                                           reg->records_read);
+                reg->queue(false);
+                IFDBG(5, "start queued read %s", reg->info.name.c_str());
+            }
 
         }
 
@@ -505,7 +557,7 @@ void Device::do_timeout(unsigned i)
             // timeout before all sent
             reg_send.pop_front();
         } else {
-            assert(reg->next_send>=reg->mem.size());
+            assert(reg->next_send>=reg->mem_tx.size());
         }
 
         reg->state = DevReg::Invalid;
@@ -526,7 +578,7 @@ void Device::handle_inspect()
 
     ROM rom;
 
-    rom.parse((char*)&reg_rom->mem[0], reg_rom->mem.size()*4);
+    rom.parse((char*)&reg_rom->mem_rx[0], reg_rom->mem_rx.size()*4);
     std::string json;
 
     unsigned i=0;
@@ -947,7 +999,7 @@ void DevReg::show(std::ostream& strm, int lvl) const
           "   Pending async records:\n"
           ;
 
-    for(DevReg::records_t::const_iterator it2 = this->records.begin(), end2 = this->records.end();
+    for(DevReg::records_t::const_iterator it2 = this->records_inprog.begin(), end2 = this->records_inprog.end();
         it2 != end2; ++it2)
     {
         RegInterest * const reg = *it2;
@@ -956,7 +1008,18 @@ void DevReg::show(std::ostream& strm, int lvl) const
         strm<<"\n";
     }
 
-    for(DevReg::records_t::const_iterator it2 = this->records2.begin(), end2 = this->records2.end();
+    strm<<"  Pending write records:\n";
+    for(DevReg::records_t::const_iterator it2 = this->records_write.begin(), end2 = this->records_write.end();
+        it2 != end2; ++it2)
+    {
+        RegInterest * const reg = *it2;
+        strm<<"    ";
+        reg->show(strm, lvl);
+        strm<<"\n";
+    }
+
+    strm<<"  Pending read records:\n";
+    for(DevReg::records_t::const_iterator it2 = this->records_read.begin(), end2 = this->records_read.end();
         it2 != end2; ++it2)
     {
         RegInterest * const reg = *it2;

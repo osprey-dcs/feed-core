@@ -67,7 +67,7 @@ struct WaitInfo : public RecInfo
             if(reg && reg->state==DevReg::InSync) {
                 // had successful reply
 
-                epicsUInt32 val(ntohl(reg->mem[offset]));
+                epicsUInt32 val(ntohl(reg->mem_rx[offset]));
 
                 if((val & mask) == value)
                 {
@@ -98,8 +98,7 @@ struct WaitInfo : public RecInfo
         IFDBG(1, "retry");
         Guard G(device->lock);
         if(reg) {
-            reg->queue(false); // ignore result (already Q'd is ok)
-            reg->records.push_back(this);
+            reg->queue(false, this);
         }
     }
 
@@ -127,19 +126,16 @@ long write_test_mask(boRecord *prec)
             IFDBG(1, "No association");
         } else if(!info->reg->info.readable) {
             IFDBG(1, "Not readable");
-        } else if(info->offset >= info->reg->mem.size()) {
+        } else if(info->offset >= info->reg->mem_rx.size()) {
             IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
-                  (unsigned)info->offset, info->reg->mem.size());
-        } else if(info->reg->state == DevReg::Writing) {
-            IFDBG(1, "Ignoring read/watch while writing");
+                  (unsigned)info->offset, info->reg->mem_rx.size());
         } else {
             if(!prec->pact) {
                 IFDBG(1, "Start Watch of %s", info->reg->info.name.c_str());
 
                 // queue read request
-                info->reg->queue(false);
                 // ensure our complete() is called after reply (or timeout)
-                info->reg->records.push_back(info);
+                info->reg->queue(false, info);
                 // begin async
                 prec->pact = 1;
 

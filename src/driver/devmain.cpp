@@ -322,10 +322,10 @@ long read_sync(longinRecord *prec)
                 it != end; ++it)
             {
                 DevReg *reg = *it;
+                assert(reg->inprogress());
 
-                // use records2 list so that we complete() after
-                // regular read/writes
-                reg->records2.push_back(info);
+                // ask to get callback after in-progress op completes
+                reg->records_inprog.push_back(info);
                 info->wait_for++;
 
                 prec->pact = 1;

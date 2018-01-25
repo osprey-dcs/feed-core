@@ -74,18 +74,16 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
             IFDBG(1, "No association");
         } else if(!info->reg->info.writable) {
             IFDBG(1, "Not writable");
-        } else if(info->offset >= info->reg->mem.size()
-                || count > info->reg->mem.size() - info->offset) {
+        } else if(info->offset >= info->reg->mem_tx.size()
+                || count > info->reg->mem_tx.size() - info->offset) {
             IFDBG(1, "Array bounds violation offset=%u size=%zu not within size=%zu",
-                  (unsigned)info->offset, count, info->reg->mem.size());
-        } else if(info->reg->inprogress()) {
-            IFDBG(1, "Ignoring write request while write already in progress");
+                  (unsigned)info->offset, count, info->reg->mem_tx.size());
         } else {
             if(!prec->pact) {
 
                 const char *in = raw, *end = raw+count*valsize;
 
-                for(size_t i=info->offset, N = info->reg->mem.size();
+                for(size_t i=info->offset, N = info->reg->mem_tx.size();
                     i<N && in+valsize<=end; i+=info->step, in+=valsize)
                 {
                     epicsUInt32 val = 0u;
@@ -102,16 +100,12 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
                         break;
                     }
 
-                    info->reg->mem[i] = htonl(val);
+                    info->reg->mem_tx[i] = htonl(val);
                 }
 
-                if(!info->reg->queue(true)) {
-                    (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
-                    return ENODEV;
-                }
+                info->reg->queue(true, info->wait ? info : 0);
 
                 if(info->wait) {
-                    info->reg->records.push_back(info);
                     prec->pact = 1;
                     IFDBG(1, "begin async\n");
                 }
@@ -178,11 +172,9 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
             IFDBG(1, "No association");
         } else if(!info->reg->info.readable) {
             IFDBG(1, "Not readable");
-        } else if(info->offset >= info->reg->mem.size()) {
+        } else if(info->offset >= info->reg->mem_rx.size()) {
             IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
-                  (unsigned)info->offset, info->reg->mem.size());
-        } else if(info->reg->state == DevReg::Writing) {
-            IFDBG(1, "Ignoring read while writing");
+                  (unsigned)info->offset, info->reg->mem_rx.size());
         } else {
             if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact) {
                 // I/O Intr scan, use cached, or async completion
@@ -197,10 +189,10 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
 
                 char *out = raw, *end = raw+nreq*valsize;
 
-                for(size_t i=info->offset, N = info->reg->mem.size();
+                for(size_t i=info->offset, N = info->reg->mem_rx.size();
                     i<N && out+valsize<=end; i+=info->step, out+=valsize)
                 {
-                    epicsUInt32 val = ntohl(info->reg->mem[i]);
+                    epicsUInt32 val = ntohl(info->reg->mem_rx[i]);
                     if(val & signmask)
                         val |= signmask;
 
@@ -237,8 +229,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                                  nreq, info->reg->sevr, (unsigned)info->offset, (unsigned)info->step);
 
             } else {
-                info->reg->queue(false);
-                info->reg->records.push_back(info);
+                info->reg->queue(false, info->wait ? info : 0);
 
                 prec->pact = 1;
                 if(count)

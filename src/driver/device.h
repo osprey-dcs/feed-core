@@ -60,11 +60,14 @@ struct DevReg
                   Writing, //!< Write in progress
                  } state;
 
+    bool read_queued, write_queued;
+
     bool inprogress() const { return state==Reading || state==Writing; }
 
     typedef std::vector<epicsUInt32> mem_t;
     // storage for this register.  Kept in network byte order
-    mem_t mem;
+    mem_t mem_rx, // recv cache
+          mem_tx; // send cache
 
     typedef std::vector<bool> flags_t;
     // track which addresses have been received
@@ -87,13 +90,16 @@ struct DevReg
     // async. record processing waiting on this register
     short stat, sevr;
     typedef std::list<RegInterest*> records_t;
-    records_t records,
-              records2;
+    records_t records_inprog, // actions waiting on the currently executing op
+              records_write,  // actions waiting on the queued write
+              records_read;   // actions waiting on the queued read
+
+    void reset();
 
     void process();
 
     // queue to be sent
-    bool queue(bool write);
+    void queue(bool write, RegInterest* action=0);
 
     void show(std::ostream& strm, int lvl) const;
 };
