@@ -276,6 +276,24 @@ to use simulator initial values.
 ./leep.py localhost dump -Z > initial.dat
 ```
 
+Simulator Logic
+^^^^^^^^^^^^^^^
+
+The simulator can be made to simulator some of the register handling logic
+of some devices.  Currently only the RFS waveform acquisition logic is modeled.
+
+The argument -L <name> is used to enable logic handling.
+This will fail if the loaded register description doesn't
+include all necessary registers.
+
+eg.
+
+
+```sh
+./bin/linux-x86_64/feedsim -L rfs tests/jblob.json
+```
+
+
 Snapshot and Simulate
 ---------------------
 
