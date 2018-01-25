@@ -205,8 +205,8 @@ struct epicsShareClass Device : public epicsThreadRunable
     // whether we should poll() to see if send() would block
     bool want_to_send;
     bool runner_stop;
-    // request to transition to Idle on next iteration
-    bool reset_requested;
+    bool reset_requested, // request to transition to Idle on next iteration
+         error_requested;   // request transition to Error on next iteration
 
     epicsThread runner;
 

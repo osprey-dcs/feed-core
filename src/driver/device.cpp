@@ -156,6 +156,7 @@ Device::Device(const std::string &name, osiSockAddr &ep)
     ,want_to_send(false)
     ,runner_stop(false)
     ,reset_requested(false)
+    ,error_requested(false)
     ,runner(*this,
             "FEED",
             epicsThreadGetStackSize(epicsThreadStackSmall),
@@ -208,6 +209,7 @@ void Device::reset()
 
     want_to_send = false;
     reset_requested = false;
+    error_requested = false;
 
     if(peer_name.empty())
         current = Idle;
@@ -643,6 +645,10 @@ void Device::handle_state()
     if(reset_requested) {
         reset();
         return;
+    } else if(error_requested) {
+        IFDBG(3, "External Error signaled: %s", last_message.c_str());
+        error_requested = false;
+        current = Error;
     }
 
     switch(current) {

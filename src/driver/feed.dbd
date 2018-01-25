@@ -1,6 +1,7 @@
 # device-wide settings
 device(longout, INST_IO, devSoFEEDDebug, "FEED Debug")
 device(stringout, INST_IO, devSoFEEDAddress, "FEED Set Address")
+device(stringout, INST_IO, devSoFEEDForceErr, "FEED Force Error")
 device(bo, INST_IO, devBoFEEDCommit, "FEED Commit")
 
 # device-wide status

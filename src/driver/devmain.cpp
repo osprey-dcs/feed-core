@@ -103,6 +103,18 @@ long write_address(stringoutRecord *prec)
     }CATCH()
 }
 
+long force_error(stringoutRecord *prec)
+{
+    TRY {
+        Guard G(device->lock);
+
+        device->last_message = prec->val;
+
+        device->error_requested = true;
+
+        return 0;
+    }CATCH()
+}
 
 long read_dev_state(mbbiRecord *prec)
 {
@@ -341,6 +353,7 @@ long read_sync(longinRecord *prec)
 // device-wide settings
 DSET(devSoFEEDDebug, longout, init_common<RecInfo>::fn, NULL, write_debug)
 DSET(devSoFEEDAddress, stringout, init_common<RecInfo>::fn, NULL, write_address)
+DSET(devSoFEEDForceErr, stringout, init_common<RecInfo>::fn, NULL, force_error)
 DSET(devBoFEEDCommit, bo, init_common<RecInfo>::fn, NULL, write_commit)
 
 // device-wide status
