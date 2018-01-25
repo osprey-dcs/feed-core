@@ -20,7 +20,7 @@ namespace {
 #define CATCH() catch(std::exception& e) { (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); \
     errlogPrintf("%s: Error %s\n", prec->name, e.what()); info->cleanup(); return 0; }
 
-#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 #define ERR(FMT, ...) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 struct WaitInfo : public RecInfo
@@ -61,6 +61,7 @@ struct WaitInfo : public RecInfo
 
     virtual void complete()
     {
+        WaitInfo * const info = this;
         bool done = true;
         try {
             Guard G(device->lock);
@@ -71,11 +72,11 @@ struct WaitInfo : public RecInfo
 
                 if((val & mask) == value)
                 {
-                    IFDBG(1, "Match %08x & %08x == %08x",
+                    IFDBG(6, "Match %08x & %08x == %08x",
                           (unsigned)val, (unsigned)mask, (unsigned)value);
 
                 } else {
-                    IFDBG(1, "No match %08x & %08x != %08x",
+                    IFDBG(6, "No match %08x & %08x != %08x",
                           (unsigned)val, (unsigned)mask, (unsigned)value);
 
                     callbackRequestDelayed(&cb, retry);
@@ -83,7 +84,7 @@ struct WaitInfo : public RecInfo
                     cb_inprogress = true;
                 }
 
-            } else IFDBG(1, "Lost attachment  %p  %u", reg, reg ? reg->state : -1);
+            } else IFDBG(6, "Lost attachment  %p  %u", reg, reg ? reg->state : -1);
         }catch(std::exception& e){
             ERR("error in complete() : %s\n", e.what());
             done = true;
@@ -95,7 +96,8 @@ struct WaitInfo : public RecInfo
 
     void done()
     {
-        IFDBG(1, "retry");
+        WaitInfo * const info = this;
+        IFDBG(6, "retry");
         Guard G(device->lock);
         if(reg) {
             reg->queue(false, this);
@@ -123,15 +125,15 @@ long write_test_mask(boRecord *prec)
         Guard G(device->lock);
 
         if(!info->reg) {
-            IFDBG(1, "No association");
+            IFDBG(6, "No association");
         } else if(!info->reg->info.readable) {
-            IFDBG(1, "Not readable");
+            IFDBG(6, "Not readable");
         } else if(info->offset >= info->reg->mem_rx.size()) {
-            IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
+            IFDBG(6, "Array bounds violation offset=%u not within size=%zu",
                   (unsigned)info->offset, info->reg->mem_rx.size());
         } else {
             if(!prec->pact) {
-                IFDBG(1, "Start Watch of %s", info->reg->info.name.c_str());
+                IFDBG(6, "Start Watch of %s", info->reg->info.name.c_str());
 
                 // queue read request
                 // ensure our complete() is called after reply (or timeout)
@@ -140,7 +142,7 @@ long write_test_mask(boRecord *prec)
                 prec->pact = 1;
 
             } else {
-                IFDBG(1, "Complete");
+                IFDBG(6, "Complete");
                 prec->pact = 0;
             }
             return 0;

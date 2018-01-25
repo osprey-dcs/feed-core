@@ -39,7 +39,7 @@
 
 #include <epicsExport.h>
 
-#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 namespace {
 
@@ -71,12 +71,12 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
         Guard G(device->lock);
 
         if(!info->reg) {
-            IFDBG(1, "No association");
+            IFDBG(6, "No association");
         } else if(!info->reg->info.writable) {
-            IFDBG(1, "Not writable");
+            IFDBG(6, "Not writable");
         } else if(info->offset >= info->reg->mem_tx.size()
                 || count > info->reg->mem_tx.size() - info->offset) {
-            IFDBG(1, "Array bounds violation offset=%u size=%zu not within size=%zu",
+            IFDBG(6, "Array bounds violation offset=%u size=%zu not within size=%zu",
                   (unsigned)info->offset, count, info->reg->mem_tx.size());
         } else {
             if(!prec->pact) {
@@ -107,7 +107,7 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
 
                 if(info->wait) {
                     prec->pact = 1;
-                    IFDBG(1, "begin async\n");
+                    IFDBG(6, "begin async\n");
                 }
 
             } else {
@@ -115,7 +115,7 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
 
                 prec->pact = 0;
 
-                IFDBG(1, "complete async\n");
+                IFDBG(6, "complete async\n");
             }
             return 0;
         }
@@ -169,11 +169,11 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
         Guard G(device->lock);
 
         if(!info->reg) {
-            IFDBG(1, "No association");
+            IFDBG(6, "No association");
         } else if(!info->reg->info.readable) {
-            IFDBG(1, "Not readable");
+            IFDBG(6, "Not readable");
         } else if(info->offset >= info->reg->mem_rx.size()) {
-            IFDBG(1, "Array bounds violation offset=%u not within size=%zu",
+            IFDBG(6, "Array bounds violation offset=%u not within size=%zu",
                   (unsigned)info->offset, info->reg->mem_rx.size());
         } else {
             if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact) {
@@ -225,7 +225,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                 }
 
                 (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                IFDBG(1, "Copy in %zu words.  sevr=%u offset=%u step=%u\n",
+                IFDBG(6, "Copy in %zu words.  sevr=%u offset=%u step=%u\n",
                                  nreq, info->reg->sevr, (unsigned)info->offset, (unsigned)info->step);
 
             } else {
@@ -235,7 +235,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                 if(count)
                     *count = 0;
 
-                IFDBG(1, "begin async\n");
+                IFDBG(6, "begin async\n");
             }
             return 0;
 

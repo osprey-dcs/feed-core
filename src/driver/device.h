@@ -148,11 +148,13 @@ struct epicsShareClass Device : public epicsThreadRunable
     osiSockAddr peer_addr;
 
     // debug print bit mask
-    // 0x01 - packet validation
-    // 0x02 - packet handling (eg. timeout)
-    // 0x04 - ROM informational
-    // 0x08 - State machine
-    // 0x10 - Worker thread
+    // 0 0x01 - packet validation
+    // 1 0x02 - packet handling (eg. timeout)
+    // 2 0x04 - ROM informational
+    // 3 0x08 - State machine
+    // 4 0x10 - Worker thread
+    // 5 0x20 - Register queuing
+    // 6 0x40 - dset
     epicsUInt32 debug;
 
     enum state_t {
