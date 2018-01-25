@@ -236,6 +236,8 @@ void Device::reset()
                   0);
 
         // complete any in-progress async
+        reg->stat = COMM_ALARM;
+        reg->sevr = INVALID_ALARM;
         reg->process();
 
         if(!reg->bootstrap) {
