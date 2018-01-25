@@ -28,6 +28,7 @@ LIB_SRCS += devutil.cpp
 LIB_SRCS += devreg.cpp
 LIB_SRCS += devsignal.cpp
 LIB_SRCS += devwatch.cpp
+LIB_SRCS += devhack.cpp
 LIB_SRCS += iocsh.cpp
 LIB_SRCS += asub.c
 LIB_SRCS += calc.c
