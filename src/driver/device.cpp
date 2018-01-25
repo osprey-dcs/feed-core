@@ -98,15 +98,17 @@ void DevReg::queue(bool write, RegInterest *action)
     case Invalid:
     case InSync:
         // Idle, queue immediately
+
+        if((!write && !info.readable)
+                || (write && !info.writable))
+            throw std::runtime_error("Register does not support requested operation");
+
+        // reset address tracking
         std::fill(received.begin(),
                   received.end(),
                   false);
         nremaining = received.size();
         next_send = 0;
-
-        if((!write && !info.readable)
-                || (write && !info.writable))
-            throw std::runtime_error("Register does not support requested operation");
 
         dev->reg_send.push_back(this);
 
