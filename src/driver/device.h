@@ -223,7 +223,7 @@ struct epicsShareClass Device : public epicsThreadRunable
     void poke_runner();
 
     void request_reset();
-    void reset();
+    void reset(bool error=false);
 
     // handle_* called from run().
 

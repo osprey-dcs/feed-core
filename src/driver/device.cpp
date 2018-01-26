@@ -241,18 +241,25 @@ void Device::request_reset()
     poke_runner();
 }
 
-void Device::reset()
+void Device::reset(bool error)
 {
-    IFDBG(0, "reset w/ %s", peer_name.c_str());
+    if(error) {
+        IFDBG(0, "External Error signaled: %s", last_message.c_str());
+    } else {
+        IFDBG(0, "reset w/ %s", peer_name.c_str());
+    }
 
     want_to_send = false;
     reset_requested = false;
     error_requested = false;
 
-    if(peer_name.empty())
+    if(error) {
+        current = Error;
+    } else if(peer_name.empty()) {
         current = Idle;
-    else
+    } else {
         current = Searching;
+    }
 
     // forget about pending or Sent messages
     for(size_t i=0, N=inflight.size(); i<N; i++)
@@ -293,7 +300,9 @@ void Device::reset()
     reg_by_name[reg_id->info.name] = reg_id.get();
     reg_by_name[reg_rom->info.name] = reg_rom.get();
 
-    last_message.clear();
+    if(!error) {
+        last_message.clear();
+    }
     dev_infos.clear();
     description.clear();
     jsonhash.clear();
@@ -698,13 +707,9 @@ void Device::handle_inspect()
 void Device::handle_state()
 {
     state_t prev = current;
-    if(reset_requested) {
-        reset();
+    if(reset_requested || error_requested) {
+        reset(error_requested);
         return;
-    } else if(error_requested) {
-        IFDBG(3, "External Error signaled: %s", last_message.c_str());
-        error_requested = false;
-        current = Error;
     }
 
     switch(current) {
