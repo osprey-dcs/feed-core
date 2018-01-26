@@ -1,6 +1,6 @@
 record(longin, "$(PREF)-I") {
     field(DTYP, "FEED Register Read")
-    field(DESC, "$(DESC=Reg $(NAME))")
+    field(DESC, "$(DESC=Reg $(REG))")
     field(INP , "@name=$(NAME) reg=$(REG)")
     field(SCAN, "$(REGSCAN=)")
     field(TSE , "-2")
