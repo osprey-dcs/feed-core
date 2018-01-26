@@ -299,6 +299,10 @@ record(fanout, "$(BASE)AcqNext-FOut_") {
     field(LNK9, "$(LNK9=)")
     field(LNKA, "$(LNKA=)")
     field(LNKB, "$(LNKB=)")
+    field(LNKC, "$(LNKC=)")
+    field(LNKD, "$(LNKD=)")
+    field(LNKE, "$(LNKE=)")
+    field(LNKF, "$(LNKF=)")
     field(FLNK, "$(BASE)AcqDly_")
 }
 

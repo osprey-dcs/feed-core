@@ -16,6 +16,7 @@ DB += feed_wf_acquire_pair.template
 DB += feed_wf_acquire_stats.template
 
 DB += rfs_base.template
+DB += rfs_slow_scalar16.template
 
 # install expanded and unexpanded
 
