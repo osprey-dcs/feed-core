@@ -1,6 +1,6 @@
 record(aao, "$(PREF)-SP") {
     field(DTYP, "FEED Register Write")
-    field(DESC, "$(DESC=Reg $(REG))")
+    #field(DESC, "$(DESC=Reg $(REG))")
     field(OUT , "@name=$(NAME) reg=$(REG) offset=$(OFF=0)")
     field(FTVL, "LONG")
     field(NELM, "$(SIZE)")
@@ -10,7 +10,7 @@ record(aao, "$(PREF)-SP") {
 }
 record(aai, "$(PREF)-I") {
     field(DTYP, "FEED Register Read")
-    field(DESC, "$(DESC=Reg $(REG))")
+    #field(DESC, "$(DESC=Reg $(REG))")
     field(INP , "@name=$(NAME) reg=$(REG)")
     field(FTVL, "LONG")
     field(NELM, "$(SIZE)")
