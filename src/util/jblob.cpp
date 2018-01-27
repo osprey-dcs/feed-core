@@ -8,6 +8,8 @@
 #include <errlog.h>
 #include <yajl_parse.h>
 
+#include <epicsStdlib.h>
+
 #include "utils.h"
 #include "jblob.h"
 
@@ -130,7 +132,14 @@ int jblob_string(void *ctx, const unsigned char *val, size_arg len)
                 }
 
             } else {
-                self->warn(SB()<<self->regname<<"."<<self->param<<" ignores string value");
+                // try to parse any unknown strings as integers
+                epicsInt32 val = 0;
+                if(epicsParseInt32(V.c_str(), &val, 0, 0)) {
+                    self->warn(SB()<<self->regname<<"."<<self->param<<" unable to parse string value '"<<V<<"' as integer");
+
+                } else {
+                    return jblob_integer(ctx, val);
+                }
             }
         } else
             self->warn(SB()<<"ignored string value at depth="<<self->depth);

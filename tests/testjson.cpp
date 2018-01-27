@@ -48,7 +48,7 @@ void testAST()
 {
     testDiag("testAST()");
 
-    const char bigblob[] = "{\"J18_debug\": {\"access\": \"r\", \"addr_width\": 0, \"sign\": \"unsigned\", \"base_addr\": 63, \"data_width\": 4}}";
+    const char bigblob[] = "{\"J18_debug\": {\"access\": \"r\", \"addr_width\": 0, \"sign\": \"unsigned\", \"base_addr\": 63, \"data_width\": \"0x4\"}}";
 
     JBlob blob;
 
