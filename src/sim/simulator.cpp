@@ -31,6 +31,7 @@ SimReg::SimReg(const JRegister& reg)
 
 Simulator::Simulator(const osiSockAddr& ep, const JBlob& blob, const values_t &initial)
     :debug(false)
+    ,slowdown(0.0)
     ,running(false)
     ,serveaddr(ep)
 {
@@ -143,6 +144,7 @@ void Simulator::exec()
             osiSockAddr peer;
 
             {
+                double sd = slowdown;
                 UnGuard U(G);
 
                 fds[0].events = POLLIN;
@@ -181,6 +183,10 @@ void Simulator::exec()
 
                 if(fds[0].revents || fds[1].revents) {
                     std::cerr<<"poll() events unhandled  "<<std::hex<<fds[0].revents<<" "<<std::hex<<fds[1].revents<<"\n";
+                }
+
+                if(!stop && sd > 0.0) {
+                    epicsThreadSleep(sd);
                 }
             }
             // locked again

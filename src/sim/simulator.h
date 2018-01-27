@@ -61,6 +61,8 @@ public:
 
     // turns on some extra debug prints
     bool debug;
+    // arbitrary slowdown before sending reply
+    double slowdown;
     // guard access  to register values
     epicsMutex lock;
 protected:

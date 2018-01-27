@@ -6,6 +6,7 @@
 #include <signal.h>
 
 #include <epicsGetopt.h>
+#include <epicsStdlib.h>
 
 #include "jblob.h"
 #include "rom.h"
@@ -15,7 +16,7 @@ namespace {
 
 void usage(const char* exe)
 {
-    std::cout<<"Usage: "<<exe<<" [-hd] [-H <iface>[:<port>]] [-L none|rfs] <json_file> [initials_file]\n";
+    std::cout<<"Usage: "<<exe<<" [-hd] [-H <iface>[:<port>]] [-L none|rfs] [-S <sec>] <json_file> [initials_file]\n";
 }
 
 Simulator* volatile current;
@@ -33,14 +34,15 @@ int main(int argc, char *argv[])
     try {
         int opt;
         bool debug = false;
+        double slowdown = 0.0;
         std::string logic("none");
         osiSockAddr endpoint;
         memset(&endpoint, 0, sizeof(endpoint));
         endpoint.ia.sin_family = AF_INET;
-        endpoint.ia.sin_addr.s_addr = htonl(INADDR_ANY);
+        endpoint.ia.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
         endpoint.ia.sin_port = htons(50006);
 
-        while((opt=getopt(argc, argv, "hH:dL:"))!=-1) {
+        while((opt=getopt(argc, argv, "hH:dL:S:"))!=-1) {
             switch(opt) {
             case 'H':
                 if(aToIPAddr(optarg, 50006, &endpoint.ia))
@@ -51,6 +53,10 @@ int main(int argc, char *argv[])
                 break;
             case 'L':
                 logic = optarg;
+                break;
+            case 'S':
+                if(epicsParseDouble(optarg, &slowdown, 0))
+                    throw std::runtime_error("-S value must be a number");
                 break;
             default:
                 std::cerr<<"Unknown option '"<<opt<<"'\n\n";
@@ -125,6 +131,7 @@ int main(int argc, char *argv[])
             throw std::runtime_error(SB()<<"Unknown logic name: -L "<<logic);
         }
         sim->debug = debug;
+        sim->slowdown = slowdown;
 
         // copy in ROM image
         {
