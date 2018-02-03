@@ -4,6 +4,7 @@ record(longout, "$(PREF)Debug-SP") {
     field(OUT , "@name=$(NAME)")
     field(VAL , "$(DEBUG=0)")
     field(PINI, "YES")
+    field(PHAS, "-1")
     info(autosaveFields_pass0, "VAL")
 }
 
