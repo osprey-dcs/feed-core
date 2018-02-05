@@ -115,9 +115,11 @@ record(aSub, "$(PREF)T-I_") {
     field(NOVA, "$(SIZE)")
     field(OUTA, "$(PREF)T-I PP MSI")
     field(TPRO, "$(TPRO=0)")
+    field(TSEL, "$(BASE)Per-I.TIME CA")
 }
 
 record(aai, "$(PREF)T-I") {
     field(FTVL, "DOUBLE")
     field(NELM, "$(SIZE)")
+    field(TSEL, "$(PREF)T-I_.TIME")
 }

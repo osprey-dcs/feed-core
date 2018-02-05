@@ -65,6 +65,7 @@ record(calc, "$(BASE)Per-I") {
     field(INPC, "94.29e6") # samp/sec
     field(CALC, "B*2*A/C")
     field(FLNK, "$(BASE)AmpCalc")
+    field(TSEL, "$(BASE)Dec-SP.TIME")
 }
 
 # amplitude
