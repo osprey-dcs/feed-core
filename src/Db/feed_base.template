@@ -1,4 +1,4 @@
-record(longout, "$(PREF)Debug-SP") {
+record(longout, "$(PREF)DEBUG") {
     field(DTYP, "FEED Debug")
     field(DESC, "Debug print mask")
     field(OUT , "@name=$(NAME)")
@@ -8,15 +8,15 @@ record(longout, "$(PREF)Debug-SP") {
     info(autosaveFields_pass0, "VAL")
 }
 
-record(bo, "$(PREF)Rst-Cmd") {
+record(bo, "$(PREF)RESET") {
     field(DESC, "Force re-connect")
     field(ZNAM, "Reset")
     field(ONAM, "Reset")
     field(UDF , "0")
-    field(FLNK, "$(PREF)Addr-SP") # setting address always forces reset
+    field(FLNK, "$(PREF)IPADDR") # setting address always forces reset
 }
 
-record(stringout, "$(PREF)Addr-SP") {
+record(stringout, "$(PREF)IPADDR") {
     field(DTYP, "FEED Set Address")
     field(DESC, "Set Device IP address")
     field(OUT , "@name=$(NAME)")
@@ -25,7 +25,7 @@ record(stringout, "$(PREF)Addr-SP") {
     info(autosaveFields_pass0, "VAL")
 }
 
-record(mbbi, "$(PREF)State-Sts") {
+record(mbbi, "$(PREF)STATUS") {
     field(DTYP, "FEED State")
     field(INP , "@name=$(NAME)")
     field(SCAN, "I/O Intr")
@@ -46,7 +46,7 @@ record(mbbi, "$(PREF)State-Sts") {
     field(FRSV, "")
 }
 
-record(aai, "$(PREF)LastError-I") {
+record(aai, "$(PREF)LAST_ERROR") {
     field(DTYP, "FEED Error")
     field(INP , "@name=$(NAME)")
     field(SCAN, "I/O Intr")
@@ -54,99 +54,99 @@ record(aai, "$(PREF)LastError-I") {
     field(NELM, "256")
 }
 
-record(longin, "$(PREF)CntTx-I") {
+record(longin, "$(PREF)TX_CNT") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=0")
     field(SCAN, "1 second") # also adjust *Rate* CALC when changing
-    field(FLNK, "$(PREF)RateTx-I")
+    field(FLNK, "$(PREF)TX_RATE")
 }
-record(calc, "$(PREF)RateTx-I") {
-    field(INPA, "$(PREF)CntTx-I")
+record(calc, "$(PREF)TX_RATE") {
+    field(INPA, "$(PREF)TX_CNT")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
-    field(FLNK, "$(PREF)CntRx-I")
+    field(FLNK, "$(PREF)RX_CNT")
 }
-record(longin, "$(PREF)CntRx-I") {
+record(longin, "$(PREF)RX_CNT") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=1")
-    field(FLNK, "$(PREF)RateRx-I")
+    field(FLNK, "$(PREF)RX_RATE")
 }
-record(calc, "$(PREF)RateRx-I") {
-    field(INPA, "$(PREF)CntRx-I")
+record(calc, "$(PREF)RX_RATE") {
+    field(INPA, "$(PREF)RX_CNT")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
-    field(FLNK, "$(PREF)CntIgnore-I")
+    field(FLNK, "$(PREF)IGNORE_CNT")
 }
-record(longin, "$(PREF)CntIgnore-I") {
+record(longin, "$(PREF)IGNORE_CNT") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=2")
-    field(FLNK, "$(PREF)RateIgnore-I")
+    field(FLNK, "$(PREF)IGNORE_RATE")
 }
-record(calc, "$(PREF)RateIgnore-I") {
-    field(INPA, "$(PREF)CntIgnore-I")
+record(calc, "$(PREF)IGNORE_RATE") {
+    field(INPA, "$(PREF)IGNORE_CNT")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
     field(HIGH, "0.0001") # small non-zero
     field(HSV , "MAJOR")
-    field(FLNK, "$(PREF)CntTimo-I")
+    field(FLNK, "$(PREF)TMO_CNT")
 }
-record(longin, "$(PREF)CntTimo-I") {
+record(longin, "$(PREF)TMO_CNT") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=3")
-    field(FLNK, "$(PREF)RateTimo-I")
+    field(FLNK, "$(PREF)TMO_RATE")
 }
-record(calc, "$(PREF)RateTimo-I") {
-    field(INPA, "$(PREF)CntTimo-I")
+record(calc, "$(PREF)TMO_RATE") {
+    field(INPA, "$(PREF)TMO_CNT")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
     field(HIGH, "0.0001") # small non-zero
     field(HSV , "MAJOR")
-    field(FLNK, "$(PREF)CntErr-I")
+    field(FLNK, "$(PREF)ERR_CNT")
 }
-record(longin, "$(PREF)CntErr-I") {
+record(longin, "$(PREF)ERR_CNT") {
     field(DTYP, "FEED Counter")
     field(INP , "@name=$(NAME) offset=4")
-    field(FLNK, "$(PREF)RateErr-I")
+    field(FLNK, "$(PREF)ERR_RATE")
 }
-record(calc, "$(PREF)RateErr-I") {
-    field(INPA, "$(PREF)CntErr-I")
+record(calc, "$(PREF)ERR_RATE") {
+    field(INPA, "$(PREF)ERR_CNT")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
     field(HIGH, "0.0001") # small non-zero
     field(HSV , "MAJOR")
 }
 
-record(aai, "$(PREF)JInfo-I") {
+record(aai, "$(PREF)JINFO") {
     field(DTYP, "FEED JBlob")
     field(DESC, "zlib compressed IOC JSON")
     field(INP , "@name=$(NAME) offset=0")
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "16000")
-    field(FLNK, "$(PREF)JSON-I")
+    field(FLNK, "$(PREF)JSON")
 }
 
-record(aai, "$(PREF)JSON-I") {
+record(aai, "$(PREF)JSON") {
     field(DTYP, "FEED JBlob")
     field(DESC, "zlib compressed Device JSON")
     field(INP , "@name=$(NAME) offset=1")
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "16000")
-    field(FLNK, "$(PREF)Desc-I")
+    field(FLNK, "$(PREF)FW_DESC")
 }
 
-record(aai, "$(PREF)Desc-I") {
+record(aai, "$(PREF)FW_DESC") {
     field(DTYP, "FEED ROM Info")
     field(DESC, "FW description")
     field(INP , "@name=$(NAME) offset=0")
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "256")
-    field(FLNK, "$(PREF)CodeHash-I")
+    field(FLNK, "$(PREF)FW_CODEHASH")
 }
 
-record(aai, "$(PREF)CodeHash-I") {
+record(aai, "$(PREF)FW_CODEHASH") {
     field(DTYP, "FEED ROM Info")
     field(DESC, "FW Git rev.")
     field(INP , "@name=$(NAME) offset=2")
@@ -155,7 +155,7 @@ record(aai, "$(PREF)CodeHash-I") {
     field(NELM, "256")
 }
 
-record(aai, "$(PREF)ROM-I") {
+record(aai, "$(PREF)FW_ROM") {
     field(DTYP, "FEED Register Read")
     field(INP , "@name=$(NAME) reg=ROM")
     field(SCAN, "I/O Intr")
@@ -164,17 +164,17 @@ record(aai, "$(PREF)ROM-I") {
 }
 
 # aggregate basic alarm status
-record(calc, "$(PREF)BaseSts_") {
-    field(INPA, "$(PREF)State-Sts.SEVR CP MSS")
-    field(INPB, "$(PREF)RateIgnore-I.SEVR CP MSS")
-    field(INPC, "$(PREF)RateTimo-I.SEVR CP MSS")
-    field(INPD, "$(PREF)RateErr-I.SEVR CP MSS")
+record(calc, "$(PREF)BASESTATUS_") {
+    field(INPA, "$(PREF)STATUS.SEVR CP MSS")
+    field(INPB, "$(PREF)IGNORE_RATE.SEVR CP MSS")
+    field(INPC, "$(PREF)TMO_RATE.SEVR CP MSS")
+    field(INPD, "$(PREF)ERR_RATE.SEVR CP MSS")
     # do something with the values so that the links are actual read
     field(CALC, "A+B+C+D")
 }
 
 # Background poll to ensure the device is still there
-record(longin, "$(PREF)Hello-I") {
+record(longin, "$(PREF)HELLO-I") {
     field(DTYP, "FEED Register Read")
     field(INP , "@name=$(NAME) reg=HELLO")
     field(SCAN, "2 second")

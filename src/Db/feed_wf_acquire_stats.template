@@ -9,7 +9,7 @@
 #
 
 # external db FLNK's here
-record(aSub, "$(PREF)Stat-Calc_") {
+record(aSub, "$(PREF)STAT_CALC_") {
   field(SNAM, "Wf Stats")
   field(FTA , "DOUBLE")
   field(FTB , "DOUBLE")
@@ -21,35 +21,35 @@ record(aSub, "$(PREF)Stat-Calc_") {
   field(NOB , "$(SIZE)")
   field(INPA, "$(SIG) NPP MSI")
   field(INPB, "$(TIME) NPP MSI")
-  field(INPC, "$(BASE)Stat:Start-SP") # window start
-  field(INPD, "$(BASE)Stat:Width-SP") # window width
-  field(OUTA, "$(PREF)Mean-I PP MSI")
-  field(OUTB, "$(PREF)Std-I PP MSI")
-  field(OUTC, "$(PREF)Min-I PP MSI")
-  field(OUTD, "$(PREF)Max-I PP MSI")
+  field(INPC, "$(BASE)STAT_START") # window start
+  field(INPD, "$(BASE)STAT_WIDTH") # window width
+  field(OUTA, "$(PREF)MEAN PP MSI")
+  field(OUTB, "$(PREF)STD PP MSI")
+  field(OUTC, "$(PREF)MIN PP MSI")
+  field(OUTD, "$(PREF)MAX PP MSI")
   field(FLNK, "$(FLNK=)")
   field(TSEL, "$(SIG).TIME")
 }
 
-record(ai, "$(PREF)Mean-I") {
+record(ai, "$(PREF)MEAN") {
   field(PREC, "$(PREC=3)")
   field(EGU , "$(EGU=)")
   field(TSEL, "$(SIG).TIME")
 }
 
-record(ai, "$(PREF)Std-I") {
+record(ai, "$(PREF)STD") {
   field(PREC, "$(PREC=3)")
   field(EGU , "$(EGU=)")
   field(TSEL, "$(SIG).TIME")
 }
 
-record(ai, "$(PREF)Min-I") {
+record(ai, "$(PREF)MIN") {
   field(PREC, "$(PREC=3)")
   field(EGU , "$(EGU=)")
   field(TSEL, "$(SIG).TIME")
 }
 
-record(ai, "$(PREF)Max-I") {
+record(ai, "$(PREF)MAX") {
   field(PREC, "$(PREC=3)")
   field(EGU , "$(EGU=)")
   field(TSEL, "$(SIG).TIME")

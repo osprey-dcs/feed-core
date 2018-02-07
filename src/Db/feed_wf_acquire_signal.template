@@ -16,56 +16,56 @@
 
 # configuration logic
 
-record(longin, "$(PREF)Config_") {
+record(longin, "$(PREF)CONFIG_") {
     # monitor offset computed in feed_wf_acquire_base.template
-    field(INP , "$(BASE)Mask3_.VAL$(LETTER) CP")
+    field(INP , "$(BASE)MASK3_.VAL$(LETTER) CP")
     field(TPRO, "$(TPRO=0)")
-    field(FLNK, "$(PREF)Off-SP")
+    field(FLNK, "$(PREF)OFFSET")
 }
 
-record(longout, "$(PREF)Off-SP") {
+record(longout, "$(PREF)OFFSET") {
     # scan disable when this signal is not selected
-    field(SDIS, "$(PREF)Config_")
+    field(SDIS, "$(PREF)CONFIG_")
     field(DISV, "-1")
 
     field(DTYP, "FEED Signal Offset")
     field(OUT , "@signal=$(PREF)")
     field(OMSL, "closed_loop")
-    field(DOL , "$(BASE)Mask3_.VAL$(LETTER)")
-    field(FLNK, "$(PREF)Step-SP")
+    field(DOL , "$(BASE)MASK3_.VAL$(LETTER)")
+    field(FLNK, "$(PREF)STEP")
 }
 
-record(longout, "$(PREF)Step-SP") {
+record(longout, "$(PREF)STEP") {
     field(DTYP, "FEED Signal Step")
     field(OUT , "@signal=$(PREF)")
     field(OMSL, "closed_loop")
-    field(DOL , "$(BASE)Mask3_.VALA MSI")
+    field(DOL , "$(BASE)MASK3_.VALA MSI")
     field(FLNK, "")
 }
 
 # User scaling factor, applied along with full scale
 # computed for decimation (wave_samp_per)
-record(ao, "$(PREF)Scale-SP") {
+record(ao, "$(PREF)SCALE") {
     field(VAL , "1.0")
     field(PREC, "9")
     field(PINI, "YES")
-    field(FLNK, "$(PREF)Scale-Calc_")
+    field(FLNK, "$(PREF)SCALE_CALC_")
     info(autosaveFields_pass0, "VAL")
 }
 
-record(calcout, "$(PREF)Scale-Calc_") {
-    field(INPA, "$(PREF)Scale-SP NPP MSI")
-    field(INPB, "$(BASE)AmpCalc.VALB CP MSI")
+record(calcout, "$(PREF)SCALE_CALC_") {
+    field(INPA, "$(PREF)SCALE NPP MSI")
+    field(INPB, "$(BASE)AMPCALC.VALB CP MSI")
     # take the full scale value and compute our scaling factor
     field(CALC, "A/B")
     # if for some reason we get a junk (INVALID) scaling factor, default to 1.0
     field(IVOA, "Set output to IVOV")
     field(IVOV, "1.0")
-    field(OUT , "$(PREF)Scale-RB PP")
+    field(OUT , "$(PREF)SCALE_RBV PP")
 }
 
 # readback of actual scaling factor used
-record(ao, "$(PREF)Scale-RB") {
+record(ao, "$(PREF)SCALE_RBV") {
     field(DTYP, "FEED Signal Scale")
     field(OUT , "@signal=$(PREF)")
     field(VAL , "1.0")
@@ -75,9 +75,9 @@ record(ao, "$(PREF)Scale-RB") {
 # waveform update logic
 
 # FLNK'd from feed_wf_acquire_base.template
-record(aai, "$(PREF)I-I") {
+record(aai, "$(PREF)WF") {
     # scan disable when this signal is not selected
-    field(SDIS, "$(PREF)Config_")
+    field(SDIS, "$(PREF)CONFIG_")
     field(DISV, "-1")
 
     field(DTYP, "FEED Register Read")
@@ -87,39 +87,39 @@ record(aai, "$(PREF)I-I") {
     field(FTVL, "DOUBLE")
     field(NELM, "$(SIZE)")
     field(TSE , "-2")
-    field(FLNK, "$(PREF)I-NORD")
+    field(FLNK, "$(PREF)NORD")
     field(TPRO, "$(TPRO=0)")
 }
 
 # workaround for bug in aaiRecord.  doesn't post monitors on NORD
-record(longin, "$(PREF)I-NORD") {
-    field(INP , "$(PREF)I-I.NORD")
+record(longin, "$(PREF)NORD") {
+    field(INP , "$(PREF)WF.NORD")
     field(FLNK, "$(FLNK=)") # connect to external (eg. _pair.template)
     field(TPRO, "$(TPRO=0)")
 }
 
-record(aSub, "$(PREF)T-I_") {
+record(aSub, "$(PREF)TWF_") {
     field(SNAM, "asub_feed_timebase")
     # first value
     field(FTA , "DOUBLE")
     field(INPA, "0.0")
     # step size
     field(FTB , "DOUBLE")
-    field(INPB, "$(BASE)Per-I CP MSI")
+    field(INPB, "$(BASE)SAMP_PERIOD CP MSI")
     # max element count limit
     # TODO: calulate real step size
     field(FTC , "ULONG")
-    field(INPC, "$(PREF)I-NORD CP MSI")
+    field(INPC, "$(PREF)NORD CP MSI")
     # output array
     field(FTVA, "DOUBLE")
     field(NOVA, "$(SIZE)")
-    field(OUTA, "$(PREF)T-I PP MSI")
+    field(OUTA, "$(PREF)TWF PP MSI")
     field(TPRO, "$(TPRO=0)")
-    field(TSEL, "$(BASE)Per-I.TIME CA")
+    field(TSEL, "$(BASE)SAMP_PERIOD.TIME CA")
 }
 
-record(aai, "$(PREF)T-I") {
+record(aai, "$(PREF)TWF") {
     field(FTVL, "DOUBLE")
     field(NELM, "$(SIZE)")
-    field(TSEL, "$(PREF)T-I_.TIME")
+    field(TSEL, "$(PREF)TWF_.TIME")
 }

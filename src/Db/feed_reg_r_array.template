@@ -1,4 +1,4 @@
-record(aai, "$(PREF)-I") {
+record(aai, "$(PREF)_RBV") {
     field(DTYP, "FEED Register Read")
     #field(DESC, "$(DESC=Reg $(REG))")
     field(INP , "@name=$(NAME) reg=$(REG) signal=$(NAME):$(REG)")
@@ -6,17 +6,17 @@ record(aai, "$(PREF)-I") {
     field(NELM, "$(SIZE)")
     field(SCAN, "$(REGSCAN=)")
     field(TSE , "-2")
-    info(feed:info:input, "$(PREF)-I")
+    info(feed:info:input, "$(PREF)_RBV")
 }
 
-record(longout, "$(PREF):Off-SP") {
+record(longout, "$(PREF)_OFFSET") {
     field(DTYP, "FEED Signal Offset")
     field(OUT , "@signal=$(NAME):$(REG)")
     field(VAL , "$(OFF=0)")
     field(PINI, "YES")
 }
 
-record(longout, "$(PREF):Step-SP") {
+record(longout, "$(PREF)_STEP") {
     field(DTYP, "FEED Signal Step")
     field(OUT , "@signal=$(NAME):$(REG)")
     field(VAL , "$(OFF=1)")

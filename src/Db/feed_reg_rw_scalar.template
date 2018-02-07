@@ -1,16 +1,16 @@
-record(longout, "$(PREF)-SP") {
+record(longout, "$(PREF)") {
     field(DTYP, "FEED Register Write")
     #field(DESC, "$(DESC=Reg $(REG))")
     field(OUT , "@name=$(NAME) reg=$(REG)")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
-    info(feed:info:output, "$(PREF)-SP")
+    info(feed:info:output, "$(PREF)")
 }
-record(longin, "$(PREF)-I") {
+record(longin, "$(PREF)_RBV") {
     field(DTYP, "FEED Register Read")
     #field(DESC, "$(DESC=Reg $(REG))")
     field(INP , "@name=$(NAME) reg=$(REG)")
     field(SCAN, "$(REGSCAN=)")
     field(TSE , "-2")
-    info(feed:info:input, "$(PREF)-I")
+    info(feed:info:input, "$(PREF)_RBV")
 }

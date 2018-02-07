@@ -1,4 +1,4 @@
-record(aao, "$(PREF)-SP") {
+record(aao, "$(PREF)") {
     field(DTYP, "FEED Register Write")
     #field(DESC, "$(DESC=Reg $(REG))")
     field(OUT , "@name=$(NAME) reg=$(REG) offset=$(OFF=0)")
@@ -6,9 +6,9 @@ record(aao, "$(PREF)-SP") {
     field(NELM, "$(SIZE)")
     field(PINI, "YES")
     info(autosaveFields_pass1, "VAL")
-    info(feed:info:output, "$(PREF)-SP")
+    info(feed:info:output, "$(PREF)")
 }
-record(aai, "$(PREF)-I") {
+record(aai, "$(PREF)_RBV") {
     field(DTYP, "FEED Register Read")
     #field(DESC, "$(DESC=Reg $(REG))")
     field(INP , "@name=$(NAME) reg=$(REG)")
@@ -16,5 +16,5 @@ record(aai, "$(PREF)-I") {
     field(NELM, "$(SIZE)")
     field(SCAN, "$(REGSCAN=)")
     field(TSE , "-2")
-    info(feed:info:input, "$(PREF)-I")
+    info(feed:info:input, "$(PREF)_RBV")
 }
