@@ -10,32 +10,33 @@
 #  SIZE - Max signal length (eg. 8192)
 #
 
-record(bo, "$(PREF)Ena-Sel") {
+record(bo, "$(PREF)ENABLE") {
   field(ZNAM, "Disable")
   field(ONAM, "Enable")
-  field(OUT , "$(PREF)Ena-FOut_ PP")
+  field(OUT , "$(PREF)ENABLE_FOUT_ PP")
 }
 
-record(dfanout, "$(PREF)Ena-FOut_") {
-  # Mask-SP is async, so only PP after setting the second bit
-  field(OUTA, "$(BASE)Mask-SP.B$(BITI)")
-  field(OUTB, "$(BASE)Mask-SP.B$(BITQ) PP")
+record(dfanout, "$(PREF)ENABLE_FOUT_") {
+  # MASK is async, so only PP after setting the second bit
+  field(OUTA, "$(BASE)MASK.B$(BITI)")
+  field(OUTB, "$(BASE)MASK.B$(BITQ) PP")
 }
 
 # alias records in _signal.template
-alias("$(SIGI)T-I", "$(PREF)T-I")
-alias("$(SIGI)I-I", "$(PREF)I-I")
-alias("$(SIGQ)I-I", "$(PREF)Q-I")
-alias("$(SIGI)Scale-SP", "$(PREF)ScaleI-SP")
-alias("$(SIGQ)Scale-SP", "$(PREF)ScaleQ-SP")
+alias("$(SIGI)TWF", "$(PREF)TWF")
+alias("$(SIGI)WF", "$(PREF)IWF")
+alias("$(SIGQ)WF", "$(PREF)QWF")
+alias("$(SIGI)SCALE", "$(PREF)ISCALE")
+alias("$(SIGQ)SCALE", "$(PREF)QSCALE")
+alias("$(SIGI)NORD", "$(PREF)NORD")
 
 # alias our records for use like _signal.template
-alias("$(PREF)Ena-Sel", "$(SIGI)Ena-Sel")
-alias("$(PREF)Ena-Sel", "$(SIGQ)Ena-Sel")
+alias("$(PREF)ENABLE", "$(SIGI)ENABLE")
+alias("$(PREF)ENABLE", "$(SIGQ)ENABLE")
 
 # scaling factor from amplitude squared to power
 #  (use I/Q scaling to determine amplitude scaling)
-record(ao, "$(PREF)ScaleP-SP") {
+record(ao, "$(PREF)PWRSCALE") {
     field(VAL , "1.0")
     field(PREC, "9")
     field(PINI, "YES")
@@ -43,7 +44,7 @@ record(ao, "$(PREF)ScaleP-SP") {
 }
 
 # FLNK'd from _signal.template of SIGQ
-record(aSub, "$(PREF)AP-Calc_") {
+record(aSub, "$(PREF)AP_CALC_") {
   field(SNAM, "IQ2AP")
   field(FTA , "DOUBLE")
   field(FTB , "DOUBLE")
@@ -55,31 +56,31 @@ record(aSub, "$(PREF)AP-Calc_") {
   field(NOVA, "$(SIZE)")
   field(NOVB, "$(SIZE)")
   field(NOVC, "$(SIZE)")
-  field(INPA, "$(PREF)I-I MSI NPP")
-  field(INPB, "$(PREF)Q-I MSI NPP")
-  field(INPC, "$(PREF)ScaleP-SP MSI NPP")
-  field(OUTA, "$(PREF)Amp-I MSI PP")
-  field(OUTB, "$(PREF)Pha-I MSI PP")
-  field(OUTC, "$(PREF)Pwr-I MSI PP")
+  field(INPA, "$(PREF)IWF MSI NPP")
+  field(INPB, "$(PREF)QWF MSI NPP")
+  field(INPC, "$(PREF)PWRSCALE MSI NPP")
+  field(OUTA, "$(PREF)AWF MSI PP")
+  field(OUTB, "$(PREF)PWF MSI PP")
+  field(OUTC, "$(PREF)PWRWF MSI PP")
   field(FLNK, "$(FLNK=)") # to external logic, eg. waveform stats
-  field(TSEL, "$(PREF)I-I.TIME")
+  field(TSEL, "$(PREF)IWF.TIME")
 }
 
-record(aai, "$(PREF)Amp-I") {
+record(aai, "$(PREF)AWF") {
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
-  field(TSEL, "$(PREF)I-I.TIME")
+  field(TSEL, "$(PREF)IWF.TIME")
 }
 
-record(aai, "$(PREF)Pwr-I") {
+record(aai, "$(PREF)PWRWF") {
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
-  field(TSEL, "$(PREF)I-I.TIME")
+  field(TSEL, "$(PREF)IWF.TIME")
 }
 
-record(aai, "$(PREF)Pha-I") {
+record(aai, "$(PREF)PWF") {
   field(EGU , "deg.")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
-  field(TSEL, "$(PREF)I-I.TIME")
+  field(TSEL, "$(PREF)IWF.TIME")
 }
