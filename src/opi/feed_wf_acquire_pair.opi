@@ -57,7 +57,7 @@
     <horizontal>true</horizontal>
     <items_from_pv>true</items_from_pv>
     <name>Choice Button</name>
-    <pv_name>$(PREF)Ena-Sel</pv_name>
+    <pv_name>$(PREF)ENABLE</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -148,7 +148,7 @@ $(pv_value)</tooltip>
     <plot_area_background_color>
       <color red="255" green="255" blue="255" />
     </plot_area_background_color>
-    <pv_name>$(PREF)I-I</pv_name>
+    <pv_name>$(PREF)IWF</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -182,7 +182,7 @@ $(trace_0_y_pv_value)</tooltip>
     <trace_0_update_mode>0</trace_0_update_mode>
     <trace_0_visible>true</trace_0_visible>
     <trace_0_x_axis_index>0</trace_0_x_axis_index>
-    <trace_0_x_pv>$(PREF)T-I</trace_0_x_pv>
+    <trace_0_x_pv>$(PREF)TWF</trace_0_x_pv>
     <trace_0_x_pv_value />
     <trace_0_y_axis_index>1</trace_0_y_axis_index>
     <trace_0_y_pv>$(pv_name)</trace_0_y_pv>
@@ -203,10 +203,10 @@ $(trace_0_y_pv_value)</tooltip>
     <trace_1_update_mode>0</trace_1_update_mode>
     <trace_1_visible>true</trace_1_visible>
     <trace_1_x_axis_index>0</trace_1_x_axis_index>
-    <trace_1_x_pv>$(PREF)T-I</trace_1_x_pv>
+    <trace_1_x_pv>$(PREF)TWF</trace_1_x_pv>
     <trace_1_x_pv_value />
     <trace_1_y_axis_index>1</trace_1_y_axis_index>
-    <trace_1_y_pv>$(PREF)Q-I</trace_1_y_pv>
+    <trace_1_y_pv>$(PREF)QWF</trace_1_y_pv>
     <trace_1_y_pv_value />
     <trace_count>2</trace_count>
     <transparent>false</transparent>
@@ -289,7 +289,7 @@ $(trace_0_y_pv_value)</tooltip>
     <plot_area_background_color>
       <color red="255" green="255" blue="255" />
     </plot_area_background_color>
-    <pv_name>$(PREF)Q-I</pv_name>
+    <pv_name>$(PREF)QWF</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -309,7 +309,7 @@ $(trace_0_y_pv_value)</tooltip>
 $(trace_0_y_pv_value)</tooltip>
     <trace_0_anti_alias>true</trace_0_anti_alias>
     <trace_0_buffer_size>8192</trace_0_buffer_size>
-    <trace_0_concatenate_data>true</trace_0_concatenate_data>
+    <trace_0_concatenate_data>false</trace_0_concatenate_data>
     <trace_0_line_width>1</trace_0_line_width>
     <trace_0_name>$(trace_0_y_pv)</trace_0_name>
     <trace_0_plot_mode>0</trace_0_plot_mode>
@@ -323,7 +323,7 @@ $(trace_0_y_pv_value)</tooltip>
     <trace_0_update_mode>0</trace_0_update_mode>
     <trace_0_visible>true</trace_0_visible>
     <trace_0_x_axis_index>0</trace_0_x_axis_index>
-    <trace_0_x_pv>$(PREF)I-I</trace_0_x_pv>
+    <trace_0_x_pv>$(PREF)IWF</trace_0_x_pv>
     <trace_0_x_pv_value />
     <trace_0_y_axis_index>1</trace_0_y_axis_index>
     <trace_0_y_pv>$(pv_name)</trace_0_y_pv>
@@ -434,7 +434,7 @@ $(trace_0_y_pv_value)</tooltip>
     <plot_area_background_color>
       <color red="255" green="255" blue="255" />
     </plot_area_background_color>
-    <pv_name>$(PREF)Amp-I</pv_name>
+    <pv_name>$(PREF)AWF</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -468,10 +468,10 @@ $(trace_0_y_pv_value)</tooltip>
     <trace_0_update_mode>0</trace_0_update_mode>
     <trace_0_visible>true</trace_0_visible>
     <trace_0_x_axis_index>0</trace_0_x_axis_index>
-    <trace_0_x_pv>$(PREF)T-I</trace_0_x_pv>
+    <trace_0_x_pv>$(PREF)TWF</trace_0_x_pv>
     <trace_0_x_pv_value />
     <trace_0_y_axis_index>2</trace_0_y_axis_index>
-    <trace_0_y_pv>$(PREF)Pha-I</trace_0_y_pv>
+    <trace_0_y_pv>$(PREF)PWF</trace_0_y_pv>
     <trace_0_y_pv_value />
     <trace_1_anti_alias>true</trace_1_anti_alias>
     <trace_1_buffer_size>8192</trace_1_buffer_size>
@@ -489,7 +489,7 @@ $(trace_0_y_pv_value)</tooltip>
     <trace_1_update_mode>0</trace_1_update_mode>
     <trace_1_visible>true</trace_1_visible>
     <trace_1_x_axis_index>0</trace_1_x_axis_index>
-    <trace_1_x_pv>$(PREF)T-I</trace_1_x_pv>
+    <trace_1_x_pv>$(PREF)TWF</trace_1_x_pv>
     <trace_1_x_pv_value />
     <trace_1_y_axis_index>1</trace_1_y_axis_index>
     <trace_1_y_pv>$(pv_name)</trace_1_y_pv>
@@ -573,7 +573,7 @@ $(trace_0_y_pv_value)</tooltip>
     <name>Text Update</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)AmpMean-I</pv_name>
+    <pv_name>$(PREF)AMEAN</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -625,7 +625,7 @@ $(pv_value)</tooltip>
     <name>Text Update_1</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PhaMean-I</pv_name>
+    <pv_name>$(PREF)PMEAN</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -677,7 +677,7 @@ $(pv_value)</tooltip>
     <name>Text Update_2</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PwrMean-I</pv_name>
+    <pv_name>$(PREF)PWRMEAN</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -729,7 +729,7 @@ $(pv_value)</tooltip>
     <name>Text Update_3</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)AmpStd-I</pv_name>
+    <pv_name>$(PREF)ASTD</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -781,7 +781,7 @@ $(pv_value)</tooltip>
     <name>Text Update_4</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PhaStd-I</pv_name>
+    <pv_name>$(PREF)PSTD</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -833,7 +833,7 @@ $(pv_value)</tooltip>
     <name>Text Update_5</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PwrStd-I</pv_name>
+    <pv_name>$(PREF)PWRSTD</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -885,7 +885,7 @@ $(pv_value)</tooltip>
     <name>Text Update_6</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)AmpMax-I</pv_name>
+    <pv_name>$(PREF)AMAX</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -937,7 +937,7 @@ $(pv_value)</tooltip>
     <name>Text Update_7</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PhaMax-I</pv_name>
+    <pv_name>$(PREF)PMAX</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -989,7 +989,7 @@ $(pv_value)</tooltip>
     <name>Text Update_8</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PwrMax-I</pv_name>
+    <pv_name>$(PREF)PWRMAX</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1041,7 +1041,7 @@ $(pv_value)</tooltip>
     <name>Text Update_9</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)AmpMin-I</pv_name>
+    <pv_name>$(PREF)AMIN</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1093,7 +1093,7 @@ $(pv_value)</tooltip>
     <name>Text Update_10</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PhaMin-I</pv_name>
+    <pv_name>$(PREF)PMIN</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1145,7 +1145,7 @@ $(pv_value)</tooltip>
     <name>Text Update_11</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)PwrMin-I</pv_name>
+    <pv_name>$(PREF)PWRMIN</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1642,7 +1642,7 @@ $(pv_value)</tooltip>
     <name>Text Input</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)ScaleI-SP</pv_name>
+    <pv_name>$(PREF)ISCALE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1699,7 +1699,7 @@ $(pv_value)</tooltip>
     <name>Text Input_1</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)ScaleQ-SP</pv_name>
+    <pv_name>$(PREF)QSCALE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1756,7 +1756,7 @@ $(pv_value)</tooltip>
     <name>Text Input_2</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)ScaleP-SP</pv_name>
+    <pv_name>$(PREF)PWRSCALE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />

@@ -65,7 +65,7 @@
     <name>Text Input</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)Debug-SP</pv_name>
+    <pv_name>$(PREF)DEBUG</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -122,7 +122,7 @@ $(pv_value)</tooltip>
     <image></image>
     <name>Action Button</name>
     <push_action_index>0</push_action_index>
-    <pv_name>$(PREF)Rst-Cmd</pv_name>
+    <pv_name>$(PREF)RESET</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -176,7 +176,7 @@ $(pv_value)</tooltip>
     <name>Text Input_1</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)Addr-SP</pv_name>
+    <pv_name>$(PREF)IPADDR</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -228,7 +228,7 @@ $(pv_value)</tooltip>
     <name>Text Update</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)State-Sts</pv_name>
+    <pv_name>$(PREF)STATUS</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -280,7 +280,7 @@ $(pv_value)</tooltip>
     <name>Text Update_1</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)CntTx-I</pv_name>
+    <pv_name>$(PREF)TX_CNT</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -332,7 +332,7 @@ $(pv_value)</tooltip>
     <name>Text Update_2</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)CntRx-I</pv_name>
+    <pv_name>$(PREF)RX_CNT</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -384,7 +384,7 @@ $(pv_value)</tooltip>
     <name>Text Update_3</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)CntIgnore-I</pv_name>
+    <pv_name>$(PREF)IGNORE_CNT</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -436,7 +436,7 @@ $(pv_value)</tooltip>
     <name>Text Update_4</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)CntTimo-I</pv_name>
+    <pv_name>$(PREF)TMO_CNT</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -488,7 +488,7 @@ $(pv_value)</tooltip>
     <name>Text Update_5</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)CntErr-I</pv_name>
+    <pv_name>$(PREF)ERR_CNT</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -860,7 +860,7 @@ $(pv_value)</tooltip>
     <name>Text Update_6</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(ACQ)Sts</pv_name>
+    <pv_name>$(ACQ)STATUS</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -952,7 +952,7 @@ $(pv_value)</tooltip>
     <name>Text Update_7</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)RateTx-I</pv_name>
+    <pv_name>$(PREF)TX_RATE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1004,7 +1004,7 @@ $(pv_value)</tooltip>
     <name>Text Update_8</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)RateRx-I</pv_name>
+    <pv_name>$(PREF)RX_RATE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1056,7 +1056,7 @@ $(pv_value)</tooltip>
     <name>Text Update_9</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)RateIgnore-I</pv_name>
+    <pv_name>$(PREF)IGNORE_RATE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1108,7 +1108,7 @@ $(pv_value)</tooltip>
     <name>Text Update_10</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)RateTimo-I</pv_name>
+    <pv_name>$(PREF)TMO_RATE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1160,7 +1160,7 @@ $(pv_value)</tooltip>
     <name>Text Update_11</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)RateErr-I</pv_name>
+    <pv_name>$(PREF)ERR_RATE</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1212,7 +1212,7 @@ $(pv_value)</tooltip>
     <name>Text Update_12</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>$(PREF)LastError-I</pv_name>
+    <pv_name>$(PREF)LAST_ERROR</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />

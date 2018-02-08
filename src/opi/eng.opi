@@ -60,7 +60,7 @@
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:J18_debug-I</pv_name>
+    <pv_name>TST:reg_J18_debug_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -157,7 +157,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:J18_debug-I</pv_name>
+    <pv_name>TST:reg_J18_debug_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -211,7 +211,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:J18_debug-SP</pv_name>
+    <pv_name>TST:reg_J18_debug</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -263,7 +263,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U15_spi_rdbk-I</pv_name>
+    <pv_name>TST:reg_U15_spi_rdbk_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -360,7 +360,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U15_spi_rdbk-I</pv_name>
+    <pv_name>TST:reg_U15_spi_rdbk_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -414,7 +414,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U15_spi_rdbk-SP</pv_name>
+    <pv_name>TST:reg_U15_spi_rdbk</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -466,7 +466,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U15_spi_status-I</pv_name>
+    <pv_name>TST:reg_U15_spi_status_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -563,7 +563,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U15_spi_status-I</pv_name>
+    <pv_name>TST:reg_U15_spi_status_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -617,7 +617,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U15_spi_status-SP</pv_name>
+    <pv_name>TST:reg_U15_spi_status</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -669,7 +669,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U18_spi_rdbk-I</pv_name>
+    <pv_name>TST:reg_U18_spi_rdbk_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -766,7 +766,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U18_spi_rdbk-I</pv_name>
+    <pv_name>TST:reg_U18_spi_rdbk_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -820,7 +820,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U18_spi_rdbk-SP</pv_name>
+    <pv_name>TST:reg_U18_spi_rdbk</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -872,7 +872,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U18_spi_status-I</pv_name>
+    <pv_name>TST:reg_U18_spi_status_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -969,7 +969,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U18_spi_status-I</pv_name>
+    <pv_name>TST:reg_U18_spi_status_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -1023,7 +1023,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U18_spi_status-SP</pv_name>
+    <pv_name>TST:reg_U18_spi_status</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1075,7 +1075,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U2dout_lsb-I</pv_name>
+    <pv_name>TST:reg_U2dout_lsb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1172,7 +1172,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U2dout_lsb-I</pv_name>
+    <pv_name>TST:reg_U2dout_lsb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -1226,7 +1226,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U2dout_lsb-SP</pv_name>
+    <pv_name>TST:reg_U2dout_lsb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1278,7 +1278,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U2dout_msb-I</pv_name>
+    <pv_name>TST:reg_U2dout_msb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1375,7 +1375,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U2dout_msb-I</pv_name>
+    <pv_name>TST:reg_U2dout_msb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -1429,7 +1429,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U2dout_msb-SP</pv_name>
+    <pv_name>TST:reg_U2dout_msb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1481,7 +1481,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U3dout_lsb-I</pv_name>
+    <pv_name>TST:reg_U3dout_lsb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1578,7 +1578,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U3dout_lsb-I</pv_name>
+    <pv_name>TST:reg_U3dout_lsb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -1632,7 +1632,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U3dout_lsb-SP</pv_name>
+    <pv_name>TST:reg_U3dout_lsb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1684,7 +1684,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U3dout_msb-I</pv_name>
+    <pv_name>TST:reg_U3dout_msb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1781,7 +1781,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:U3dout_msb-I</pv_name>
+    <pv_name>TST:reg_U3dout_msb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -1835,7 +1835,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:U3dout_msb-SP</pv_name>
+    <pv_name>TST:reg_U3dout_msb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1887,7 +1887,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_mmcm-I</pv_name>
+    <pv_name>TST:reg_adc_mmcm_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -1984,7 +1984,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_mmcm-I</pv_name>
+    <pv_name>TST:reg_adc_mmcm_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -2038,7 +2038,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_mmcm-SP</pv_name>
+    <pv_name>TST:reg_adc_mmcm</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2090,7 +2090,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_mode-I</pv_name>
+    <pv_name>TST:reg_adc_test_mode_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2187,7 +2187,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_test_mode-I</pv_name>
+    <pv_name>TST:reg_adc_test_mode_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -2241,7 +2241,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_mode-SP</pv_name>
+    <pv_name>TST:reg_adc_test_mode</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2293,7 +2293,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_reset-I</pv_name>
+    <pv_name>TST:reg_adc_test_reset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2390,7 +2390,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_test_reset-I</pv_name>
+    <pv_name>TST:reg_adc_test_reset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -2444,7 +2444,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_reset-SP</pv_name>
+    <pv_name>TST:reg_adc_test_reset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2496,7 +2496,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_trig_cnt-I</pv_name>
+    <pv_name>TST:reg_adc_test_trig_cnt_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2593,7 +2593,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_test_trig_cnt-I</pv_name>
+    <pv_name>TST:reg_adc_test_trig_cnt_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -2647,7 +2647,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_trig_cnt-SP</pv_name>
+    <pv_name>TST:reg_adc_test_trig_cnt</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2699,7 +2699,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave1_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave1_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2796,7 +2796,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_test_wave1_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave1_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -2850,7 +2850,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave1_out-SP</pv_name>
+    <pv_name>TST:reg_adc_test_wave1_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2902,7 +2902,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave2_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave2_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -2999,7 +2999,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_test_wave2_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave2_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -3053,7 +3053,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave2_out-SP</pv_name>
+    <pv_name>TST:reg_adc_test_wave2_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3105,7 +3105,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave3_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave3_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3202,7 +3202,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_test_wave3_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave3_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -3256,7 +3256,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave3_out-SP</pv_name>
+    <pv_name>TST:reg_adc_test_wave3_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3308,7 +3308,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave4_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave4_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3405,7 +3405,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:adc_test_wave4_out-I</pv_name>
+    <pv_name>TST:reg_adc_test_wave4_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -3459,7 +3459,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:adc_test_wave4_out-SP</pv_name>
+    <pv_name>TST:reg_adc_test_wave4_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3511,7 +3511,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:amplitude-I</pv_name>
+    <pv_name>TST:reg_amplitude_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3608,7 +3608,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:amplitude-I</pv_name>
+    <pv_name>TST:reg_amplitude_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -3662,7 +3662,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:amplitude-SP</pv_name>
+    <pv_name>TST:reg_amplitude</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3714,7 +3714,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:average_len-I</pv_name>
+    <pv_name>TST:reg_average_len_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3811,7 +3811,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:average_len-I</pv_name>
+    <pv_name>TST:reg_average_len_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -3865,7 +3865,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:average_len-SP</pv_name>
+    <pv_name>TST:reg_average_len</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -3917,7 +3917,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:banyan_status-I</pv_name>
+    <pv_name>TST:reg_banyan_status_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4014,7 +4014,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:banyan_status-I</pv_name>
+    <pv_name>TST:reg_banyan_status_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -4068,7 +4068,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:banyan_status-SP</pv_name>
+    <pv_name>TST:reg_banyan_status</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4120,7 +4120,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_0_modulo-I</pv_name>
+    <pv_name>TST:reg_beam_0_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4217,7 +4217,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:beam_0_modulo-I</pv_name>
+    <pv_name>TST:reg_beam_0_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -4271,7 +4271,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_0_modulo-SP</pv_name>
+    <pv_name>TST:reg_beam_0_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4323,7 +4323,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_0_phase_init-I</pv_name>
+    <pv_name>TST:reg_beam_0_phase_init_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4420,7 +4420,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:beam_0_phase_init-I</pv_name>
+    <pv_name>TST:reg_beam_0_phase_init_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -4474,7 +4474,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_0_phase_init-SP</pv_name>
+    <pv_name>TST:reg_beam_0_phase_init</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4526,7 +4526,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_0_phase_step-I</pv_name>
+    <pv_name>TST:reg_beam_0_phase_step_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4623,7 +4623,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:beam_0_phase_step-I</pv_name>
+    <pv_name>TST:reg_beam_0_phase_step_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -4677,7 +4677,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_0_phase_step-SP</pv_name>
+    <pv_name>TST:reg_beam_0_phase_step</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4729,7 +4729,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_1_modulo-I</pv_name>
+    <pv_name>TST:reg_beam_1_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4826,7 +4826,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:beam_1_modulo-I</pv_name>
+    <pv_name>TST:reg_beam_1_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -4880,7 +4880,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_1_modulo-SP</pv_name>
+    <pv_name>TST:reg_beam_1_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -4932,7 +4932,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_1_phase_init-I</pv_name>
+    <pv_name>TST:reg_beam_1_phase_init_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5029,7 +5029,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:beam_1_phase_init-I</pv_name>
+    <pv_name>TST:reg_beam_1_phase_init_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -5083,7 +5083,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_1_phase_init-SP</pv_name>
+    <pv_name>TST:reg_beam_1_phase_init</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5135,7 +5135,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_1_phase_step-I</pv_name>
+    <pv_name>TST:reg_beam_1_phase_step_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5232,7 +5232,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:beam_1_phase_step-I</pv_name>
+    <pv_name>TST:reg_beam_1_phase_step_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -5286,7 +5286,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:beam_1_phase_step-SP</pv_name>
+    <pv_name>TST:reg_beam_1_phase_step</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5338,7 +5338,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:buf_trig-I</pv_name>
+    <pv_name>TST:reg_buf_trig_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5435,7 +5435,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:buf_trig-I</pv_name>
+    <pv_name>TST:reg_buf_trig_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -5489,7 +5489,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:buf_trig-SP</pv_name>
+    <pv_name>TST:reg_buf_trig</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5541,7 +5541,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cav4_mech_prng_iva-I</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_iva_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5638,7 +5638,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cav4_mech_prng_iva-I</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_iva_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -5692,7 +5692,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cav4_mech_prng_iva-SP</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_iva</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5744,7 +5744,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cav4_mech_prng_ivb-I</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_ivb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5841,7 +5841,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cav4_mech_prng_ivb-I</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_ivb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -5895,7 +5895,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cav4_mech_prng_ivb-SP</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_ivb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -5947,7 +5947,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cav4_mech_prng_random_run-I</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_random_run_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6044,7 +6044,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cav4_mech_prng_random_run-I</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_random_run_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -6098,7 +6098,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cav4_mech_prng_random_run-SP</pv_name>
+    <pv_name>TST:reg_cav4_mech_prng_random_run</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6150,7 +6150,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity0_detune-I</pv_name>
+    <pv_name>TST:reg_cavity0_detune_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6247,7 +6247,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity0_detune-I</pv_name>
+    <pv_name>TST:reg_cavity0_detune_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -6301,7 +6301,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity0_detune-SP</pv_name>
+    <pv_name>TST:reg_cavity0_detune</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6353,7 +6353,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity0_sat_count-I</pv_name>
+    <pv_name>TST:reg_cavity0_sat_count_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6450,7 +6450,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity0_sat_count-I</pv_name>
+    <pv_name>TST:reg_cavity0_sat_count_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -6504,7 +6504,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity0_sat_count-SP</pv_name>
+    <pv_name>TST:reg_cavity0_sat_count</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6556,7 +6556,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity1_detune-I</pv_name>
+    <pv_name>TST:reg_cavity1_detune_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6653,7 +6653,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity1_detune-I</pv_name>
+    <pv_name>TST:reg_cavity1_detune_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -6707,7 +6707,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity1_detune-SP</pv_name>
+    <pv_name>TST:reg_cavity1_detune</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6759,7 +6759,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity1_sat_count-I</pv_name>
+    <pv_name>TST:reg_cavity1_sat_count_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6856,7 +6856,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity1_sat_count-I</pv_name>
+    <pv_name>TST:reg_cavity1_sat_count_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -6910,7 +6910,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity1_sat_count-SP</pv_name>
+    <pv_name>TST:reg_cavity1_sat_count</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -6962,7 +6962,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_a_cav_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_0_a_cav_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7059,7 +7059,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_a_cav_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_0_a_cav_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -7113,7 +7113,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_a_cav_offset-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_a_cav_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7165,7 +7165,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_a_for_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_0_a_for_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7262,7 +7262,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_a_for_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_0_a_for_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -7316,7 +7316,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_a_for_offset-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_a_for_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7368,7 +7368,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_a_rfl_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_0_a_rfl_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7465,7 +7465,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_a_rfl_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_0_a_rfl_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -7519,7 +7519,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_a_rfl_offset-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_a_rfl_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7571,7 +7571,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_amp_lp_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_amp_lp_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7668,7 +7668,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_amp_lp_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_amp_lp_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -7722,7 +7722,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_amp_lp_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_amp_lp_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7774,7 +7774,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_compr_sat_ctl-I</pv_name>
+    <pv_name>TST:reg_cavity_0_compr_sat_ctl_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7871,7 +7871,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_compr_sat_ctl-I</pv_name>
+    <pv_name>TST:reg_cavity_0_compr_sat_ctl_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -7925,7 +7925,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_compr_sat_ctl-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_compr_sat_ctl</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -7977,7 +7977,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_freq_0_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_0_coarse_freq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8074,7 +8074,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_freq_0_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_0_coarse_freq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -8128,7 +8128,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_freq_0_coarse_freq-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_0_coarse_freq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8180,7 +8180,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_freq_1_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_1_coarse_freq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8277,7 +8277,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_freq_1_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_1_coarse_freq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -8331,7 +8331,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_freq_1_coarse_freq-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_1_coarse_freq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8383,7 +8383,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_freq_2_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_2_coarse_freq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8480,7 +8480,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_freq_2_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_2_coarse_freq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -8534,7 +8534,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_freq_2_coarse_freq-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_freq_2_coarse_freq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8586,7 +8586,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_0_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_beam_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8683,7 +8683,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_0_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_beam_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -8737,7 +8737,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_0_beam_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_beam_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8789,7 +8789,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_0_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8886,7 +8886,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_0_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -8940,7 +8940,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_0_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -8992,7 +8992,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_0_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_drive_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9089,7 +9089,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_0_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_drive_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -9143,7 +9143,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_0_drive_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_0_drive_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9195,7 +9195,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_1_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_beam_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9292,7 +9292,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_1_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_beam_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -9346,7 +9346,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_1_beam_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_beam_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9398,7 +9398,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_1_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9495,7 +9495,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_1_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -9549,7 +9549,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_1_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9601,7 +9601,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_1_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_drive_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9698,7 +9698,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_1_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_drive_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -9752,7 +9752,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_1_drive_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_1_drive_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9804,7 +9804,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_2_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_beam_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -9901,7 +9901,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_2_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_beam_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -9955,7 +9955,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_2_beam_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_beam_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10007,7 +10007,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_2_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10104,7 +10104,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_2_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -10158,7 +10158,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_2_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10210,7 +10210,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_2_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_drive_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10307,7 +10307,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_mode_2_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_drive_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -10361,7 +10361,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_mode_2_drive_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_mode_2_drive_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10413,7 +10413,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_modulo-I</pv_name>
+    <pv_name>TST:reg_cavity_0_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10510,7 +10510,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_modulo-I</pv_name>
+    <pv_name>TST:reg_cavity_0_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -10564,7 +10564,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_modulo-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10616,7 +10616,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_phase_step-I</pv_name>
+    <pv_name>TST:reg_cavity_0_phase_step_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10713,7 +10713,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_phase_step-I</pv_name>
+    <pv_name>TST:reg_cavity_0_phase_step_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -10767,7 +10767,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_phase_step-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_phase_step</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10819,7 +10819,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_prng_iva-I</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_iva_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -10916,7 +10916,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_prng_iva-I</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_iva_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -10970,7 +10970,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_prng_iva-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_iva</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11022,7 +11022,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_prng_ivb-I</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_ivb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11119,7 +11119,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_prng_ivb-I</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_ivb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -11173,7 +11173,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_prng_ivb-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_ivb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11225,7 +11225,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_prng_random_run-I</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_random_run_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11322,7 +11322,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_0_prng_random_run-I</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_random_run_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -11376,7 +11376,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_0_prng_random_run-SP</pv_name>
+    <pv_name>TST:reg_cavity_0_prng_random_run</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11428,7 +11428,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_a_cav_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_1_a_cav_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11525,7 +11525,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_a_cav_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_1_a_cav_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -11579,7 +11579,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_a_cav_offset-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_a_cav_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11631,7 +11631,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_a_for_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_1_a_for_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11728,7 +11728,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_a_for_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_1_a_for_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -11782,7 +11782,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_a_for_offset-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_a_for_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11834,7 +11834,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_a_rfl_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_1_a_rfl_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -11931,7 +11931,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_a_rfl_offset-I</pv_name>
+    <pv_name>TST:reg_cavity_1_a_rfl_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -11985,7 +11985,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_a_rfl_offset-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_a_rfl_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12037,7 +12037,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_amp_lp_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_amp_lp_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12134,7 +12134,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_amp_lp_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_amp_lp_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -12188,7 +12188,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_amp_lp_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_amp_lp_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12240,7 +12240,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_compr_sat_ctl-I</pv_name>
+    <pv_name>TST:reg_cavity_1_compr_sat_ctl_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12337,7 +12337,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_compr_sat_ctl-I</pv_name>
+    <pv_name>TST:reg_cavity_1_compr_sat_ctl_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -12391,7 +12391,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_compr_sat_ctl-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_compr_sat_ctl</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12443,7 +12443,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_freq_0_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_0_coarse_freq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12540,7 +12540,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_freq_0_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_0_coarse_freq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -12594,7 +12594,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_freq_0_coarse_freq-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_0_coarse_freq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12646,7 +12646,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_freq_1_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_1_coarse_freq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12743,7 +12743,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_freq_1_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_1_coarse_freq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -12797,7 +12797,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_freq_1_coarse_freq-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_1_coarse_freq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12849,7 +12849,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_freq_2_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_2_coarse_freq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -12946,7 +12946,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_freq_2_coarse_freq-I</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_2_coarse_freq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -13000,7 +13000,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_freq_2_coarse_freq-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_freq_2_coarse_freq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13052,7 +13052,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_0_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_beam_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13149,7 +13149,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_0_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_beam_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -13203,7 +13203,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_0_beam_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_beam_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13255,7 +13255,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_0_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13352,7 +13352,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_0_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -13406,7 +13406,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_0_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13458,7 +13458,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_0_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_drive_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13555,7 +13555,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_0_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_drive_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -13609,7 +13609,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_0_drive_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_0_drive_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13661,7 +13661,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_1_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_beam_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13758,7 +13758,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_1_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_beam_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -13812,7 +13812,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_1_beam_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_beam_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13864,7 +13864,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_1_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -13961,7 +13961,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_1_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -14015,7 +14015,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_1_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14067,7 +14067,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_1_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_drive_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14164,7 +14164,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_1_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_drive_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -14218,7 +14218,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_1_drive_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_1_drive_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14270,7 +14270,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_2_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_beam_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14367,7 +14367,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_2_beam_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_beam_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -14421,7 +14421,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_2_beam_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_beam_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14473,7 +14473,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_2_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_bw_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14570,7 +14570,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_2_bw-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_bw_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -14624,7 +14624,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_2_bw-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_bw</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14676,7 +14676,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_2_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_drive_coupling_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14773,7 +14773,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_mode_2_drive_coupling-I</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_drive_coupling_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -14827,7 +14827,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_mode_2_drive_coupling-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_mode_2_drive_coupling</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14879,7 +14879,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_modulo-I</pv_name>
+    <pv_name>TST:reg_cavity_1_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -14976,7 +14976,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_modulo-I</pv_name>
+    <pv_name>TST:reg_cavity_1_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -15030,7 +15030,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_modulo-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15082,7 +15082,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_phase_step-I</pv_name>
+    <pv_name>TST:reg_cavity_1_phase_step_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15179,7 +15179,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_phase_step-I</pv_name>
+    <pv_name>TST:reg_cavity_1_phase_step_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -15233,7 +15233,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_phase_step-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_phase_step</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15285,7 +15285,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_prng_iva-I</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_iva_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15382,7 +15382,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_prng_iva-I</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_iva_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -15436,7 +15436,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_prng_iva-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_iva</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15488,7 +15488,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_prng_ivb-I</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_ivb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15585,7 +15585,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_prng_ivb-I</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_ivb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -15639,7 +15639,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_prng_ivb-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_ivb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15691,7 +15691,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_prng_random_run-I</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_random_run_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15788,7 +15788,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cavity_1_prng_random_run-I</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_random_run_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -15842,7 +15842,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cavity_1_prng_random_run-SP</pv_name>
+    <pv_name>TST:reg_cavity_1_prng_random_run</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15894,7 +15894,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cc_error_clear-I</pv_name>
+    <pv_name>TST:reg_cc_error_clear_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -15991,7 +15991,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cc_error_clear-I</pv_name>
+    <pv_name>TST:reg_cc_error_clear_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -16045,7 +16045,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cc_error_clear-SP</pv_name>
+    <pv_name>TST:reg_cc_error_clear</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16097,7 +16097,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cc_loc1-I</pv_name>
+    <pv_name>TST:reg_cc_loc1_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16194,7 +16194,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cc_loc1-I</pv_name>
+    <pv_name>TST:reg_cc_loc1_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -16248,7 +16248,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cc_loc1-SP</pv_name>
+    <pv_name>TST:reg_cc_loc1</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16300,7 +16300,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cct1_cavity0_status_aux-I</pv_name>
+    <pv_name>TST:reg_cct1_cavity0_status_aux_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16397,7 +16397,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cct1_cavity0_status_aux-I</pv_name>
+    <pv_name>TST:reg_cct1_cavity0_status_aux_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -16451,7 +16451,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cct1_cavity0_status_aux-SP</pv_name>
+    <pv_name>TST:reg_cct1_cavity0_status_aux</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16503,7 +16503,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cct1_cavity1_status_aux-I</pv_name>
+    <pv_name>TST:reg_cct1_cavity1_status_aux_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16600,7 +16600,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cct1_cavity1_status_aux-I</pv_name>
+    <pv_name>TST:reg_cct1_cavity1_status_aux_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -16654,7 +16654,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cct1_cavity1_status_aux-SP</pv_name>
+    <pv_name>TST:reg_cct1_cavity1_status_aux</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16706,7 +16706,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cic_period-I</pv_name>
+    <pv_name>TST:reg_cic_period_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16803,7 +16803,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cic_period-I</pv_name>
+    <pv_name>TST:reg_cic_period_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -16857,7 +16857,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cic_period-SP</pv_name>
+    <pv_name>TST:reg_cic_period</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -16909,7 +16909,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cic_shift-I</pv_name>
+    <pv_name>TST:reg_cic_shift_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17006,7 +17006,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:cic_shift-I</pv_name>
+    <pv_name>TST:reg_cic_shift_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -17060,7 +17060,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:cic_shift-SP</pv_name>
+    <pv_name>TST:reg_cic_shift</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17112,7 +17112,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:circle_buf_flip-I</pv_name>
+    <pv_name>TST:reg_circle_buf_flip_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17209,7 +17209,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:circle_buf_flip-I</pv_name>
+    <pv_name>TST:reg_circle_buf_flip_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -17263,7 +17263,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:circle_buf_flip-SP</pv_name>
+    <pv_name>TST:reg_circle_buf_flip</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17315,7 +17315,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:clk_phase_diff_out_U2-I</pv_name>
+    <pv_name>TST:reg_clk_phase_diff_out_U2_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17412,7 +17412,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:clk_phase_diff_out_U2-I</pv_name>
+    <pv_name>TST:reg_clk_phase_diff_out_U2_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -17466,7 +17466,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:clk_phase_diff_out_U2-SP</pv_name>
+    <pv_name>TST:reg_clk_phase_diff_out_U2</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17518,7 +17518,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:clk_phase_diff_out_U3-I</pv_name>
+    <pv_name>TST:reg_clk_phase_diff_out_U3_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17615,7 +17615,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:clk_phase_diff_out_U3-I</pv_name>
+    <pv_name>TST:reg_clk_phase_diff_out_U3_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -17669,7 +17669,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:clk_phase_diff_out_U3-SP</pv_name>
+    <pv_name>TST:reg_clk_phase_diff_out_U3</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17721,7 +17721,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:clk_status_out-I</pv_name>
+    <pv_name>TST:reg_clk_status_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17818,7 +17818,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:clk_status_out-I</pv_name>
+    <pv_name>TST:reg_clk_status_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -17872,7 +17872,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:clk_status_out-SP</pv_name>
+    <pv_name>TST:reg_clk_status_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -17924,7 +17924,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U15_spi_data_addr_r-I</pv_name>
+    <pv_name>TST:reg_config_U15_spi_data_addr_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18021,7 +18021,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U15_spi_data_addr_r-I</pv_name>
+    <pv_name>TST:reg_config_U15_spi_data_addr_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -18075,7 +18075,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U15_spi_data_addr_r-SP</pv_name>
+    <pv_name>TST:reg_config_U15_spi_data_addr_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18127,7 +18127,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U15_spi_read_and_start_r-I</pv_name>
+    <pv_name>TST:reg_config_U15_spi_read_and_start_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18224,7 +18224,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U15_spi_read_and_start_r-I</pv_name>
+    <pv_name>TST:reg_config_U15_spi_read_and_start_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -18278,7 +18278,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U15_spi_read_and_start_r-SP</pv_name>
+    <pv_name>TST:reg_config_U15_spi_read_and_start_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18330,7 +18330,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U18_spi_data_addr_r-I</pv_name>
+    <pv_name>TST:reg_config_U18_spi_data_addr_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18427,7 +18427,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U18_spi_data_addr_r-I</pv_name>
+    <pv_name>TST:reg_config_U18_spi_data_addr_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -18481,7 +18481,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U18_spi_data_addr_r-SP</pv_name>
+    <pv_name>TST:reg_config_U18_spi_data_addr_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18533,7 +18533,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U18_spi_read_and_start_r-I</pv_name>
+    <pv_name>TST:reg_config_U18_spi_read_and_start_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18630,7 +18630,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U18_spi_read_and_start_r-I</pv_name>
+    <pv_name>TST:reg_config_U18_spi_read_and_start_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -18684,7 +18684,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U18_spi_read_and_start_r-SP</pv_name>
+    <pv_name>TST:reg_config_U18_spi_read_and_start_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18736,7 +18736,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U2_clk_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U2_clk_reset_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18833,7 +18833,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U2_clk_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U2_clk_reset_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -18887,7 +18887,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U2_clk_reset_r-SP</pv_name>
+    <pv_name>TST:reg_config_U2_clk_reset_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -18939,7 +18939,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U2_iserdes_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U2_iserdes_reset_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19036,7 +19036,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U2_iserdes_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U2_iserdes_reset_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -19090,7 +19090,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U2_iserdes_reset_r-SP</pv_name>
+    <pv_name>TST:reg_config_U2_iserdes_reset_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19142,7 +19142,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U3_clk_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U3_clk_reset_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19239,7 +19239,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U3_clk_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U3_clk_reset_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -19293,7 +19293,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U3_clk_reset_r-SP</pv_name>
+    <pv_name>TST:reg_config_U3_clk_reset_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19345,7 +19345,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U3_iserdes_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U3_iserdes_reset_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19442,7 +19442,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U3_iserdes_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U3_iserdes_reset_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -19496,7 +19496,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U3_iserdes_reset_r-SP</pv_name>
+    <pv_name>TST:reg_config_U3_iserdes_reset_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19548,7 +19548,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U4_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U4_reset_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19645,7 +19645,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_U4_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_U4_reset_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -19699,7 +19699,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_U4_reset_r-SP</pv_name>
+    <pv_name>TST:reg_config_U4_reset_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19751,7 +19751,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_banyan_mask-I</pv_name>
+    <pv_name>TST:reg_config_banyan_mask_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19848,7 +19848,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_banyan_mask-I</pv_name>
+    <pv_name>TST:reg_config_banyan_mask_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -19902,7 +19902,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_banyan_mask-SP</pv_name>
+    <pv_name>TST:reg_config_banyan_mask</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -19954,7 +19954,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_bitslip-I</pv_name>
+    <pv_name>TST:reg_config_bitslip_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20051,7 +20051,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_bitslip-I</pv_name>
+    <pv_name>TST:reg_config_bitslip_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -20105,7 +20105,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_bitslip-SP</pv_name>
+    <pv_name>TST:reg_config_bitslip</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20157,7 +20157,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_clk_status_we-I</pv_name>
+    <pv_name>TST:reg_config_clk_status_we_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20254,7 +20254,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_clk_status_we-I</pv_name>
+    <pv_name>TST:reg_config_clk_status_we_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -20308,7 +20308,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_clk_status_we-SP</pv_name>
+    <pv_name>TST:reg_config_clk_status_we</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20360,7 +20360,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_idelayctrl_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_idelayctrl_reset_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20457,7 +20457,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_idelayctrl_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_idelayctrl_reset_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -20511,7 +20511,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_idelayctrl_reset_r-SP</pv_name>
+    <pv_name>TST:reg_config_idelayctrl_reset_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20563,7 +20563,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_llspi_we-I</pv_name>
+    <pv_name>TST:reg_config_llspi_we_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20660,7 +20660,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_llspi_we-I</pv_name>
+    <pv_name>TST:reg_config_llspi_we_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -20714,7 +20714,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_llspi_we-SP</pv_name>
+    <pv_name>TST:reg_config_llspi_we</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20766,7 +20766,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_mmcm_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_mmcm_reset_r_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20863,7 +20863,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_mmcm_reset_r-I</pv_name>
+    <pv_name>TST:reg_config_mmcm_reset_r_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -20917,7 +20917,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_mmcm_reset_r-SP</pv_name>
+    <pv_name>TST:reg_config_mmcm_reset_r</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -20969,7 +20969,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_periph_config-I</pv_name>
+    <pv_name>TST:reg_config_periph_config_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21066,7 +21066,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_periph_config-I</pv_name>
+    <pv_name>TST:reg_config_periph_config_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -21120,7 +21120,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_periph_config-SP</pv_name>
+    <pv_name>TST:reg_config_periph_config</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21172,7 +21172,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_phasex_trig-I</pv_name>
+    <pv_name>TST:reg_config_phasex_trig_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21269,7 +21269,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_phasex_trig-I</pv_name>
+    <pv_name>TST:reg_config_phasex_trig_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -21323,7 +21323,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_phasex_trig-SP</pv_name>
+    <pv_name>TST:reg_config_phasex_trig</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21375,7 +21375,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_rawadc_trig-I</pv_name>
+    <pv_name>TST:reg_config_rawadc_trig_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21472,7 +21472,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_rawadc_trig-I</pv_name>
+    <pv_name>TST:reg_config_rawadc_trig_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -21526,7 +21526,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_rawadc_trig-SP</pv_name>
+    <pv_name>TST:reg_config_rawadc_trig</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21578,7 +21578,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_scan_trigger_we-I</pv_name>
+    <pv_name>TST:reg_config_scan_trigger_we_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21675,7 +21675,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_scan_trigger_we-I</pv_name>
+    <pv_name>TST:reg_config_scan_trigger_we_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -21729,7 +21729,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_scan_trigger_we-SP</pv_name>
+    <pv_name>TST:reg_config_scan_trigger_we</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21781,7 +21781,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_scanner_debug-I</pv_name>
+    <pv_name>TST:reg_config_scanner_debug_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21878,7 +21878,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_scanner_debug-I</pv_name>
+    <pv_name>TST:reg_config_scanner_debug_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -21932,7 +21932,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_scanner_debug-SP</pv_name>
+    <pv_name>TST:reg_config_scanner_debug</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -21984,7 +21984,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_sync_ad7794_cset-I</pv_name>
+    <pv_name>TST:reg_config_sync_ad7794_cset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22081,7 +22081,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_sync_ad7794_cset-I</pv_name>
+    <pv_name>TST:reg_config_sync_ad7794_cset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -22135,7 +22135,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_sync_ad7794_cset-SP</pv_name>
+    <pv_name>TST:reg_config_sync_ad7794_cset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22187,7 +22187,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_sync_tps62210_cset-I</pv_name>
+    <pv_name>TST:reg_config_sync_tps62210_cset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22284,7 +22284,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:config_sync_tps62210_cset-I</pv_name>
+    <pv_name>TST:reg_config_sync_tps62210_cset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -22338,7 +22338,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:config_sync_tps62210_cset-SP</pv_name>
+    <pv_name>TST:reg_config_sync_tps62210_cset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22390,7 +22390,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:crc_errors-I</pv_name>
+    <pv_name>TST:reg_crc_errors_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22487,7 +22487,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:crc_errors-I</pv_name>
+    <pv_name>TST:reg_crc_errors_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -22541,7 +22541,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:crc_errors-SP</pv_name>
+    <pv_name>TST:reg_crc_errors</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22593,7 +22593,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ctrace_running-I</pv_name>
+    <pv_name>TST:reg_ctrace_running_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22690,7 +22690,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ctrace_running-I</pv_name>
+    <pv_name>TST:reg_ctrace_running_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -22744,7 +22744,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ctrace_running-SP</pv_name>
+    <pv_name>TST:reg_ctrace_running</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22796,7 +22796,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ctrace_start-I</pv_name>
+    <pv_name>TST:reg_ctrace_start_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22893,7 +22893,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ctrace_start-I</pv_name>
+    <pv_name>TST:reg_ctrace_start_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -22947,7 +22947,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ctrace_start-SP</pv_name>
+    <pv_name>TST:reg_ctrace_start</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -22999,7 +22999,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dac_dds_reset-I</pv_name>
+    <pv_name>TST:reg_dac_dds_reset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23096,7 +23096,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:dac_dds_reset-I</pv_name>
+    <pv_name>TST:reg_dac_dds_reset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -23150,7 +23150,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dac_dds_reset-SP</pv_name>
+    <pv_name>TST:reg_dac_dds_reset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23202,7 +23202,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dac_iq_phase-I</pv_name>
+    <pv_name>TST:reg_dac_iq_phase_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23299,7 +23299,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:dac_iq_phase-I</pv_name>
+    <pv_name>TST:reg_dac_iq_phase_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -23353,7 +23353,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dac_iq_phase-SP</pv_name>
+    <pv_name>TST:reg_dac_iq_phase</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23405,7 +23405,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dac_mode-I</pv_name>
+    <pv_name>TST:reg_dac_mode_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23502,7 +23502,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:dac_mode-I</pv_name>
+    <pv_name>TST:reg_dac_mode_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -23556,7 +23556,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dac_mode-SP</pv_name>
+    <pv_name>TST:reg_dac_mode</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23608,7 +23608,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ddsa_modulo-I</pv_name>
+    <pv_name>TST:reg_ddsa_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23705,7 +23705,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ddsa_modulo-I</pv_name>
+    <pv_name>TST:reg_ddsa_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -23759,7 +23759,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ddsa_modulo-SP</pv_name>
+    <pv_name>TST:reg_ddsa_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23811,7 +23811,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ddsa_phstep_h-I</pv_name>
+    <pv_name>TST:reg_ddsa_phstep_h_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -23908,7 +23908,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ddsa_phstep_h-I</pv_name>
+    <pv_name>TST:reg_ddsa_phstep_h_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -23962,7 +23962,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ddsa_phstep_h-SP</pv_name>
+    <pv_name>TST:reg_ddsa_phstep_h</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24014,7 +24014,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ddsa_phstep_l-I</pv_name>
+    <pv_name>TST:reg_ddsa_phstep_l_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24111,7 +24111,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ddsa_phstep_l-I</pv_name>
+    <pv_name>TST:reg_ddsa_phstep_l_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -24165,7 +24165,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ddsa_phstep_l-SP</pv_name>
+    <pv_name>TST:reg_ddsa_phstep_l</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24217,7 +24217,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:domain_jump_realign-I</pv_name>
+    <pv_name>TST:reg_domain_jump_realign_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24314,7 +24314,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:domain_jump_realign-I</pv_name>
+    <pv_name>TST:reg_domain_jump_realign_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -24368,7 +24368,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:domain_jump_realign-SP</pv_name>
+    <pv_name>TST:reg_domain_jump_realign</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24420,7 +24420,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dtrace_cmd-I</pv_name>
+    <pv_name>TST:reg_dtrace_cmd_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24517,7 +24517,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:dtrace_cmd-I</pv_name>
+    <pv_name>TST:reg_dtrace_cmd_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -24571,7 +24571,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dtrace_cmd-SP</pv_name>
+    <pv_name>TST:reg_dtrace_cmd</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24623,7 +24623,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dtrace_status-I</pv_name>
+    <pv_name>TST:reg_dtrace_status_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24720,7 +24720,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:dtrace_status-I</pv_name>
+    <pv_name>TST:reg_dtrace_status_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -24774,7 +24774,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:dtrace_status-SP</pv_name>
+    <pv_name>TST:reg_dtrace_status</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24826,7 +24826,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:fdbk_drive_buf_ctl-I</pv_name>
+    <pv_name>TST:reg_fdbk_drive_buf_ctl_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -24923,7 +24923,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:fdbk_drive_buf_ctl-I</pv_name>
+    <pv_name>TST:reg_fdbk_drive_buf_ctl_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -24977,7 +24977,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:fdbk_drive_buf_ctl-SP</pv_name>
+    <pv_name>TST:reg_fdbk_drive_buf_ctl</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25029,7 +25029,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ffffffff-I</pv_name>
+    <pv_name>TST:reg_ffffffff_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25126,7 +25126,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ffffffff-I</pv_name>
+    <pv_name>TST:reg_ffffffff_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -25180,7 +25180,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ffffffff-SP</pv_name>
+    <pv_name>TST:reg_ffffffff</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25232,7 +25232,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:fiber_reset-I</pv_name>
+    <pv_name>TST:reg_fiber_reset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25329,7 +25329,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:fiber_reset-I</pv_name>
+    <pv_name>TST:reg_fiber_reset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -25383,7 +25383,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:fiber_reset-SP</pv_name>
+    <pv_name>TST:reg_fiber_reset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25435,7 +25435,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_4xout-I</pv_name>
+    <pv_name>TST:reg_frequency_4xout_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25532,7 +25532,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:frequency_4xout-I</pv_name>
+    <pv_name>TST:reg_frequency_4xout_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -25586,7 +25586,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_4xout-SP</pv_name>
+    <pv_name>TST:reg_frequency_4xout</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25638,7 +25638,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_adc-I</pv_name>
+    <pv_name>TST:reg_frequency_adc_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25735,7 +25735,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:frequency_adc-I</pv_name>
+    <pv_name>TST:reg_frequency_adc_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -25789,7 +25789,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_adc-SP</pv_name>
+    <pv_name>TST:reg_frequency_adc</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25841,7 +25841,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_clkout3-I</pv_name>
+    <pv_name>TST:reg_frequency_clkout3_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -25938,7 +25938,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:frequency_clkout3-I</pv_name>
+    <pv_name>TST:reg_frequency_clkout3_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -25992,7 +25992,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_clkout3-SP</pv_name>
+    <pv_name>TST:reg_frequency_clkout3</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26044,7 +26044,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_dco-I</pv_name>
+    <pv_name>TST:reg_frequency_dco_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26141,7 +26141,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:frequency_dco-I</pv_name>
+    <pv_name>TST:reg_frequency_dco_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -26195,7 +26195,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_dco-SP</pv_name>
+    <pv_name>TST:reg_frequency_dco</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26247,7 +26247,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_gtx_rx-I</pv_name>
+    <pv_name>TST:reg_frequency_gtx_rx_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26344,7 +26344,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:frequency_gtx_rx-I</pv_name>
+    <pv_name>TST:reg_frequency_gtx_rx_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -26398,7 +26398,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_gtx_rx-SP</pv_name>
+    <pv_name>TST:reg_frequency_gtx_rx</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26450,7 +26450,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_gtx_tx-I</pv_name>
+    <pv_name>TST:reg_frequency_gtx_tx_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26547,7 +26547,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:frequency_gtx_tx-I</pv_name>
+    <pv_name>TST:reg_frequency_gtx_tx_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -26601,7 +26601,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:frequency_gtx_tx-SP</pv_name>
+    <pv_name>TST:reg_frequency_gtx_tx</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26653,7 +26653,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_0-I</pv_name>
+    <pv_name>TST:reg_hello_0_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26750,7 +26750,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:hello_0-I</pv_name>
+    <pv_name>TST:reg_hello_0_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -26804,7 +26804,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_0-SP</pv_name>
+    <pv_name>TST:reg_hello_0</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26856,7 +26856,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_1-I</pv_name>
+    <pv_name>TST:reg_hello_1_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -26953,7 +26953,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:hello_1-I</pv_name>
+    <pv_name>TST:reg_hello_1_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -27007,7 +27007,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_1-SP</pv_name>
+    <pv_name>TST:reg_hello_1</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27059,7 +27059,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_2-I</pv_name>
+    <pv_name>TST:reg_hello_2_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27156,7 +27156,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:hello_2-I</pv_name>
+    <pv_name>TST:reg_hello_2_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -27210,7 +27210,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_2-SP</pv_name>
+    <pv_name>TST:reg_hello_2</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27262,7 +27262,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_3-I</pv_name>
+    <pv_name>TST:reg_hello_3_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27359,7 +27359,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:hello_3-I</pv_name>
+    <pv_name>TST:reg_hello_3_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -27413,7 +27413,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hello_3-SP</pv_name>
+    <pv_name>TST:reg_hello_3</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27465,7 +27465,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hist_count_w_strobe-I</pv_name>
+    <pv_name>TST:reg_hist_count_w_strobe_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27562,7 +27562,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:hist_count_w_strobe-I</pv_name>
+    <pv_name>TST:reg_hist_count_w_strobe_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -27616,7 +27616,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hist_count_w_strobe-SP</pv_name>
+    <pv_name>TST:reg_hist_count_w_strobe</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27668,7 +27668,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hist_status-I</pv_name>
+    <pv_name>TST:reg_hist_status_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27765,7 +27765,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:hist_status-I</pv_name>
+    <pv_name>TST:reg_hist_status_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -27819,7 +27819,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:hist_status-SP</pv_name>
+    <pv_name>TST:reg_hist_status</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27871,7 +27871,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:icc_cfg-I</pv_name>
+    <pv_name>TST:reg_icc_cfg_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -27968,7 +27968,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:icc_cfg-I</pv_name>
+    <pv_name>TST:reg_icc_cfg_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -28022,7 +28022,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:icc_cfg-SP</pv_name>
+    <pv_name>TST:reg_icc_cfg</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28074,7 +28074,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U2_lsb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U2_lsb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28171,7 +28171,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:idelay_value_out_U2_lsb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U2_lsb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -28225,7 +28225,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U2_lsb-SP</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U2_lsb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28277,7 +28277,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U2_msb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U2_msb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28374,7 +28374,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:idelay_value_out_U2_msb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U2_msb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -28428,7 +28428,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U2_msb-SP</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U2_msb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28480,7 +28480,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U3_lsb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U3_lsb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28577,7 +28577,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:idelay_value_out_U3_lsb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U3_lsb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -28631,7 +28631,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U3_lsb-SP</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U3_lsb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28683,7 +28683,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U3_msb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U3_msb_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28780,7 +28780,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:idelay_value_out_U3_msb-I</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U3_msb_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -28834,7 +28834,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:idelay_value_out_U3_msb-SP</pv_name>
+    <pv_name>TST:reg_idelay_value_out_U3_msb</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28886,7 +28886,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llrf_circle_ready-I</pv_name>
+    <pv_name>TST:reg_llrf_circle_ready_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -28983,7 +28983,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:llrf_circle_ready-I</pv_name>
+    <pv_name>TST:reg_llrf_circle_ready_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -29037,7 +29037,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llrf_circle_ready-SP</pv_name>
+    <pv_name>TST:reg_llrf_circle_ready</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29089,7 +29089,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llrf_dsp_dac_en-I</pv_name>
+    <pv_name>TST:reg_llrf_dsp_dac_en_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29186,7 +29186,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:llrf_dsp_dac_en-I</pv_name>
+    <pv_name>TST:reg_llrf_dsp_dac_en_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -29240,7 +29240,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llrf_dsp_dac_en-SP</pv_name>
+    <pv_name>TST:reg_llrf_dsp_dac_en</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29292,7 +29292,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llspi_result-I</pv_name>
+    <pv_name>TST:reg_llspi_result_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29389,7 +29389,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:llspi_result-I</pv_name>
+    <pv_name>TST:reg_llspi_result_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -29443,7 +29443,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llspi_result-SP</pv_name>
+    <pv_name>TST:reg_llspi_result</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29495,7 +29495,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llspi_status-I</pv_name>
+    <pv_name>TST:reg_llspi_status_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29592,7 +29592,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:llspi_status-I</pv_name>
+    <pv_name>TST:reg_llspi_status_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -29646,7 +29646,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:llspi_status-SP</pv_name>
+    <pv_name>TST:reg_llspi_status</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29698,7 +29698,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:lo_amp-I</pv_name>
+    <pv_name>TST:reg_lo_amp_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29795,7 +29795,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:lo_amp-I</pv_name>
+    <pv_name>TST:reg_lo_amp_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -29849,7 +29849,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:lo_amp-SP</pv_name>
+    <pv_name>TST:reg_lo_amp</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29901,7 +29901,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:modulo-I</pv_name>
+    <pv_name>TST:reg_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -29998,7 +29998,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:modulo-I</pv_name>
+    <pv_name>TST:reg_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -30052,7 +30052,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:modulo-SP</pv_name>
+    <pv_name>TST:reg_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30104,7 +30104,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:phase_step_h-I</pv_name>
+    <pv_name>TST:reg_phase_step_h_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30201,7 +30201,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:phase_step_h-I</pv_name>
+    <pv_name>TST:reg_phase_step_h_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -30255,7 +30255,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:phase_step_h-SP</pv_name>
+    <pv_name>TST:reg_phase_step_h</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30307,7 +30307,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:phase_step_l-I</pv_name>
+    <pv_name>TST:reg_phase_step_l_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30404,7 +30404,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:phase_step_l-I</pv_name>
+    <pv_name>TST:reg_phase_step_l_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -30458,7 +30458,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:phase_step_l-SP</pv_name>
+    <pv_name>TST:reg_phase_step_l</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30510,7 +30510,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:phasex_status-I</pv_name>
+    <pv_name>TST:reg_phasex_status_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30607,7 +30607,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:phasex_status-I</pv_name>
+    <pv_name>TST:reg_phasex_status_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -30661,7 +30661,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:phasex_status-SP</pv_name>
+    <pv_name>TST:reg_phasex_status</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30713,7 +30713,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:prc_dsp_cav_sel-I</pv_name>
+    <pv_name>TST:reg_prc_dsp_cav_sel_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30810,7 +30810,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:prc_dsp_cav_sel-I</pv_name>
+    <pv_name>TST:reg_prc_dsp_cav_sel_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -30864,7 +30864,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:prc_dsp_cav_sel-SP</pv_name>
+    <pv_name>TST:reg_prc_dsp_cav_sel</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -30916,7 +30916,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:prc_dsp_prl_cfg-I</pv_name>
+    <pv_name>TST:reg_prc_dsp_prl_cfg_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31013,7 +31013,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:prc_dsp_prl_cfg-I</pv_name>
+    <pv_name>TST:reg_prc_dsp_prl_cfg_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -31067,7 +31067,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:prc_dsp_prl_cfg-SP</pv_name>
+    <pv_name>TST:reg_prc_dsp_prl_cfg</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31119,7 +31119,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:prc_dsp_prl_gain-I</pv_name>
+    <pv_name>TST:reg_prc_dsp_prl_gain_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31216,7 +31216,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:prc_dsp_prl_gain-I</pv_name>
+    <pv_name>TST:reg_prc_dsp_prl_gain_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -31270,7 +31270,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:prc_dsp_prl_gain-SP</pv_name>
+    <pv_name>TST:reg_prc_dsp_prl_gain</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31322,7 +31322,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:qsfp_i2c_reg-I</pv_name>
+    <pv_name>TST:reg_qsfp_i2c_reg_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31419,7 +31419,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:qsfp_i2c_reg-I</pv_name>
+    <pv_name>TST:reg_qsfp_i2c_reg_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -31473,7 +31473,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:qsfp_i2c_reg-SP</pv_name>
+    <pv_name>TST:reg_qsfp_i2c_reg</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31525,7 +31525,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:rewind-I</pv_name>
+    <pv_name>TST:reg_rewind_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31622,7 +31622,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:rewind-I</pv_name>
+    <pv_name>TST:reg_rewind_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -31676,7 +31676,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:rewind-SP</pv_name>
+    <pv_name>TST:reg_rewind</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31728,7 +31728,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:sfp_address_set-I</pv_name>
+    <pv_name>TST:reg_sfp_address_set_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31825,7 +31825,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:sfp_address_set-I</pv_name>
+    <pv_name>TST:reg_sfp_address_set_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -31879,7 +31879,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:sfp_address_set-SP</pv_name>
+    <pv_name>TST:reg_sfp_address_set</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -31931,7 +31931,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_chan_keep-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_chan_keep_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32028,7 +32028,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_chan_keep-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_chan_keep_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -32082,7 +32082,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_chan_keep-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_chan_keep</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32134,7 +32134,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_coarse_scale-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_coarse_scale_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32231,7 +32231,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_coarse_scale-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_coarse_scale_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -32285,7 +32285,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_coarse_scale-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_coarse_scale</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32337,7 +32337,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_ph_offset-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_ph_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32434,7 +32434,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_ph_offset-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_ph_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -32488,7 +32488,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_ph_offset-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_ph_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32540,7 +32540,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_sel_en-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_sel_en_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32637,7 +32637,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_sel_en-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_sel_en_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -32691,7 +32691,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_sel_en-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_sel_en</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32743,7 +32743,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_sel_thresh-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_sel_thresh_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32840,7 +32840,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_sel_thresh-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_sel_thresh_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -32894,7 +32894,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_fdbk_core_mp_proc_sel_thresh-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_fdbk_core_mp_proc_sel_thresh</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -32946,7 +32946,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_modulo-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33043,7 +33043,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_modulo-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -33097,7 +33097,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_modulo-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33149,7 +33149,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_phase_step-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_phase_step_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33246,7 +33246,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_phase_step-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_phase_step_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -33300,7 +33300,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_phase_step-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_phase_step</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33352,7 +33352,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_piezo_piezo_dc-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_piezo_piezo_dc_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33449,7 +33449,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_piezo_piezo_dc-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_piezo_piezo_dc_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -33503,7 +33503,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_piezo_piezo_dc-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_piezo_piezo_dc</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33555,7 +33555,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_tag-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_tag_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33652,7 +33652,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_tag-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_tag_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -33706,7 +33706,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_tag-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_tag</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33758,7 +33758,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_use_fiber_iq-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_use_fiber_iq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33855,7 +33855,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_use_fiber_iq-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_use_fiber_iq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -33909,7 +33909,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_use_fiber_iq-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_use_fiber_iq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -33961,7 +33961,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_wave_samp_per-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_wave_samp_per_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34058,7 +34058,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_wave_samp_per-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_wave_samp_per_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -34112,7 +34112,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_wave_samp_per-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_wave_samp_per</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34164,7 +34164,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_wave_shift-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_wave_shift_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34261,7 +34261,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_0_dsp_wave_shift-I</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_wave_shift_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -34315,7 +34315,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_0_dsp_wave_shift-SP</pv_name>
+    <pv_name>TST:reg_shell_0_dsp_wave_shift</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34367,7 +34367,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_chan_keep-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_chan_keep_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34464,7 +34464,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_chan_keep-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_chan_keep_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -34518,7 +34518,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_chan_keep-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_chan_keep</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34570,7 +34570,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_coarse_scale-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_coarse_scale_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34667,7 +34667,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_coarse_scale-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_coarse_scale_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -34721,7 +34721,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_coarse_scale-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_coarse_scale</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34773,7 +34773,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_ph_offset-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_ph_offset_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34870,7 +34870,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_ph_offset-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_ph_offset_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -34924,7 +34924,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_ph_offset-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_ph_offset</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -34976,7 +34976,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_sel_en-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_sel_en_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35073,7 +35073,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_sel_en-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_sel_en_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -35127,7 +35127,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_sel_en-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_sel_en</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35179,7 +35179,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_sel_thresh-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_sel_thresh_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35276,7 +35276,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_sel_thresh-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_sel_thresh_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -35330,7 +35330,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_fdbk_core_mp_proc_sel_thresh-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_fdbk_core_mp_proc_sel_thresh</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35382,7 +35382,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_modulo-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_modulo_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35479,7 +35479,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_modulo-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_modulo_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -35533,7 +35533,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_modulo-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_modulo</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35585,7 +35585,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_phase_step-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_phase_step_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35682,7 +35682,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_phase_step-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_phase_step_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -35736,7 +35736,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_phase_step-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_phase_step</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35788,7 +35788,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_piezo_piezo_dc-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_piezo_piezo_dc_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35885,7 +35885,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_piezo_piezo_dc-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_piezo_piezo_dc_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -35939,7 +35939,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_piezo_piezo_dc-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_piezo_piezo_dc</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -35991,7 +35991,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_tag-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_tag_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36088,7 +36088,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_tag-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_tag_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -36142,7 +36142,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_tag-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_tag</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36194,7 +36194,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_use_fiber_iq-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_use_fiber_iq_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36291,7 +36291,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_use_fiber_iq-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_use_fiber_iq_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -36345,7 +36345,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_use_fiber_iq-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_use_fiber_iq</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36397,7 +36397,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_wave_samp_per-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_wave_samp_per_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36494,7 +36494,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_wave_samp_per-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_wave_samp_per_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -36548,7 +36548,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_wave_samp_per-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_wave_samp_per</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36600,7 +36600,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_wave_shift-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_wave_shift_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36697,7 +36697,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:shell_1_dsp_wave_shift-I</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_wave_shift_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -36751,7 +36751,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:shell_1_dsp_wave_shift-SP</pv_name>
+    <pv_name>TST:reg_shell_1_dsp_wave_shift</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36803,7 +36803,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:slow_chain_out-I</pv_name>
+    <pv_name>TST:reg_slow_chain_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -36900,7 +36900,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:slow_chain_out-I</pv_name>
+    <pv_name>TST:reg_slow_chain_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -36954,7 +36954,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:slow_chain_out-SP</pv_name>
+    <pv_name>TST:reg_slow_chain_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37006,7 +37006,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_ampstep-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_ampstep_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37103,7 +37103,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ssa_stim_ampstep-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_ampstep_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -37157,7 +37157,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_ampstep-SP</pv_name>
+    <pv_name>TST:reg_ssa_stim_ampstep</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37209,7 +37209,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_en-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_en_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37306,7 +37306,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ssa_stim_en-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_en_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -37360,7 +37360,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_en-SP</pv_name>
+    <pv_name>TST:reg_ssa_stim_en</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37412,7 +37412,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_g_period-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_g_period_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37509,7 +37509,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ssa_stim_g_period-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_g_period_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -37563,7 +37563,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_g_period-SP</pv_name>
+    <pv_name>TST:reg_ssa_stim_g_period</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37615,7 +37615,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_pertstep-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_pertstep_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37712,7 +37712,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:ssa_stim_pertstep-I</pv_name>
+    <pv_name>TST:reg_ssa_stim_pertstep_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -37766,7 +37766,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:ssa_stim_pertstep-SP</pv_name>
+    <pv_name>TST:reg_ssa_stim_pertstep</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37818,7 +37818,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:tag_now-I</pv_name>
+    <pv_name>TST:reg_tag_now_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -37915,7 +37915,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:tag_now-I</pv_name>
+    <pv_name>TST:reg_tag_now_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -37969,7 +37969,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:tag_now-SP</pv_name>
+    <pv_name>TST:reg_tag_now</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38021,7 +38021,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:tgen_0_bank_next-I</pv_name>
+    <pv_name>TST:reg_tgen_0_bank_next_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38118,7 +38118,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:tgen_0_bank_next-I</pv_name>
+    <pv_name>TST:reg_tgen_0_bank_next_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -38172,7 +38172,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:tgen_0_bank_next-SP</pv_name>
+    <pv_name>TST:reg_tgen_0_bank_next</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38224,7 +38224,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:tgen_1_bank_next-I</pv_name>
+    <pv_name>TST:reg_tgen_1_bank_next_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38321,7 +38321,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:tgen_1_bank_next-I</pv_name>
+    <pv_name>TST:reg_tgen_1_bank_next_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -38375,7 +38375,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:tgen_1_bank_next-SP</pv_name>
+    <pv_name>TST:reg_tgen_1_bank_next</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38427,7 +38427,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_keep-I</pv_name>
+    <pv_name>TST:reg_trace_keep_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38524,7 +38524,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:trace_keep-I</pv_name>
+    <pv_name>TST:reg_trace_keep_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -38578,7 +38578,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_keep-SP</pv_name>
+    <pv_name>TST:reg_trace_keep</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38630,7 +38630,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_reset_we-I</pv_name>
+    <pv_name>TST:reg_trace_reset_we_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38727,7 +38727,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:trace_reset_we-I</pv_name>
+    <pv_name>TST:reg_trace_reset_we_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -38781,7 +38781,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_reset_we-SP</pv_name>
+    <pv_name>TST:reg_trace_reset_we</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38833,7 +38833,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_status1-I</pv_name>
+    <pv_name>TST:reg_trace_status1_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -38930,7 +38930,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:trace_status1-I</pv_name>
+    <pv_name>TST:reg_trace_status1_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -38984,7 +38984,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_status1-SP</pv_name>
+    <pv_name>TST:reg_trace_status1</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39036,7 +39036,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_status2-I</pv_name>
+    <pv_name>TST:reg_trace_status2_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39133,7 +39133,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:trace_status2-I</pv_name>
+    <pv_name>TST:reg_trace_status2_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -39187,7 +39187,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trace_status2-SP</pv_name>
+    <pv_name>TST:reg_trace_status2</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39239,7 +39239,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trig_internal-I</pv_name>
+    <pv_name>TST:reg_trig_internal_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39336,7 +39336,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:trig_internal-I</pv_name>
+    <pv_name>TST:reg_trig_internal_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -39390,7 +39390,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trig_internal-SP</pv_name>
+    <pv_name>TST:reg_trig_internal</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39442,7 +39442,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trig_mode-I</pv_name>
+    <pv_name>TST:reg_trig_mode_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39539,7 +39539,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:trig_mode-I</pv_name>
+    <pv_name>TST:reg_trig_mode_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -39593,7 +39593,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:trig_mode-SP</pv_name>
+    <pv_name>TST:reg_trig_mode</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39645,7 +39645,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave0_out-I</pv_name>
+    <pv_name>TST:reg_wave0_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39742,7 +39742,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:wave0_out-I</pv_name>
+    <pv_name>TST:reg_wave0_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -39796,7 +39796,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave0_out-SP</pv_name>
+    <pv_name>TST:reg_wave0_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39848,7 +39848,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave0_src-I</pv_name>
+    <pv_name>TST:reg_wave0_src_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -39945,7 +39945,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:wave0_src-I</pv_name>
+    <pv_name>TST:reg_wave0_src_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -39999,7 +39999,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave0_src-SP</pv_name>
+    <pv_name>TST:reg_wave0_src</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -40051,7 +40051,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave1_out-I</pv_name>
+    <pv_name>TST:reg_wave1_out_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -40148,7 +40148,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:wave1_out-I</pv_name>
+    <pv_name>TST:reg_wave1_out_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -40202,7 +40202,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave1_out-SP</pv_name>
+    <pv_name>TST:reg_wave1_out</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -40254,7 +40254,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave1_src-I</pv_name>
+    <pv_name>TST:reg_wave1_src_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -40351,7 +40351,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:wave1_src-I</pv_name>
+    <pv_name>TST:reg_wave1_src_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -40405,7 +40405,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:wave1_src-SP</pv_name>
+    <pv_name>TST:reg_wave1_src</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -40457,7 +40457,7 @@ $(pv_value)</tooltip>
     <name>Readback</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:waveforms_available-I</pv_name>
+    <pv_name>TST:reg_waveforms_available_RBV</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
@@ -40554,7 +40554,7 @@ $(pv_value)</tooltip>
     <image />
     <name>Scan</name>
     <push_action_index>0</push_action_index>
-    <pv_name>TST:reg:waveforms_available-I</pv_name>
+    <pv_name>TST:reg_waveforms_available_RBV</pv_name>
     <pv_value />
     <rules />
     <scale_options>
@@ -40608,7 +40608,7 @@ $(pv_value)</tooltip>
     <name>Setting</name>
     <precision>0</precision>
     <precision_from_pv>true</precision_from_pv>
-    <pv_name>TST:reg:waveforms_available-SP</pv_name>
+    <pv_name>TST:reg_waveforms_available</pv_name>
     <pv_value />
     <rotation_angle>0.0</rotation_angle>
     <rules />
