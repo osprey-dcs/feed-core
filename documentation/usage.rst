@@ -88,6 +88,8 @@ The sequence for waveform acquistion is ::
     ch0, ch1 = dev.get_channels([0, 1])
     ...
 
+Where the argument of the :py:meth:`set_channel_mask` method
+is the list of channels to acquire.
 When it is desired to coordinate acquistion with changes to
 setting registers, then ::
 
