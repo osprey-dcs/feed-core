@@ -67,18 +67,41 @@ record(aSub, "$(PREF)AP_CALC_") {
 }
 
 record(aai, "$(PREF)AWF") {
+  field(DESC, "Amplitude")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
   field(TSEL, "$(PREF)IWF.TIME")
 }
 
 record(aai, "$(PREF)PWRWF") {
+  field(DESC, "Power")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
   field(TSEL, "$(PREF)IWF.TIME")
 }
 
 record(aai, "$(PREF)PWF") {
+  field(DESC, "Phase")
+  field(EGU , "deg.")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(FLNK, "$(PREF)PWF_CALC_")
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(aSub, "$(PREF)PWF_CALC_") {
+  field(SNAM, "Phase Unwrap")
+  field(FTA , "DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOVA, "$(SIZE)")
+  field(INPA, "$(PREF)PWF MS NPP")
+  field(INPB, "160")
+  field(OUTA, "$(PREF)UPWF MS PP")
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(aai, "$(PREF)UPWF") {
+  field(DESC, "Unwrapped Phase")
   field(EGU , "deg.")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")

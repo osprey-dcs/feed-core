@@ -394,6 +394,18 @@ long convert_ap2iq(aSubRecord* prec)
     return 0;
 }
 
+static
+double phase_wrap(double pha)
+{
+    double out = fmod(pha, 360.0);
+    // (-360, -360) -> [-180, 180)
+    if(out < -180.0)
+        out += 360.0;
+    else if(out >= 180.0)
+        out -= 360.0;
+    return out;
+}
+
 /* Waveform statistics
  *
  * Computes mean and std of the (subset of)
@@ -406,6 +418,7 @@ long convert_ap2iq(aSubRecord* prec)
  *  field(FTB , "DOUBLE")
  *  field(FTC , "DOUBLE")
  *  field(FTD , "DOUBLE")
+ *  field(FTE , "LONG")
  *  field(FTVA ,"DOUBLE")
  *  field(FTVB ,"DOUBLE")
  *  field(FTVC ,"DOUBLE")
@@ -416,6 +429,7 @@ long convert_ap2iq(aSubRecord* prec)
  *  field(INPB, "Waveform X")
  *  field(INPC, "Start X") # window start
  *  field(INPD, "Width X") # window width
+ *  field(INPE, "isphase")  # optional, 1 - output modulo +-180
  *  field(OUTA, "Mean PP")
  *  field(OUTB, "Std PP")
  *  field(OUTC, "Min PP")
@@ -428,6 +442,7 @@ long wf_stats(aSubRecord* prec)
     size_t i, N=0;
     epicsEnum16 *ft = &prec->fta,
                 *ftv= &prec->ftva;
+    epicsUInt32 phamod = prec->fte==menuFtypeLONG ? *(epicsUInt32*)prec->e : 0;
     // actual length of inputs
     epicsUInt32 len = MIN(prec->nea, prec->neb);
 
@@ -501,6 +516,22 @@ long wf_stats(aSubRecord* prec)
     prec->neva=1;
     *(double*)prec->valb = sqrt(sum2 - sum*sum);
     prec->nevb=1;
+
+    if(phamod) {
+        /* (re)wrap as phase.
+         * Only min/max/mean, not sure how to wrap std meaningfully.
+         */
+        *(double*)prec->vala = phase_wrap(*(double*)prec->vala);
+        min = phase_wrap(min);
+        max = phase_wrap(max);
+        if(max < min) {
+            /* make sure we don't confuse users if max wraps to less than min */
+            double temp = min;
+            min = max;
+            max = temp;
+        }
+    }
+
     *(double*)prec->valc = min;
     prec->nevc=1;
     *(double*)prec->vald = max;

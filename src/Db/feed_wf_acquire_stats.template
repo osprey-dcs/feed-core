@@ -15,6 +15,7 @@ record(aSub, "$(PREF)STAT_CALC_") {
   field(FTB , "DOUBLE")
   field(FTC , "DOUBLE")
   field(FTD , "DOUBLE")
+  field(FTE , "LONG")
   field(FTVA ,"DOUBLE")
   field(FTVB ,"DOUBLE")
   field(NOA , "$(SIZE)")
@@ -23,6 +24,7 @@ record(aSub, "$(PREF)STAT_CALC_") {
   field(INPB, "$(TIME) NPP MSI")
   field(INPC, "$(BASE)STAT_START") # window start
   field(INPD, "$(BASE)STAT_WIDTH") # window width
+  field(INPE, "$(WRAP=0)")
   field(OUTA, "$(PREF)MEAN PP MSI")
   field(OUTB, "$(PREF)STD PP MSI")
   field(OUTC, "$(PREF)MIN PP MSI")
