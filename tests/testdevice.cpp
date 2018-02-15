@@ -127,10 +127,10 @@ MAIN(testdevice)
         }
         (void)dev;
 
-        testdbPutFieldOk("tst:Addr-SP", DBF_STRING, sim.addr.c_str());
+        testdbPutFieldOk("tst:IPADDR", DBF_STRING, sim.addr.c_str());
 
         {
-            Channel state("tst:State-Sts");
+            Channel state("tst:STATUS");
             unsigned N;
             epicsEnum16 S;
             for(N=5; N && (S=state.getEnum())<4 ; N--)
