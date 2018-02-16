@@ -57,6 +57,7 @@ record(longout, "$(BASE)DECIM") {
     field(FLNK, "$(BASE)SAMP_PERIOD")
     field(TPRO, "$(TPRO=0)")
     info(autosaveFields_pass0, "VAL")
+    info(feed:info:setting, "$(BASE)DECIM")
 }
 
 record(calc, "$(BASE)SAMP_PERIOD") {
@@ -155,7 +156,7 @@ record(longout, "$(BASE)TAG_RBV") {
     field(DTYP, "FEED Register Write")
     field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_tag")
     field(FLNK, "$(BASE)TAGDONE_CMD_")
-    info(feed:info:input, "$(BASE)TAG_RBV")
+    info(feed:info:readback, "$(BASE)TAG_RBV")
     info(feed:info:increment, "$(BASE)TAGINC_CMD")
 }
 
@@ -239,7 +240,8 @@ record(ai, "$(BASE)CIRCRAW_") {
     field(TSE , "-2")
     field(FLNK, "$(BASE)TAG1_RBVX_")
     field(TPRO, "$(TPRO=0)")
-    info(feed:info:rawinput, "$(BASE)CIRCRAW_")
+    info(feed:info:acqcnt, "$(BASE)CNT")
+    info(feed:info:acqmode, "$(BASE)MODE")
 }
 
 record(longout, "$(BASE)TAG1_RBVX_") {
@@ -252,12 +254,10 @@ record(longin, "$(BASE)TAG1_RBV") {
     field(DTYP, "FEED Register Read")
     field(DESC, "Tag at start of acq.")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=34")
-    # cheating a little here.
-    # use reception time of circle_data as the "acquisition time"
-    # ignore reception time of slow_data
     field(TSEL, "$(BASE)CIRCRAW_.TIME")
     field(FLNK, "$(BASE)TAG2_RBV")
     field(TPRO, "$(TPRO=0)")
+    info(feed:info:tag1, "$(BASE)TAG1_RBV")
 }
 
 record(longin, "$(BASE)TAG2_RBV") {
@@ -265,28 +265,13 @@ record(longin, "$(BASE)TAG2_RBV") {
     field(DESC, "Tag at end of acq.")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=33 wait=false")
     field(TSEL, "$(BASE)CIRCRAW_.TIME")
-    field(FLNK, "$(BASE)CNT")
-    field(TPRO, "$(TPRO=0)")
-}
-
-# individual signals monitor this to detect new data
-record(calc, "$(BASE)CNT") {
-    field(SDIS, "$(BASE)RDY_RBV_ MSI")
-    field(DISV, "-42")
-    field(INPA, "$(BASE)CNT")
-    field(CALC, "A+1")
     field(FLNK, "$(BASE)NEXT_FOUT_")
     field(TPRO, "$(TPRO=0)")
+    info(feed:info:tag2, "$(BASE)TAG2_RBV")
 }
 
-record(calc, "$(BASE)RATE") {
-    field(SCAN, "10 second")
-    field(INPA, "$(BASE)CNT")
-    field(CALC, "C:=A-B;B:=A;C/10")
-    field(EGU , "Hz")
-    field(PREC, "2")
-}
-
+# does downstream processing
+# of signals, I/Q pairs, and stats
 record(fanout, "$(BASE)NEXT_FOUT_") {
     field(LNK0, "$(LNK0=)")
     field(LNK1, "$(LNK1=)")
@@ -304,7 +289,42 @@ record(fanout, "$(BASE)NEXT_FOUT_") {
     field(LNKD, "$(LNKD=)")
     field(LNKE, "$(LNKE=)")
     field(LNKF, "$(LNKF=)")
+    field(FLNK, "$(BASE)CNT")
+}
+
+# at this point all signal/pair/stats records are updated.
+# So external clients can monitor CNT or SLOWRAW to detect new data
+# and be confident that any get() issued after a subscription update
+# will not fetch data from a previous acquisition.
+
+record(calc, "$(BASE)CNT") {
+    field(SDIS, "$(BASE)RDY_RBV_ MSI")
+    field(DISV, "-42")
+    field(INPA, "$(BASE)CNT")
+    field(CALC, "A+1")
+    field(FLNK, "$(BASE)SLOWRAW")
+    field(TPRO, "$(TPRO=0)")
+}
+
+# used by wait_for_acq() in ca.py
+record(aai, "$(BASE)SLOWRAW") {
+    field(DTYP, "FEED Register Read")
+    field(DESC, "Tag at start of acq.")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data wait=false")
+    field(FTVL, "UCHAR") # slow_data width=8
+    field(NELM, "128")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
     field(FLNK, "$(BASE)DLY_")
+    field(TPRO, "$(TPRO=0)")
+    info(feed:info:rawinput, "$(BASE)SLOWRAW")
+}
+
+record(calc, "$(BASE)RATE") {
+    field(SCAN, "10 second")
+    field(INPA, "$(BASE)CNT")
+    field(CALC, "C:=A-B;B:=A;C/10")
+    field(EGU , "Hz")
+    field(PREC, "2")
 }
 
 record(calcout, "$(BASE)DLY_") {

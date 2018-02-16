@@ -30,6 +30,14 @@ alias("$(SIGI)SCALE", "$(PREF)ISCALE")
 alias("$(SIGQ)SCALE", "$(PREF)QSCALE")
 alias("$(SIGI)NORD", "$(PREF)NORD")
 
+# inject info tags into records from _signal.template
+record(aai, "$(SIGI)WF") {
+    info(feed:info:enable$(CHANI), "$(PREF)ENABLE")
+}
+record(aai, "$(SIGQ)WF") {
+    info(feed:info:enable$(CHANQ), "$(PREF)ENABLE")
+}
+
 # alias our records for use like _signal.template
 alias("$(PREF)ENABLE", "$(SIGI)ENABLE")
 alias("$(PREF)ENABLE", "$(SIGQ)ENABLE")

@@ -89,6 +89,8 @@ record(aai, "$(PREF)WF") {
     field(TSE , "-2")
     field(FLNK, "$(PREF)NORD")
     field(TPRO, "$(TPRO=0)")
+    info(feed:info:input$(CHAN), "$(PREF)WF")
+    info(feed:info:time$(CHAN), "$(PREF)TWF")
 }
 
 # workaround for bug in aaiRecord.  doesn't post monitors on NORD
