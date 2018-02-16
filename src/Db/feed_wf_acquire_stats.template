@@ -24,7 +24,7 @@ record(aSub, "$(PREF)STAT_CALC_") {
   field(INPB, "$(TIME) NPP MSI")
   field(INPC, "$(BASE)STAT_START") # window start
   field(INPD, "$(BASE)STAT_WIDTH") # window width
-  field(INPE, "$(WRAP=0)")
+  field(INPE, "$(WRAP=0)")  #TODO: really should be doing circular mean of I/Q, then angle.  instead we unwrap and average
   field(OUTA, "$(PREF)MEAN PP MSI")
   field(OUTB, "$(PREF)STD PP MSI")
   field(OUTC, "$(PREF)MIN PP MSI")
