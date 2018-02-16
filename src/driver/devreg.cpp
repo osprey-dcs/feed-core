@@ -188,7 +188,6 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                 }
 
                 char *out = raw, *end = raw+nreq*valsize;
-
                 for(size_t i=info->offset, N = info->reg->mem_rx.size();
                     i<N && out+valsize<=end; i+=info->step, out+=valsize)
                 {
@@ -214,6 +213,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                     }
                 }
 
+                assert((ssize_t)nreq >= (out-raw)/valsize);
                 nreq = (out-raw)/valsize;
 
                 prec->pact = 0;
@@ -225,8 +225,9 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                 }
 
                 (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                IFDBG(6, "Copy in %zu words.  sevr=%u offset=%u step=%u\n",
-                                 nreq, info->reg->sevr, (unsigned)info->offset, (unsigned)info->step);
+                IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u\n",
+                      nreq, info->reg->mem_rx.size(),
+                      info->reg->sevr, (unsigned)info->offset, (unsigned)info->step, valsize);
 
             } else {
                 info->reg->queue(false, info->wait ? info : 0);
@@ -265,7 +266,7 @@ long read_register_mbbi(mbbiRecord *prec)
 
 long read_register_aai(aaiRecord *prec)
 {
-    size_t cnt = prec->nelm * dbValueSize(prec->ftvl) /4u;
+    size_t cnt = prec->nelm;
     long ret = read_register_common((dbCommon*)prec, (char*)prec->bptr, &cnt, (menuFtype)prec->ftvl);
     prec->nord = cnt;
     return ret;
