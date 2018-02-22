@@ -17,4 +17,7 @@ feedApp_DEPEND_DIRS = configure src
 DIRS += tests
 tests_DEPEND_DIRS = configure src src/Db
 
+DIRS += slacRfApp
+slacRfApp_DEPEND_DIRS = configure src
+
 include $(TOP)/configure/RULES_TOP
