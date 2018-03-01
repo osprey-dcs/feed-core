@@ -189,6 +189,9 @@ struct epicsShareClass Device : public epicsThreadRunable
     // non-JSON info extracted from ROM
     std::string description, jsonhash, codehash;
 
+    // __metadata__ keys from JSON
+    JBlob::info32_t info32;
+
     typedef std::map<std::string, DevReg*> reg_by_name_t;
     reg_by_name_t reg_by_name;
 

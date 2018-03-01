@@ -307,6 +307,7 @@ void Device::reset(bool error)
     description.clear();
     jsonhash.clear();
     codehash.clear();
+    info32.clear();
 
     for(reg_interested_t::const_iterator it = reg_interested.begin(), end = reg_interested.end();
         it != end; ++it)
@@ -628,6 +629,8 @@ void Device::handle_inspect()
 
     JBlob blob;
     blob.parse(json.c_str());
+
+    info32.swap(blob.info32);
 
     zdeflate(raw_infos, json.c_str(), json.size(), 9);
 

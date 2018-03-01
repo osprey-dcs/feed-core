@@ -348,6 +348,47 @@ long read_sync(longinRecord *prec)
     }CATCH()
 }
 
+#undef TRY
+#define TRY MetaInfo *info = (MetaInfo*)prec->dpvt; if(!info) { \
+    (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
+    Device *device=info->device; (void)device; try
+
+struct MetaInfo : public RecInfo
+{
+    bool has_default;
+    epicsUInt32 defval;
+
+    MetaInfo(dbCommon *prec, Device *dev)
+        :RecInfo(prec, dev)
+        ,has_default(false)
+    {}
+
+    virtual void configure(const pairs_t& pairs)
+    {
+        has_default = get_pair(pairs, "default", defval);
+    }
+};
+
+long read_metadata(longinRecord *prec)
+{
+    TRY {
+        Guard G(device->lock);
+
+        JBlob::info32_t::iterator it(device->info32.find(info->regname));
+        if(it!=device->info32.end()) {
+            prec->val = it->second;
+
+        } else if(!info->has_default) {
+            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+
+        } else {
+            prec->val = info->defval;
+        }
+
+        return 0;
+    } CATCH()
+}
+
 } // namespace
 
 // device-wide settings
@@ -363,6 +404,9 @@ DSET(devLiFEEDCounter, longin, init_common<RecInfo>::fn, get_dev_changed_intr, r
 DSET(devAaiFEEDError, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_error)
 DSET(devAaiFEEDJBlob, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_jblob)
 DSET(devLiFEEDConnect, longin, init_common<RecInfo>::fn, get_on_connect_intr, read_inc)
+
+// JSON __metadata__ info
+DSET(devLiFEEDMetadata, longin, init_common<MetaInfo>::fn, get_on_connect_intr, read_metadata)
 
 // register status
 DSET(devMbbiFEEDRegState, mbbi, init_common<RecInfo>::fn, get_reg_changed_intr, read_reg_state)

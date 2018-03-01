@@ -15,6 +15,9 @@ device(longin, INST_IO, devLiFEEDConnect, "FEED On Connect")
 # device-wide special
 device(longin, INST_IO, devLiFEEDSync, "FEED Sync")
 
+# JSON __metadata__ info
+device(longin, INST_IO, devLiFEEDMetadata, "FEED __metadata__")
+
 # register status
 device(mbbi, INST_IO, devMbbiFEEDRegState, "FEED Register State")
 
