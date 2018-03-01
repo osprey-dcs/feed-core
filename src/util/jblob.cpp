@@ -31,6 +31,7 @@ struct context {
                 regname,
                 param;
     unsigned depth;
+    bool in_metadata;
 
     bool ignore_scratch;
     JRegister scratch;
@@ -39,7 +40,7 @@ struct context {
         errlogPrintf("FEED JSON warning: %s\n", msg.c_str());
     }
 
-    context() :depth(0), ignore_scratch(false) {}
+    context() :depth(0), in_metadata(false), ignore_scratch(false) {}
 };
 
 #define TRY context *self = (context*)ctx; try
@@ -66,7 +67,10 @@ int jblob_integer(void *ctx, integer_arg val)
 {
     TRY {
         if(self->depth==2) {
-            if(self->param=="base_addr") {
+            if(self->in_metadata) {
+                self->blob.info32[self->param] = val;
+
+            } else if(self->param=="base_addr") {
                 if(val&0xff000000) {
                     self->ignore_scratch = true;
                     self->warn(SB()<<self->regname<<"."<<self->param<<" ignores out of range base_addr");
@@ -113,7 +117,11 @@ int jblob_string(void *ctx, const unsigned char *val, size_arg len)
         std::string V((const char*)val, len);
 
         if(self->depth==2) {
-            if(self->param=="access") {
+            if(self->in_metadata) {
+                // TODO handle string metadata?
+                // until then, silently ignore as this might be interesting
+                // to scripts
+            } else if(self->param=="access") {
                 self->scratch.readable = V.find_first_of('r')!=V.npos;
                 self->scratch.writable = V.find_first_of('w')!=V.npos;
 
@@ -168,6 +176,9 @@ int jblob_map_key(void *ctx, const unsigned char *key, size_arg len)
         std::string K((const char*)key, len);
         if(self->depth==1) {
             self->regname = K;
+            if(self->regname=="__metadata__") {
+                self->in_metadata = true;
+            } else
             if(self->blob.registers.find(K)!=self->blob.registers.end()) {
                 self->warn(SB()<<"Duplicate definition for register "<<self->regname);
             }
@@ -193,6 +204,7 @@ int jblob_end_map(void *ctx)
                 self->blob.registers[self->regname] = self->scratch;
             }
             self->ignore_scratch = false;
+            self->in_metadata = false;
             self->scratch.clear();
         }
         if(self->depth==0)
@@ -291,6 +303,7 @@ void JBlob::parse(const char *buf, size_t buflen)
     }
 
     registers.swap(ctxt.blob.registers);
+    info32.swap(ctxt.blob.info32);
 }
 
 const JRegister& JBlob::operator[](const std::string& name) const

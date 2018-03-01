@@ -48,7 +48,10 @@ void testAST()
 {
     testDiag("testAST()");
 
-    const char bigblob[] = "{\"J18_debug\": {\"access\": \"r\", \"addr_width\": 0, \"sign\": \"unsigned\", \"base_addr\": 63, \"data_width\": \"0x4\"}}";
+    const char bigblob[] = "{"
+                           "\"J18_debug\": {""\"access\": \"r\", \"addr_width\": 0, \"sign\": \"unsigned\", \"base_addr\": 63, \"data_width\": \"0x4\"},"
+                           "\"__metadata__\": {\"slow_abi_ver\": 1}"
+                           "}";
 
     JBlob blob;
 
@@ -68,13 +71,15 @@ void testAST()
     } else {
         testSkip(6, "failed to find");
     }
+
+    testOk(blob.info32["slow_abi_ver"]==1, "slow_abi_ver = %d", (int)blob.info32["slow_abi_ver"]);
 }
 
 }
 
 MAIN(testjson)
 {
-    testPlan(13);
+    testPlan(14);
     try {
         testEmpty();
         testSyntaxError();
