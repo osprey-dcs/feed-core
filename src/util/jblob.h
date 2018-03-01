@@ -34,7 +34,7 @@ struct JRegister {
 struct epicsShareClass JBlob {
     typedef std::map<std::string, JRegister> registers_t;
     registers_t registers;
-    typedef std::map<std::string, int32_t> info32_t;
+    typedef std::map<std::string, epicsInt32> info32_t;
     info32_t info32;
 
     // Parse and replace current contents
