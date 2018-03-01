@@ -28,7 +28,7 @@ record(longin, "$(BASE)INIT1_") {
 record(fanout, "$(BASE)INIT2_") {
     field(LNK1, "$(BASE)DECIM")
     field(LNK2, "$(BASE)MASK")
-    field(LNK3, "")
+    field(LNK3, "$(BASE)TAG_RBV")
     field(LNK4, "")
     field(LNK5, "")
     field(LNK6, "$(BASE)MODE")
@@ -143,7 +143,7 @@ record(calcout, "$(BASE)TAGINC_CALC_") {
 
     field(INPA, "$(BASE)TAGINC_CALC_")
     field(INPB, "255")
-    field(CALC, "A+1<=B?A+1:1") # 8 bit counter, overflows to 1 (0 means HW un-initialized)
+    field(CALC, "(A+1)&0xff") # 8 bit counter
     field(OUT , "$(BASE)TAG_RBVX_ PP")
 }
 
