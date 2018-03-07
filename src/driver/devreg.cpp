@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <stdexcept>
 
 #include <stdio.h>
 
