@@ -47,7 +47,7 @@ def yscale(wave_samp_per=1):
     try:
         from math import ceil, log
 
-        lo_cheat = (74694*1.646760258)/2**17
+        lo_cheat = (74762*1.646760258)/2**17
 
         shift_base = 4
         cic_period=33
