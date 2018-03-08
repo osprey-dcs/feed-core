@@ -152,7 +152,7 @@ long asub_yscale(aSubRecord *prec)
     epicsUInt32 *wave_shift = (epicsUInt32*)prec->vala;
     double *yscale = (double*)prec->valb;
 
-    const double lo_cheat = (74694*1.646760258)/pow(2, 17);
+    const double lo_cheat = (74762*1.646760258)/pow(2, 17);
     const long   cic_n    = wave_samp_per * cic_period;
     const double shift_min= log2(cic_n*cic_n * lo_cheat)-12;
 
