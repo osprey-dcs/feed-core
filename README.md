@@ -314,3 +314,11 @@ Protocol
 --------
 
 The network protocol implemented by FEED is described in [proto.md](proto.md).
+
+slacRfApp
+---------------
+
+Provides displays and databases geared toward SLAC production operations.
+
+To use the screens in srcDislplay, you must incorporate srcDisplay/calc.list
+into your local installation's EDM config/calc.list
