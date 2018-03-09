@@ -30,6 +30,9 @@ DB += rfs_registers.db
 DB += rfs_registers_short.substitutions
 DB += rfs_registers_short.db
 
+# RF support databases
+DB += chas.template
+DB += cav.template
 
 include $(TOP)/configure/RULES
 #----------------------------------------
