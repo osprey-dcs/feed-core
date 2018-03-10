@@ -320,5 +320,5 @@ slacRfApp
 
 Provides displays and databases geared toward SLAC production operations.
 
-To use the screens in srcDislplay, you must incorporate srcDisplay/calc.list
+To use the screens in srcDisplay, you must incorporate srcDisplay/calc.list
 into your local installation's EDM config/calc.list
