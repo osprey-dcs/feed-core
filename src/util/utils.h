@@ -45,7 +45,7 @@ epicsShareExtern std::string read_entire_file(const char *name);
 
 struct epicsShareClass SocketError : public std::exception
 {
-    int code;
+    const int code;
 
     SocketError() :code(0) {}
     SocketError(int code) throw() :code(code) {}
