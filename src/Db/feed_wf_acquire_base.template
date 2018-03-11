@@ -94,7 +94,6 @@ record(longout, "$(BASE)WAVESHIFT") {
 record(mbboDirect, "$(BASE)MASK") {
     field(DESC, "Channel selection bitmask")
     field(OUT , "$(BASE)MASK2_ PP")
-    field(PINI, "YES")
     field(TPRO, "$(TPRO=0)")
     info(autosaveFields_pass0, "VAL B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 BA BB")
 }
@@ -155,6 +154,7 @@ record(longout, "$(BASE)TAG_RBVX_") {
 record(longout, "$(BASE)TAG_RBV") {
     field(DTYP, "FEED Register Write")
     field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_tag")
+    field(VAL , "0")
     field(FLNK, "$(BASE)TAGDONE_CMD_")
     info(feed:info:readback, "$(BASE)TAG_RBV")
     info(feed:info:increment, "$(BASE)TAGINC_CMD")
@@ -290,6 +290,7 @@ record(fanout, "$(BASE)NEXT_FOUT_") {
     field(LNKE, "$(LNKE=)")
     field(LNKF, "$(LNKF=)")
     field(FLNK, "$(BASE)CNT")
+    field(TPRO, "$(TPRO=0)")
 }
 
 # at this point all signal/pair/stats records are updated.

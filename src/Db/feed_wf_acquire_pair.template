@@ -14,6 +14,8 @@ record(bo, "$(PREF)ENABLE") {
   field(ZNAM, "Disable")
   field(ONAM, "Enable")
   field(OUT , "$(PREF)ENABLE_FOUT_ PP")
+  field(VAL , "1") # initially Enable
+  field(PINI, "YES")
 }
 
 record(dfanout, "$(PREF)ENABLE_FOUT_") {
