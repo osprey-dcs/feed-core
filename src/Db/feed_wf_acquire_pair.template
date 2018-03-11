@@ -51,12 +51,22 @@ record(ao, "$(PREF)PWRSCALE") {
     info(autosaveFields_pass0, "VAL")
 }
 
+# Arbitrary offset added to phase (zero angle)
+record(ao, "$(PREF)ZRANGLE") {
+    field(VAL , "0.0")
+    field(PREC, "2")
+    field(EGU , "deg")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
 # FLNK'd from _signal.template of SIGQ
 record(aSub, "$(PREF)AP_CALC_") {
   field(SNAM, "IQ2AP")
   field(FTA , "DOUBLE")
   field(FTB , "DOUBLE")
   field(FTC , "DOUBLE")
+  field(FTD , "DOUBLE")
   field(FTVA ,"DOUBLE")
   field(FTVB ,"DOUBLE")
   field(NOA , "$(SIZE)")
@@ -67,6 +77,7 @@ record(aSub, "$(PREF)AP_CALC_") {
   field(INPA, "$(PREF)IWF MSI NPP")
   field(INPB, "$(PREF)QWF MSI NPP")
   field(INPC, "$(PREF)PWRSCALE MSI NPP")
+  field(INPD, "$(PREF)ZRANGLE MSI NPP")
   field(OUTA, "$(PREF)AWF MSI PP")
   field(OUTB, "$(PREF)PWF MSI PP")
   field(OUTC, "$(PREF)PWRWF MSI PP")

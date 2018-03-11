@@ -20,6 +20,19 @@
 #define MIN(A,B) ((A)<(B) ? (A) : (B))
 #define MAX(A,B) ((A)>(B) ? (A) : (B))
 
+/* wrap arbitrary phase to [-180, 180) */
+static
+double phase_wrap(double pha)
+{
+    double out = fmod(pha, 360.0);
+    // (-360, -360) -> [-180, 180)
+    if(out < -180.0)
+        out += 360.0;
+    else if(out >= 180.0)
+        out -= 360.0;
+    return out;
+}
+
 /* Element wise waveform calculator
  *
  * record(stringout, "$(N):expr") {
@@ -249,6 +262,7 @@ long gen_waveform(aSubRecord* prec)
  *  field(FTA , "DOUBLE")
  *  field(FTB , "DOUBLE")
  *  field(FTC , "DOUBLE")
+ *  field(FTD , "DOUBLE")
  *  field(FTVA ,"DOUBLE")
  *  field(FTVB ,"DOUBLE")
  *  field(FTVC ,"DOUBLE")
@@ -260,6 +274,7 @@ long gen_waveform(aSubRecord* prec)
  *  field(INPA, "I")
  *  field(INPB, "Q")
  *  field(INPC, "POWSCALE") # scaling of AMP squared (Optional)
+ *  field(INPD, "ZEROANGLE") # arbitrary angle added to output phase (deg.)
  *  field(OUTA, "AMP PP")
  *  field(OUTB, "PHA PP") # in degrees
  *  field(OUTC, "POW PP") # AMP squared (Optional)
@@ -274,7 +289,7 @@ long convert_iq2ap(aSubRecord* prec)
     size_t i;
     epicsUInt32 len = prec->nea; /* actual output length */
     unsigned pow_out = prec->ftvc==menuFtypeDOUBLE;
-    double pow_scale = 1.0;
+    double pow_scale = 1.0, zero_angle = 0.0;
 
     double *I = (double*)prec->a,
            *Q = (double*)prec->b,
@@ -298,6 +313,10 @@ long convert_iq2ap(aSubRecord* prec)
         pow_scale = 1.0;
     }
 
+    if(prec->ftd==menuFtypeDOUBLE) {
+        zero_angle = *(double*)prec->d;
+    }
+
     if(len > prec->neb)
         len = prec->neb;
     if(len > prec->nova)
@@ -310,6 +329,7 @@ long convert_iq2ap(aSubRecord* prec)
     for(i=0; i<len; i++) {
         A[i] = sqrt(I[i]*I[i] + Q[i]*Q[i]);
         P[i] = atan2(Q[i], I[i]) * 180 / PI;
+        P[i] = phase_wrap(P[i] + zero_angle);
         if(PW)
             PW[i] = pow_scale * A[i] * A[i];
     }
@@ -392,18 +412,6 @@ long convert_ap2iq(aSubRecord* prec)
     prec->neva = prec->nevb = len;
 
     return 0;
-}
-
-static
-double phase_wrap(double pha)
-{
-    double out = fmod(pha, 360.0);
-    // (-360, -360) -> [-180, 180)
-    if(out < -180.0)
-        out += 360.0;
-    else if(out >= 180.0)
-        out -= 360.0;
-    return out;
 }
 
 /* Waveform statistics
