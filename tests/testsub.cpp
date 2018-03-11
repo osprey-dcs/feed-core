@@ -39,51 +39,30 @@ struct testdat {
     double yscale;
 };
 
-/** expected values calculated with python script
+/** cross-check waveform scaling with python code
 
-from math import ceil, log
-
-def yscale(wave_samp_per=1):
-    try:
-        from math import ceil, log
-
-        lo_cheat = (74762*1.646760258)/2**17
-
-        shift_base = 4
-        cic_period=33
-        cic_n = wave_samp_per * cic_period
-
-        def log2(n):
-            try:
-                return log(n,2)
-            except ValueError as e:
-                raise ValueError("log2(%s) %s"%(n,e))
-
-        shift_min = log2(cic_n**2 * lo_cheat)-12
-
-        wave_shift = max(0, ceil(shift_min/2))
-
-        return wave_shift, 16 * lo_cheat * (33 * wave_samp_per)**2 * 4**(8 - wave_shift)/512.0/(2**shift_base)
-    except Exception as e:
-        raise RuntimeError("yscale(%s) %s"%(wave_samp_per, e))
+from leep.raw import yscale
+for nn in [1,2,3,7,10,15,25,50,55,128,200,255]:
+    sh, fs = yscale(nn)
+    print '    {%d, %d, %.6f},'%(nn, sh, fs)
 
 */
 static const testdat yscale_data[] = {
-    {1, 0, 16 * 8175.68283},
-    {2, 0, 16 * 32702.73134},
-    {3, 1, 16 * 18395.28638},
-    {7, 2, 16 * 25038.02868},
-    {10, 3, 16 * 12774.50443},
-    {15, 3, 16 * 28742.63497},
-    {25, 4, 16 * 19960.16317},
-    {50, 5, 16 * 19960.16317},
-    {55, 5, 16 * 24151.79744},
-    {128, 6, 16 * 32702.73134},
-    {200, 7, 16 * 19960.16317},
-    {255, 7, 16 * 32447.74025},
+    {1, 0, 130930.013140},
+    {2, 0, 523720.052558},
+    {3, 1, 294592.529564},
+    {7, 2, 400973.165240},
+    {10, 3, 204578.145531},
+    {15, 3, 460300.827444},
+    {25, 4, 319653.352392},
+    {50, 5, 319653.352392},
+    {55, 5, 386780.556394},
+    {128, 6, 523720.052558},
+    {200, 7, 319653.352392},
+    {255, 7, 519636.480982},
 };
 
-MAIN(testdevice)
+MAIN(testsub)
 {
     testPlan(61);
     try {
