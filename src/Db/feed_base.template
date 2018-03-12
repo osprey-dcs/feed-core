@@ -8,6 +8,20 @@ record(longout, "$(PREF)DEBUG") {
     info(autosaveFields_pass0, "VAL")
 }
 
+record(bo, "$(PREF)HALT") {
+    field(DESC, "Force to Error state")
+    field(ZNAM, "Halt")
+    field(ONAM, "Halt")
+    field(UDF , "0")
+    field(FLNK, "$(PREF)HALT_.PROC")
+}
+
+record(stringout, "$(PREF)HALT_") {
+    field(DTYP, "FEED Force Error")
+    field(OUT , "@name=$(NAME)")
+    field(VAL , "Halt")
+}
+
 record(bo, "$(PREF)RESET") {
     field(DESC, "Force re-connect")
     field(ZNAM, "Reset")
