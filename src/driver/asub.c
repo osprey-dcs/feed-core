@@ -169,6 +169,38 @@ long asub_yscale(aSubRecord *prec)
     return 0;
 }
 
+/* concatinate byte array together (bytes MSBF)
+ *
+ * record(asub, "$(N)") {
+ *   field(SNAM, "asub_feed_bcat")
+ *   field(FTA, "UCHAR") # byte array
+ *   field(FTVA, "ULONG")# output word
+ *   field(NEA , "3")    # max number of bytes
+ * }
+ */
+static
+long asub_feed_bcat(aSubRecord *prec)
+{
+    const epicsUInt8 *arr = (epicsUInt8*)prec->a;
+    epicsUInt32 *out = (epicsUInt32*)prec->vala;
+    epicsUInt32 i, lim = prec->nea;
+    /* mask includes sign bit and all higher */
+    epicsUInt32 mask = 0xffffffff<<(lim*8-1);
+
+    *out = 0;
+
+    for(i=0; i < lim; i++) {
+        *out <<= 8;
+        *out |= arr[i];
+    }
+
+    /* sign extend */
+    if(mask & *out)
+        *out |= mask;
+
+    return 0;
+}
+
 static
 void asubFEEDRegistrar(void)
 {
@@ -176,5 +208,6 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_split_bits", (REGISTRYFUNCTION)&asub_split_bits);
     registryFunctionAdd("sub_count_bits", (REGISTRYFUNCTION)&sub_count_bits);
     registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
+    registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
 }
 epicsExportRegistrar(asubFEEDRegistrar);
