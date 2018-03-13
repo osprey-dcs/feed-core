@@ -42,7 +42,7 @@ struct RecInfo : public RegInterest
     std::string signal;
 
     RecInfo(dbCommon *prec, Device *device);
-    ~RecInfo();
+    virtual ~RecInfo();
 
     // called during init_common_base()
     virtual void configure(const pairs_t& pairs);
