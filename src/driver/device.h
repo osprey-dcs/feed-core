@@ -31,9 +31,12 @@ struct RegInterest
     typedef std::map<std::string, std::string> info_items_t;
     typedef std::map<std::string, info_items_t> infos_t;
 
+    dbCommon * const prec;
+    Device * const device;
+
     DevReg *reg;
     IOSCANPVT changed;
-    RegInterest();
+    RegInterest(dbCommon *prec, Device *dev);
     virtual ~RegInterest() {}
     // callback after register read/write is complete
     virtual void complete() =0;
@@ -218,6 +221,7 @@ struct epicsShareClass Device : public epicsThreadRunable
     bool runner_stop;
     bool reset_requested, // request to transition to Idle on next iteration
          error_requested;   // request transition to Error on next iteration
+    bool after_reset;
 
     epicsThread runner;
 

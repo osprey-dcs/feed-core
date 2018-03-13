@@ -45,8 +45,10 @@ const struct gblrom_t {
 } gblrom;
 }
 
-RegInterest::RegInterest()
-    :reg(0)
+RegInterest::RegInterest(dbCommon *prec, Device *dev)
+    :prec(prec)
+    ,device(dev)
+    ,reg(0)
 {
     scanIoInit(&changed);
 }
@@ -195,6 +197,7 @@ Device::Device(const std::string &name, osiSockAddr &ep)
     ,runner_stop(false)
     ,reset_requested(false)
     ,error_requested(false)
+    ,after_reset(false)
     ,runner(*this,
             "FEED",
             epicsThreadGetStackSize(epicsThreadStackSmall),
@@ -252,6 +255,7 @@ void Device::reset(bool error)
     want_to_send = false;
     reset_requested = false;
     error_requested = false;
+    after_reset = true;
 
     if(error) {
         current = Error;
@@ -799,6 +803,23 @@ void Device::run()
                 completed.swap(records);
 
                 UnGuard U(G);
+
+                // Hack.
+                // only active if there is a logic error somewhere in async record handling
+                if(current == Error && completed.empty() && after_reset) {
+                    errlogPrintf("%s scan for orphaned async\n", myname.c_str());
+                    for(reg_interested_t::iterator it(reg_interested.begin()), end(reg_interested.end());
+                                                      it!=end; ++it)
+                    {
+                        RegInterest *item = it->second;
+                        if(item->prec->pact) {
+                            errlogPrintf("%s : Forcing orphaned async record to complete\n", item->prec->name);
+                            item->complete();
+                        }
+                    }
+
+                    after_reset = false;
+                }
 
                 for(DevReg::records_t::const_iterator it = completed.begin(), end = completed.end();
                     it != end; ++it)

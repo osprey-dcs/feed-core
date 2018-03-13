@@ -22,8 +22,6 @@ bool get_pair(const pairs_t& pairs, const std::string& key, bool& out);
 
 struct RecInfo : public RegInterest
 {
-    dbCommon * const prec;
-    Device * const device;
 
     epicsUInt32 offset, // offset of first element (in words)
                 step;   // increment between elements (in words)

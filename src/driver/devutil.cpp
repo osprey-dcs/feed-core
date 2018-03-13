@@ -193,8 +193,7 @@ DBLINK *getDevLnk(dbCommon *prec)
 
 
 RecInfo::RecInfo(dbCommon *prec, Device *device)
-    :prec(prec)
-    ,device(device)
+    :RegInterest(prec, device)
     ,offset(0u)
     ,step(1)
     ,scale(1.0)
@@ -223,7 +222,9 @@ void RecInfo::cleanup() {
 void RecInfo::complete() {
     long (*process)(dbCommon*) = (long (*)(dbCommon*))prec->rset->process;
     dbScanLock(prec);
-    (*process)(prec); // ignore result
+    if(prec->pact) {
+        (*process)(prec); // ignore result
+    }
     dbScanUnlock(prec);
 }
 
