@@ -107,7 +107,7 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
 
                 info->reg->queue(true, info->wait ? info : 0);
 
-                if(info->wait) {
+                if(info->wait && info->device->active()) {
                     prec->pact = 1;
                     IFDBG(6, "begin async\n");
                 }
@@ -178,8 +178,8 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
             IFDBG(6, "Array bounds violation offset=%u not within size=%zu",
                   (unsigned)info->offset, info->reg->mem_rx.size());
         } else {
-            if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact) {
-                // I/O Intr scan, use cached, or async completion
+            if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact || !info->device->active()) {
+                // I/O Intr scan, use cached, async completion, or no comm.
 
                 // mask for sign extension
                 epicsUInt32 signmask = 0;

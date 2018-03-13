@@ -169,7 +169,7 @@ struct epicsShareClass Device : public epicsThreadRunable
     } current;
     static const char *current_name[5];
 
-    inline bool active() const { return current!=Error && current!=Idle; }
+    inline bool active() const { return current!=Error && current!=Idle && current!=Searching; }
 
     IOSCANPVT current_changed, on_connect;
 

@@ -786,7 +786,7 @@ void Device::run()
         try {
             IFDBG(4, "Looping state=%u", current);
 
-            if(active())
+            if(current!=Error && current!=Idle)
                 handle_send(G);
 
             fds[0].events = POLLIN;
