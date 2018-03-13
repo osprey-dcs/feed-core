@@ -807,15 +807,12 @@ void Device::run()
                 // Hack.
                 // only active if there is a logic error somewhere in async record handling
                 if(current == Error && completed.empty() && after_reset) {
-                    errlogPrintf("%s scan for orphaned async\n", myname.c_str());
                     for(reg_interested_t::iterator it(reg_interested.begin()), end(reg_interested.end());
                                                       it!=end; ++it)
                     {
                         RegInterest *item = it->second;
-                        if(item->prec->pact) {
-                            errlogPrintf("%s : Forcing orphaned async record to complete\n", item->prec->name);
-                            item->complete();
-                        }
+                        // no-op unless PACT!=0
+                        item->complete();
                     }
 
                     after_reset = false;
