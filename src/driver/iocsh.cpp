@@ -1,9 +1,12 @@
 
-#include <iostream>
+#include <sstream>
 
 #include <drvSup.h>
 #include <iocsh.h>
 #include <initHooks.h>
+
+// redirects stdout/err for iocsh capture
+#include <epicsStdio.h>
 
 #include "device.h"
 
@@ -11,12 +14,14 @@
 
 static long feed_report(int lvl)
 {
+    std::ostringstream strm;
     for(Device::devices_t::const_iterator it(Device::devices.begin()), end(Device::devices.end());
         it != end; ++it)
     {
-        std::cout<<"Device: "<<it->first<<"\n";
-        it->second->show(std::cout, lvl);
+        strm<<"Device: "<<it->first<<"\n";
+        it->second->show(strm, lvl);
     }
+    printf("%s", strm.str().c_str());
     return 0;
 }
 
