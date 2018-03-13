@@ -311,7 +311,7 @@ struct SyncInfo : public RecInfo
 long read_sync(longinRecord *prec)
 {
     TRY {
-        if(!prec->pact) {
+        if(!prec->pact && info->device->active()) {
             if(device->reg_send.empty())
                 IFDBG(1, "Send queue empty");
 
