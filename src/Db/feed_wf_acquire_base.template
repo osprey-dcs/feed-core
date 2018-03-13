@@ -80,6 +80,7 @@ record(aSub, "$(BASE)AMPCALC") {
     field(FTVA, "ULONG") # wave_shift
     field(OUTA, "$(BASE)WAVESHIFT MSI PP")
     field(FTVB, "DOUBLE") # yscale  (referenced in feed_wf_acquire_signal.template)
+    field(EFLG, "ALWAYS")
 }
 
 record(longout, "$(BASE)WAVESHIFT") {

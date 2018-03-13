@@ -49,7 +49,6 @@ record(longout, "$(PREF)STEP") {
 record(ao, "$(PREF)SCALE") {
     field(VAL , "1.0")
     field(PREC, "9")
-    field(PINI, "YES")
     field(FLNK, "$(PREF)SCALE_CALC_")
     info(autosaveFields_pass0, "VAL")
 }
