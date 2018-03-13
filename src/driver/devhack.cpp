@@ -34,7 +34,7 @@ void propLink(dbCommon *src, DBLINK *plink)
         // a processing loop.
         dest->rpro = 1;
 
-        if(src->tpro>1)
+        if(src->tpro>1 || dest->tpro>1)
             printf("%s -> %s force RPRO\n", src->name, dest->name);
     }
 }
