@@ -200,6 +200,8 @@ void Simulator::exec()
             }
 
             if(process) {
+                bool ignore = false;
+
                 if(buf.size()%8) {
                     errlogPrintf("%s: sent request with %u bytes of trailing junk\n",
                                  addr.c_str(), unsigned(buf.size()%8));
@@ -228,6 +230,11 @@ void Simulator::exec()
                     } else {
                         SimReg& reg = *it->second;
                         size_t offset = (cmd_addr&0x00ffffff)-reg.base;
+
+                        if(reg.name=="ghost") {
+                            // magic register name to test timeout handling
+                            ignore = true;
+                        }
 
                         if(cmd_addr&0x10000000) {
                             // read
@@ -263,9 +270,11 @@ void Simulator::exec()
                     *reinterpret_cast<epicsUInt32*>(&buf[i+4]) = htonl(data);
                 }
 
-                UnGuard U(G);
+                if(!ignore) {
+                    UnGuard U(G);
 
-                serve.sendto(peer, buf);
+                    serve.sendto(peer, buf);
+                }
             }
         }
 
