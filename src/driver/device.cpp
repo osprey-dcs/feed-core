@@ -71,16 +71,18 @@ DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
 
 DevReg::~DevReg()
 {
-    // shouldn't be letting these fall on the floor...
-    assert(records_inprog.empty());
-    assert(records_write.empty());
-    assert(records_read.empty());
+    reset();
 }
 
 void DevReg::reset()
 {
     state = DevReg::Invalid;
     read_queued = write_queued = false;
+
+    // shouldn't be letting these fall on the floor...
+    assert(records_inprog.empty());
+    assert(records_write.empty());
+    assert(records_read.empty());
 }
 
 void DevReg::process(bool cancel)
