@@ -69,17 +69,35 @@ DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
     ,next_send(mem_rx.size())
 {}
 
+DevReg::~DevReg()
+{
+    // shouldn't be letting these fall on the floor...
+    assert(records_inprog.empty());
+    assert(records_write.empty());
+    assert(records_read.empty());
+}
+
 void DevReg::reset()
 {
     state = DevReg::Invalid;
     read_queued = write_queued = false;
 }
 
-void DevReg::process()
+void DevReg::process(bool cancel)
 {
-    // regular read/writes
+    // in-progress reads/writes
     dev->records.splice(dev->records.end(),
                         records_inprog);
+
+    if(cancel) {
+        // for queued write
+        dev->records.splice(dev->records.end(),
+                            records_write);
+
+        // for queued read
+        dev->records.splice(dev->records.end(),
+                            records_read);
+    }
 }
 
 void DevReg::scan_interested()
@@ -287,10 +305,10 @@ void Device::reset(bool error)
                   reg->mem_tx.end(),
                   0);
 
-        // complete any in-progress async
+        // complete any in-progress async, including for queued writes
         reg->stat = COMM_ALARM;
         reg->sevr = INVALID_ALARM;
-        reg->process();
+        reg->process(true);
 
         if(!reg->bootstrap) {
             delete reg;
@@ -499,7 +517,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
 
             reg->stat = 0;
             reg->sevr = 0;
-            reg->process();
+            reg->process(false);
 
             reg->scan_interested();
             IFDBG(5, "complete %s", reg->info.name.c_str());
@@ -580,7 +598,7 @@ void Device::do_timeout(unsigned i)
 
         reg->stat = COMM_ALARM;
         reg->sevr = INVALID_ALARM;
-        reg->process();
+        reg->process(true);
 
         reg->scan_interested();
     }

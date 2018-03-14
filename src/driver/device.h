@@ -50,6 +50,7 @@ struct RegInterest
 struct DevReg
 {
     DevReg(Device *dev, const JRegister& info, bool bootstrap = false);
+    ~DevReg();
 
     Device * const dev;
     const JRegister info;
@@ -99,7 +100,7 @@ struct DevReg
 
     void reset();
 
-    void process();
+    void process(bool cancel);
 
     // queue to be sent
     void queue(bool write, RegInterest* action=0);
