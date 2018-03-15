@@ -325,6 +325,18 @@ asub_setamp(aSubRecord *prec)
     return 0;
 }
 
+static long
+asub_round(aSubRecord *prec)
+{
+    double input = *(double *)prec->a;
+    long *output = (long *)prec->vala;
+
+    *output = (long)(round(input));
+    
+    return 0;
+
+}
+
 static
 void asubFEEDRegistrar(void)
 {
@@ -334,5 +346,6 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
+    registryFunctionAdd("asub_round", (REGISTRYFUNCTION)&asub_round);
 }
 epicsExportRegistrar(asubFEEDRegistrar);
