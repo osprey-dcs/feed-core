@@ -261,14 +261,13 @@ asub_setamp(aSubRecord *prec)
     }
 
     /* Trig */
-    *max_imag = max_magn * sintheta;
-    *pol_y = max_magn * *max_imag;
+    *pol_y = max_magn * sintheta;
     *pol_x = max_magn * sqrt(1 - pow(*max_imag, 2));
     /* end Trig */
 
     if (debug) {
-	printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", 
-	    max_magn, *max_imag, *pol_x, *pol_y);
+	printf("setAmpl: max_magn %f sintheta %f calc policy x %f y %f\n", 
+	    max_magn, sintheta, *pol_x, *pol_y);
     }
 
     *sqrtu = adesv / (sqrt(imped * 2 * M_PI * freqhz));
@@ -311,13 +310,13 @@ asub_setamp(aSubRecord *prec)
     }
 
     /* Gate */
-    if ( pha_close ) {
+    *y_lo = *y_hi = 0;
+
+    if ( pha_close && (ades>0.0) ) {
 	*y_lo = - *pol_y;
 	*y_hi = *pol_y;
     }
-    else {
-	*y_lo = *y_hi = 0;
-    }
+
     *lim_y_lo = (epicsInt32)(79500 * (*y_lo));
     *lim_y_hi = (epicsInt32)(79500 * (*y_hi));
     /* end Gate */
