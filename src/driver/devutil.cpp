@@ -236,16 +236,10 @@ void RecInfo::getInfo(infos_t& infos)
 {
     DBENTRY entry;
 
-    if(!reg)
+    if(regname.empty())
         return;
 
-    infos_t::iterator it(infos.find(reg->info.name));
-    if(it==infos.end()) {
-        infos[reg->info.name];
-        it = infos.find(reg->info.name);
-        assert(it!=infos.end());
-    }
-    info_items_t& items = it->second;
+    info_items_t& items = infos[regname];
 
     dbInitEntry(pdbbase, &entry);
 
