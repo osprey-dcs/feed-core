@@ -43,7 +43,7 @@ struct RegInterest
     // debug
     virtual void show(std::ostream&, int lvl) {}
     // called when building Device::dev_info
-    virtual void getInfo(infos_t&) {}
+    virtual void getInfo(infos_t&) const {}
 };
 
 // Device Register

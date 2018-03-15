@@ -658,8 +658,6 @@ void Device::handle_inspect()
 
     zdeflate(raw_infos, json.c_str(), json.size(), 9);
 
-    RegInterest::infos_t infos;
-
     // iterate registers and find interested
     for(JBlob::const_iterator it = blob.begin(), end = blob.end(); it != end; ++it)
     {
@@ -686,11 +684,19 @@ void Device::handle_inspect()
             dreg->interested.push_back(interest);
 
             interest->reg = dreg.get();
-
-            interest->getInfo(infos);
         }
 
         reg_by_name[reg.name] = dreg.release();
+    }
+
+    RegInterest::infos_t infos;
+
+    for(reg_interested_t::iterator it(reg_interested.begin()), end(reg_interested.end());
+        it != end; ++it)
+    {
+        const RegInterest * const interest = it->second;
+
+        interest->getInfo(infos);
     }
 
     // Print driver JSON blob

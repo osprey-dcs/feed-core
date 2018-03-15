@@ -55,7 +55,7 @@ struct RecInfo : public RegInterest
     virtual void show(std::ostream& strm, int lvl);
 
     // RegInterest::getInfo()
-    virtual void getInfo(infos_t&);
+    virtual void getInfo(infos_t&) const;
 };
 
 // Find INP/OUT

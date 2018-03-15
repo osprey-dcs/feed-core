@@ -232,7 +232,7 @@ void RecInfo::show(std::ostream& strm, int lvl) {
     strm<<prec->name;
 }
 
-void RecInfo::getInfo(infos_t& infos)
+void RecInfo::getInfo(infos_t& infos) const
 {
     DBENTRY entry;
 
@@ -240,6 +240,8 @@ void RecInfo::getInfo(infos_t& infos)
         return;
 
     info_items_t& items = infos[regname];
+
+    items["present"] = reg ? "true" : "false";
 
     dbInitEntry(pdbbase, &entry);
 
