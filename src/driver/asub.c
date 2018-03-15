@@ -205,127 +205,124 @@ long asub_feed_bcat(aSubRecord *prec)
 static long
 asub_setamp(aSubRecord *prec)
 {
-
-double CORDIC_SCALE = 0.774483*pow(2,17); /* From Larry */
+    double CORDIC_SCALE = 0.774483*pow(2,17); /* From Larry */
 
     /* Inputs  */
     double ades   = *(double *)prec->a,
-        imped     = *(double *)prec->b,
-        freq      = *(double *)prec->c,
-        l         = *(double *)prec->d,
-        qloaded   = *(double *)prec->e,
-        fwd_fs    = *(double *)prec->f,
-        cav_fs    = *(double *)prec->g,
-        amp_close = *(short  *)prec->h,
-        ssa_slope = *(double *)prec->i,
-        ssa_minx  = *(double *)prec->j,
-        ssa_ped   = *(double *)prec->k,
-        max_magn  = *(double *)prec->l,
-        sintheta  = *(double *)prec->m,
-        pha_close = *(short  *)prec->n;
+	imped     = *(double *)prec->b,
+	freq      = *(double *)prec->c,
+	l         = *(double *)prec->d,
+	qloaded   = *(double *)prec->e,
+	fwd_fs    = *(double *)prec->f,
+	cav_fs    = *(double *)prec->g,
+	amp_close = *(short  *)prec->h,
+	ssa_slope = *(double *)prec->i,
+	ssa_minx  = *(double *)prec->j,
+	ssa_ped   = *(double *)prec->k,
+	max_magn  = *(double *)prec->l,
+	sintheta  = *(double *)prec->m,
+	pha_close = *(short  *)prec->n;
 
-    /* Outputs */
+/* Outputs */
     double *sqrtu = (double *)prec->vala,
-        *ssa      = (double *)prec->valb, /* SSA target */
-        *ssan     = (double *)prec->valc, /* Normalized SSA target */
-        *adcn     = (double *)prec->vald, /* Normalized cavity ADC */
-        *pol_x    = (double *)prec->valf,
-        *pol_y    = (double *)prec->valg,
-        *lowslope = (double *)prec->valh,
-        *x_lo     = (double *)prec->vali,
-        *x_hi     = (double *)prec->valj,
-        *y_lo     = (double *)prec->valm,
-        *y_hi     = (double *)prec->valn,
-        *max_imag = (double *)prec->valr;
+	*ssa      = (double *)prec->valb, /* SSA target */
+	*ssan     = (double *)prec->valc, /* Normalized SSA target */
+	*adcn     = (double *)prec->vald, /* Normalized cavity ADC */
+	*pol_x    = (double *)prec->valf,
+	*pol_y    = (double *)prec->valg,
+	*lowslope = (double *)prec->valh,
+	*x_lo     = (double *)prec->vali,
+	*x_hi     = (double *)prec->valj,
+       	*y_lo     = (double *)prec->valm,
+	*y_hi     = (double *)prec->valn,
+	*max_imag = (double *)prec->valr;
 
     epicsInt32 *setm = (epicsInt32 *)prec->vale, /* Value for setmp reg element 0 */
-        *lim_x_lo = (epicsInt32 *)prec->valk,
-        *lim_x_hi = (epicsInt32 *)prec->vall,
-        *lim_y_lo = (epicsInt32 *)prec->valo,
-        *lim_y_hi = (epicsInt32 *)prec->valp;
+	*lim_x_lo = (epicsInt32 *)prec->valk,
+	*lim_x_hi = (epicsInt32 *)prec->vall,
+	*lim_y_lo = (epicsInt32 *)prec->valo,
+	*lim_y_hi = (epicsInt32 *)prec->valp;
 
-        short *too_high = (short *)prec->valq; 
+    short debug = (prec->tpro > 1) ? 1 : 0;
+    short *too_high = (short *)prec->valq; 
 
-        double freqhz = freq*1e6;
-        double adesv  = ades*1e6;
-        short debug = (prec->tpro > 1) ? 1 : 0;
+    double freqhz = freq*1e6;
+    double adesv  = ades*1e6;
 
-        double x_lo_final, x_hi_final;
+    double x_lo_final, x_hi_final;
 
-        if (debug) {
-                printf("setAmpl: input values ades %f MV imped %f ohms freq %f MHz l m %f qloaded %f\n",
-                ades, imped, freq, l, qloaded);
+    if (debug) {
+	printf("setAmpl: input values ades %f MV imped %f ohms freq %f MHz l m %f qloaded %f\n",
+	    ades, imped, freq, l, qloaded);
+	printf("amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f\n",
+	    (int)amp_close, (int)pha_close, ssa_slope, ssa_minx, ssa_ped);
+	printf("fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f sintheta %f\n",
+	    fwd_fs, cav_fs, max_magn, sintheta);
+    }
 
-                printf("amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f\n",
-                (int)amp_close, (int)pha_close, ssa_slope, ssa_minx, ssa_ped);
+    /* Trig */
+    *max_imag = max_magn * sintheta;
+    *pol_y = max_magn * *max_imag;
+    *pol_x = max_magn * sqrt(1 - pow(*max_imag, 2));
+    /* end Trig */
 
-                printf("fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f sintheta %f\n",
-                fwd_fs, cav_fs, max_magn, sintheta);
-        }
+    if (debug) {
+	printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", 
+	    max_magn, *max_imag, *pol_x, *pol_y);
+    }
 
-        /* Trig */
-        *max_imag = max_magn * sintheta;
-        *pol_y = max_magn * *max_imag;
-        *pol_x = max_magn * sqrt(1 - pow(*max_imag, 2));
-        /* end Trig */
+    *sqrtu = adesv / (sqrt(imped * 2 * M_PI * freqhz));
 
-        if (debug) {
-                printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", 
-                max_magn, *max_imag, *pol_x, *pol_y);
-        }
+    /* For Affine */
+    *ssa = *sqrtu * sqrt((M_PI * freqhz) / (2 * qloaded));
+    *ssan = *ssa / fwd_fs;
 
-        *sqrtu = adesv / (sqrt(imped * 2 * M_PI * freqhz));
+    if (debug) {
+	printf("setAmpl: to affine sqrtu %f sqrt(J) ssa %f ssan %f\n", *sqrtu, *ssa, *ssan);
+    }
 
-        /* For Affine */
-        *ssa = *sqrtu * sqrt((M_PI * freqhz) / (2 * qloaded));
-        *ssan = *ssa / fwd_fs;
+    /* Affine */
+    *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
+    if (amp_close) { 
+	*x_lo = ssa_slope * *ssan * 0.85;
+	*x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
+	*x_hi = fmin(*x_hi, *lowslope * *ssan * 1.15);
+    }
+    else {
+	*x_lo = ssa_slope * *ssan;
+	*x_lo = fmin(*x_lo, *lowslope * *ssan);
+	*x_hi = *x_lo;
+    }
 
-        if (debug) {
-                printf("setAmpl: to affine sqrtu %f sqrt(J) ssa %f ssan %f\n", *sqrtu, *ssa, *ssan);
-        }
+    *too_high = (*x_hi > *pol_x) ? 1 : 0;
 
-        /* Affine */
-        *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
-        if (amp_close) { 
-                *x_lo = ssa_slope * *ssan * 0.85;
-                *x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
-                *x_hi = fmin(*x_hi, *lowslope * *ssan * 1.15);
-        }
-        else {
-                *x_lo = ssa_slope * *ssan;
-                *x_lo = fmin(*x_lo, *lowslope * *ssan);
-                *x_hi = *x_lo;
-        }
+    x_lo_final = fmin(*x_lo, *pol_x); 
+    x_hi_final = fmin(*x_hi, *pol_x); 
+    *lim_x_lo = (epicsInt32)(79500 * (x_lo_final));
+    *lim_x_hi = (epicsInt32)(79500 * (x_hi_final));
+    /* end Affine */
 
-        *too_high = (*x_hi > *pol_x) ? 1 : 0;
+    /* For setmp */
+    *adcn = ades / cav_fs;
+    *setm = (epicsInt32)(round(*adcn * CORDIC_SCALE));
 
-        x_lo_final = fmin(*x_lo, *pol_x); 
-        x_hi_final = fmin(*x_hi, *pol_x); 
-        *lim_x_lo = (epicsInt32)(79500 * (x_lo_final));
-        *lim_x_hi = (epicsInt32)(79500 * (x_hi_final));
-        /* end Affine */
+    if (debug) {
+	printf("setAmpl: to setmp adcn %f setm %i\n", *adcn, *setm);
+    }
 
-        /* For setmp */
-        *adcn = ades / cav_fs;
-        *setm = (epicsInt32)(round(*adcn * CORDIC_SCALE));
+    /* Gate */
+    if ( pha_close ) {
+	*y_lo = - *pol_y;
+	*y_hi = *pol_y;
+    }
+    else {
+	*y_lo = *y_hi = 0;
+    }
+    *lim_y_lo = (epicsInt32)(79500 * (*y_lo));
+    *lim_y_hi = (epicsInt32)(79500 * (*y_hi));
+    /* end Gate */
 
-        if (debug) {
-                printf("setAmpl: to setmp adcn %f setm %i\n", *adcn, *setm);
-        }
-
-        /* Gate */
-        if ( pha_close ) {
-                *y_lo = - *pol_y;
-                *y_hi = *pol_y;
-        }
-        else {
-                *y_lo = *y_hi = 0;
-        }
-        *lim_y_lo = (epicsInt32)(79500 * (*y_lo));
-        *lim_y_hi = (epicsInt32)(79500 * (*y_hi));
-        /* end Gate */
-
-        return 0;
+    return 0;
 }
 
 static
