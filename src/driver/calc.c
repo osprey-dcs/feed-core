@@ -438,10 +438,11 @@ long convert_ap2iq(aSubRecord* prec)
  *  field(INPC, "Start X") # window start
  *  field(INPD, "Width X") # window width
  *  field(INPE, "isphase")  # optional, 1 - output modulo +-180
- *  field(OUTA, "Mean PP")
- *  field(OUTB, "Std PP")
- *  field(OUTC, "Min PP")
- *  field(OUTD, "Max PP")
+ *  field(OUTA, "MEAN PP")
+ *  field(OUTB, "STD PP")
+ *  field(OUTC, "MIN PP")
+ *  field(OUTD, "MAX PP")
+ *  field(OUTE, "RSTD PP")
  */
 
 static
@@ -544,6 +545,8 @@ long wf_stats(aSubRecord* prec)
     prec->nevc=1;
     *(double*)prec->vald = max;
     prec->nevd=1;
+    *(double*)prec->vale = *(double*)prec->valb / abs(*(double*)prec->vala);
+    prec->neve=1;
 
     return 0;
 }

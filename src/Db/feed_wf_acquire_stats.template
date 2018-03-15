@@ -29,6 +29,7 @@ record(aSub, "$(PREF)STAT_CALC_") {
   field(OUTB, "$(PREF)STD PP MSI")
   field(OUTC, "$(PREF)MIN PP MSI")
   field(OUTD, "$(PREF)MAX PP MSI")
+  field(OUTE, "$(PREF)RSTD PP MSI")
   field(FLNK, "$(FLNK=)")
   field(TSEL, "$(SIG).TIME")
 }
@@ -56,3 +57,10 @@ record(ai, "$(PREF)MAX") {
   field(EGU , "$(EGU=)")
   field(TSEL, "$(SIG).TIME")
 }
+
+record(ai, "$(PREF)RSTD") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
