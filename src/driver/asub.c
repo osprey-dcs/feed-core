@@ -1,16 +1,22 @@
 #include <errno.h>
-
+#include <string.h>
 #include <errlog.h>
 #include <recGbl.h>
 #include <alarm.h>
 #include <menuFtype.h>
-#include <epicsMath.h>
 
 #include <subRecord.h>
 #include <aSubRecord.h>
 
 #include <registryFunction.h>
 #include <epicsExport.h>
+
+#include <epicsMath.h>
+
+#define PI 3.14159265359
+
+#define MIN(A,B) ((A)<(B) ? (A) : (B))
+#define MAX(A,B) ((A)>(B) ? (A) : (B))
 
 /* Fill in VALA with sequence
  *  [first, first+step, first+step*2, ...]
@@ -201,29 +207,30 @@ long asub_feed_bcat(aSubRecord *prec)
     return 0;
 }
 
-/* Subroutine to set cavity amplitude. Under development */
-static long
-asub_setamp(aSubRecord *prec)
+/* Subroutine to set cavity amplitude */
+static 
+long asub_setamp(aSubRecord *prec)
 {
-    double CORDIC_SCALE = 0.774483*pow(2,17); /* From Larry */
+    double CORDIC_SCALE = 0.774483*pow(2,17);
 
     /* Inputs  */
     double ades   = *(double *)prec->a,
 	imped     = *(double *)prec->b,
 	freq      = *(double *)prec->c,
-	l         = *(double *)prec->d,
-	qloaded   = *(double *)prec->e,
-	fwd_fs    = *(double *)prec->f,
-	cav_fs    = *(double *)prec->g,
+	qloaded   = *(double *)prec->d,
+	fwd_fs    = *(double *)prec->e,
+	cav_fs    = *(double *)prec->f,
 	ssa_slope = *(double *)prec->i,
 	ssa_minx  = *(double *)prec->j,
 	ssa_ped   = *(double *)prec->k,
 	max_magn  = *(double *)prec->l,
-	sintheta  = *(double *)prec->m;
-    short amp_close = *(short  *)prec->h,
-	pha_close = *(short  *)prec->n;
+	max_imag  = *(double *)prec->m;
 
-/* Outputs */
+    short amp_close = *(short *)prec->g,
+	pha_close   = *(short *)prec->h,
+	rfctrl      = *(short *)prec->n;
+
+    /* Intermediate results */
     double *sqrtu = (double *)prec->vala,
 	*ssa      = (double *)prec->valb, /* SSA target */
 	*ssan     = (double *)prec->valc, /* Normalized SSA target */
@@ -234,93 +241,123 @@ asub_setamp(aSubRecord *prec)
 	*x_lo     = (double *)prec->vali,
 	*x_hi     = (double *)prec->valj,
        	*y_lo     = (double *)prec->valm,
-	*y_hi     = (double *)prec->valn,
-	*max_imag = (double *)prec->valr;
+	*y_hi     = (double *)prec->valn;
+    double x_lo_final, x_hi_final;
 
-    epicsInt32 *setm = (epicsInt32 *)prec->vale, /* Value for setmp reg element 0 */
-	*lim_x_lo = (epicsInt32 *)prec->valk,
-	*lim_x_hi = (epicsInt32 *)prec->vall,
-	*lim_y_lo = (epicsInt32 *)prec->valo,
-	*lim_y_hi = (epicsInt32 *)prec->valp;
+    /* Outputs */
+    epicsInt32 *setm = (epicsInt32 *)prec->vale,
+	*lim_x_lo    = (epicsInt32 *)prec->valk,
+	*lim_x_hi    = (epicsInt32 *)prec->vall,
+	*lim_y_lo    = (epicsInt32 *)prec->valo,
+	*lim_y_hi    = (epicsInt32 *)prec->valp;
+    short *too_high  = (short *)prec->valq,
+	  *error     = (short *)prec->valt;
+    char  *msg       = (char *)prec->vals;
+
+    unsigned short *mask = (unsigned short *)prec->valr;
 
     short debug = (prec->tpro > 1) ? 1 : 0;
-    short *too_high = (short *)prec->valq; 
 
     double freqhz = freq*1e6;
     double adesv  = ades*1e6;
 
-    double x_lo_final, x_hi_final;
+    unsigned short MASKOK  = 0xFF;
+    unsigned short MASKERR = 0;
 
     if (debug) {
-	printf("setAmpl: input values ades %f MV imped %f ohms freq %f MHz l m %f qloaded %f\n",
-	    ades, imped, freq, l, qloaded);
-	printf("amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f\n",
-	    amp_close, pha_close, ssa_slope, ssa_minx, ssa_ped);
-	printf("fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f sintheta %f\n",
-	    fwd_fs, cav_fs, max_magn, sintheta);
+	printf("setAmpl: input values ades %f MV imped %f ohms freq %f MHz qloaded %f "
+		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
+		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f\n",
+		ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
+		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag);
     }
 
-    /* Trig */
-    *pol_y = max_magn * sintheta;
-    *pol_x = max_magn * sqrt(1 - pow(*max_imag, 2));
-    /* end Trig */
+    /* Policy maximum X/Y */
+    *pol_y = max_magn * max_imag;
+    *pol_x = max_magn * sqrt(1 - pow(max_imag, 2));
 
     if (debug) {
-	printf("setAmpl: max_magn %f sintheta %f calc policy x %f y %f\n", 
-	    max_magn, sintheta, *pol_x, *pol_y);
+	printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", 
+	    max_magn, max_imag, *pol_x, *pol_y);
     }
 
-    *sqrtu = adesv / (sqrt(imped * 2 * M_PI * freqhz));
+    /* Cavity sqrt(energy) 
+     * V/(sqrt( (shunt impedance) * 2pi * (cav freq)))
+     */
+    *sqrtu = adesv / (sqrt(imped * 2 * PI * freqhz));
 
-    /* For Affine */
-    *ssa = *sqrtu * sqrt((M_PI * freqhz) / (2 * qloaded));
+    /* Target SSA ADC normalized amplitude */
+    *ssa = *sqrtu * sqrt((PI * freqhz) / (2 * qloaded));
     *ssan = *ssa / fwd_fs;
 
-    if (debug) {
+    if (debug)
 	printf("setAmpl: to affine sqrtu %f sqrt(J) ssa %f ssan %f\n", *sqrtu, *ssa, *ssan);
-    }
 
-    /* Affine */
+    /* Calculate values for X limit registers */
     *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
     if (amp_close) { 
 	*x_lo = ssa_slope * *ssan * 0.85;
 	*x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
-	*x_hi = fmin(*x_hi, *lowslope * *ssan * 1.15);
+	*x_hi = MIN(*x_hi, *lowslope * *ssan * 1.15);
     }
     else {
 	*x_lo = ssa_slope * *ssan;
-	*x_lo = fmin(*x_lo, *lowslope * *ssan);
+	*x_lo = MIN(*x_lo, *lowslope * *ssan);
 	*x_hi = *x_lo;
     }
-
     *too_high = (*x_hi > *pol_x) ? 1 : 0;
-
-    x_lo_final = fmin(*x_lo, *pol_x); 
-    x_hi_final = fmin(*x_hi, *pol_x); 
+    x_lo_final = MIN(*x_lo, *pol_x); 
+    x_hi_final = MIN(*x_hi, *pol_x); 
     *lim_x_lo = (epicsInt32)(79500 * (x_lo_final));
     *lim_x_hi = (epicsInt32)(79500 * (x_hi_final));
-    /* end Affine */
 
-    /* For setmp */
+    /* Calculate value for set-magnitude register */
     *adcn = ades / cav_fs;
     *setm = (epicsInt32)(round(*adcn * CORDIC_SCALE));
 
-    if (debug) {
+    if (debug)
 	printf("setAmpl: to setmp adcn %f setm %i\n", *adcn, *setm);
-    }
 
-    /* Gate */
+    /* Calculate values for Y limit registers */
     *y_lo = *y_hi = 0;
-
     if ( pha_close && (ades>0.0) ) {
 	*y_lo = - *pol_y;
 	*y_hi = *pol_y;
     }
-
     *lim_y_lo = (epicsInt32)(79500 * (*y_lo));
     *lim_y_hi = (epicsInt32)(79500 * (*y_hi));
-    /* end Gate */
 
+    *mask = MASKERR; /* Initialize to do not write registers */
+
+    /* If RF control is set off, do not push values.
+     * Set error to 0, though, because this is not 
+     * considered an error state and no accompanying
+     * message should be necessary
+     */
+    *error = 0;
+    if (rfctrl == 0)
+	return 0;
+
+    /* Determine if settings should actually be written to registers.
+     * TODO: Revisit numbers used in cav/fwd scale checks
+     */
+    if (*too_high) {
+	if (cav_fs < 25)
+	    sprintf(msg, "Overrange. Check cav scale");
+	else if (fwd_fs < 50)
+	    sprintf(msg, "Overrange. Check fwd scale");
+	else 
+	    sprintf(msg, "Overrange");
+	*error = 1;
+	return 0;
+    }
+    else if (isnan(*lowslope) || isinf(*lowslope)) {
+	sprintf(msg, "Bad lowslope. Check SSA parms");
+	*error = 1;
+	return 0;
+    }
+
+    *mask = MASKOK;
     return 0;
 }
 
