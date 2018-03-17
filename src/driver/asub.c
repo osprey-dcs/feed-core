@@ -215,12 +215,12 @@ asub_setamp(aSubRecord *prec)
 	qloaded   = *(double *)prec->e,
 	fwd_fs    = *(double *)prec->f,
 	cav_fs    = *(double *)prec->g,
-	amp_close = *(short  *)prec->h,
 	ssa_slope = *(double *)prec->i,
 	ssa_minx  = *(double *)prec->j,
 	ssa_ped   = *(double *)prec->k,
 	max_magn  = *(double *)prec->l,
-	sintheta  = *(double *)prec->m,
+	sintheta  = *(double *)prec->m;
+    short amp_close = *(short  *)prec->h,
 	pha_close = *(short  *)prec->n;
 
 /* Outputs */
@@ -255,7 +255,7 @@ asub_setamp(aSubRecord *prec)
 	printf("setAmpl: input values ades %f MV imped %f ohms freq %f MHz l m %f qloaded %f\n",
 	    ades, imped, freq, l, qloaded);
 	printf("amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f\n",
-	    (int)amp_close, (int)pha_close, ssa_slope, ssa_minx, ssa_ped);
+	    amp_close, pha_close, ssa_slope, ssa_minx, ssa_ped);
 	printf("fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f sintheta %f\n",
 	    fwd_fs, cav_fs, max_magn, sintheta);
     }
