@@ -245,9 +245,8 @@ void Simulator::exec()
                                              reg.name.c_str(), unsigned(offset),
                                              unsigned(cmd_addr), unsigned(data));
 
-                            if(!reg.readable) {
+                            if(!reg.readable && debug) {
                                 errlogPrintf("%s: read of unreadable cmd/address %08x\n", addr.c_str(), unsigned(cmd_addr));
-                                data = 0xdeadbeef;
                             }
 
                         } else {
