@@ -274,10 +274,13 @@ long gen_waveform(aSubRecord* prec)
  *  field(INPA, "I")
  *  field(INPB, "Q")
  *  field(INPC, "POWSCALE") # scaling of AMP squared (Optional)
- *  field(INPD, "ZEROANGLE") # arbitrary angle added to output phase (deg.)
+ *  field(INPD, "ZRANGLE") # arbitrary angle added to output phase (deg.)
+ *  field(INPE, "DISPANGLE") # rotate I/Q for displays
  *  field(OUTA, "AMP PP")
  *  field(OUTB, "PHA PP") # in degrees
  *  field(OUTC, "POW PP") # AMP squared (Optional)
+ *  field(OUTD, "IWFDISP PP")
+ *  field(OUTE, "QWFDISP PP")
  * }
  */
 #define MAGIC ((void*)&convert_iq2ap)
@@ -289,13 +292,16 @@ long convert_iq2ap(aSubRecord* prec)
     size_t i;
     epicsUInt32 len = prec->nea; /* actual output length */
     unsigned pow_out = prec->ftvc==menuFtypeDOUBLE;
-    double pow_scale = 1.0, zero_angle = 0.0;
+    double pow_scale = 1.0, zero_angle = 0.0,
+	   disp_angle = 0.0;
 
     double *I = (double*)prec->a,
            *Q = (double*)prec->b,
            *A = (double*)prec->vala,
            *P = (double*)prec->valb,
-           *PW= pow_out ? (double*)prec->valc : NULL;
+           *PW= pow_out ? (double*)prec->valc : NULL,
+	   *IROT = (double*)prec->vald,
+	   *QROT = (double*)prec->vale;
 
     if(prec->fta!=menuFtypeDOUBLE
             || prec->ftb!=menuFtypeDOUBLE
@@ -317,6 +323,10 @@ long convert_iq2ap(aSubRecord* prec)
         zero_angle = *(double*)prec->d;
     }
 
+    if(prec->fte==menuFtypeDOUBLE) {
+        disp_angle = *(double*)prec->e*PI/180.0;
+    }
+
     if(len > prec->neb)
         len = prec->neb;
     if(len > prec->nova)
@@ -332,6 +342,8 @@ long convert_iq2ap(aSubRecord* prec)
         P[i] = phase_wrap(P[i] + zero_angle);
         if(PW)
             PW[i] = pow_scale * A[i] * A[i];
+	IROT[i] = I[i]*cos(disp_angle) - Q[i]*sin(disp_angle);
+	QROT[i] = I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
     }
 
     prec->neva = prec->nevb = len;
