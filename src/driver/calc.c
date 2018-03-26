@@ -545,7 +545,7 @@ long wf_stats(aSubRecord* prec)
     prec->nevc=1;
     *(double*)prec->vald = max;
     prec->nevd=1;
-    *(double*)prec->vale = *(double*)prec->valb / abs(*(double*)prec->vala);
+    *(double*)prec->vale = *(double*)prec->valb / fabs(*(double*)prec->vala);
     prec->neve=1;
 
     return 0;
