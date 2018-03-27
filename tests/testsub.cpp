@@ -62,9 +62,77 @@ static const testdat yscale_data[] = {
     {255, 7, 519636.480982},
 };
 
+static
+void test_yscale()
+{
+    testdbPutFieldOk("yscale.B", DBF_LONG, 33);// cic_period
+
+    for(size_t i=0; i<NELEMENTS(yscale_data); i++) {
+        testDiag("[%zu] wave_samp_per=%u wave_shift=%u yscale=%f", i,
+                 yscale_data[i].wave_samp_per,
+                 yscale_data[i].wave_shift,
+                 yscale_data[i].yscale);
+
+        testdbPutFieldOk("yscale.A", DBF_LONG, yscale_data[i].wave_samp_per);
+
+        testdbPutFieldOk("yscale.PROC", DBF_LONG, 1);
+        testdbGetFieldEqual("yscale.SEVR", DBF_SHORT, 0);
+
+        testApproxEqual("yscale.VALA", yscale_data[i].wave_shift, 0);
+        testApproxEqual("yscale.VALB", yscale_data[i].yscale, 0.0001);
+    }
+}
+
+static
+void putArr(const char *pv, size_t N, const epicsInt32 *arr)
+{
+    DBADDR addr;
+
+    if (dbNameToAddr(pv, &addr)) {
+        testFail("Missing PV \"%s\"", pv);
+        return;
+    }
+
+    long status = dbPutField(&addr, DBF_LONG, (const void*)arr, long(N));
+    testOk(status==0, "putArr %s with %zu elem", pv, N);
+}
+
+static
+void test_bcat()
+{
+    epicsInt32 arr[4];
+
+    putArr("bcat.A", 0, arr);
+    testdbPutFieldOk("bcat.PROC", DBF_LONG, 0);
+    testdbGetFieldEqual("bcat.VALA", DBF_LONG, 0);
+
+    arr[0] = arr[1] = 0;
+    putArr("bcat.A", 2, arr);
+    testdbPutFieldOk("bcat.PROC", DBF_LONG, 0);
+    testdbGetFieldEqual("bcat.VALA", DBF_LONG, 0);
+
+    arr[0] = 0x12;
+    arr[1] = 0x34;
+    putArr("bcat.A", 2, arr);
+    testdbPutFieldOk("bcat.PROC", DBF_LONG, 0);
+    testdbGetFieldEqual("bcat.VALA", DBF_LONG, 0x1234);
+
+    arr[0] = 0x80;
+    arr[1] = 0x00;
+    putArr("bcat.A", 2, arr);
+    testdbPutFieldOk("bcat.PROC", DBF_LONG, 0);
+    testdbGetFieldEqual("bcat.VALA", DBF_LONG, -32768);
+
+    arr[0] = 0x82;
+    arr[1] = 0x9c;
+    putArr("bcat.A", 2, arr);
+    testdbPutFieldOk("bcat.PROC", DBF_LONG, 0);
+    testdbGetFieldEqual("bcat.VALA", DBF_LONG, -32100);
+}
+
 MAIN(testsub)
 {
-    testPlan(61);
+    testPlan(76);
     try {
         testdbPrepare();
 
@@ -77,22 +145,8 @@ MAIN(testsub)
         testIocInitOk();
         eltc(1);
 
-        testdbPutFieldOk("yscale.B", DBF_LONG, 33);// cic_period
-
-        for(size_t i=0; i<NELEMENTS(yscale_data); i++) {
-            testDiag("[%zu] wave_samp_per=%u wave_shift=%u yscale=%f", i,
-                     yscale_data[i].wave_samp_per,
-                     yscale_data[i].wave_shift,
-                     yscale_data[i].yscale);
-
-            testdbPutFieldOk("yscale.A", DBF_LONG, yscale_data[i].wave_samp_per);
-
-            testdbPutFieldOk("yscale.PROC", DBF_LONG, 1);
-            testdbGetFieldEqual("yscale.SEVR", DBF_SHORT, 0);
-
-            testApproxEqual("yscale.VALA", yscale_data[i].wave_shift, 0);
-            testApproxEqual("yscale.VALB", yscale_data[i].yscale, 0.0001);
-        }
+        test_yscale();
+        test_bcat();
 
         testIocShutdownOk();
 

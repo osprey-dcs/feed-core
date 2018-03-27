@@ -5,3 +5,10 @@ record(aSub, "yscale") {
     field(FTVA, "ULONG") # wave_shift
     field(FTVB, "DOUBLE") # yscale
 }
+
+record(aSub, "bcat") {
+    field(SNAM, "asub_feed_bcat")
+    field(FTA , "UCHAR")
+    field(FTVA, "ULONG")
+    field(NOA , "2")
+}
