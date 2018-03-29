@@ -1,0 +1,50 @@
+record(busy, "$(P)STRT") {
+    field(ZNAM, "Start")
+    field(ONAM, "Start")
+    field(OUT , "$(P)STRT_.PROC PP")
+    field(TPRO, "$(TPRO=)")
+}
+
+# use counter to ensure than momentary command results in a subscription update
+# to trigger the script
+record(calc, "$(P)STRT_") {
+    field(INPA, "$(P)STRT_ NPP")
+    field(CALC, "A+1")
+}
+
+
+record(bo, "$(P)STOP") {
+    field(ZNAM, "Stop")
+    field(ONAM, "Stop")
+    field(OUT , "$(P)STOP_.PROC PP")
+    field(TPRO, "$(TPRO=)")
+}
+
+record(calc, "$(P)STOP_") {
+    field(INPA, "$(P)STOP_ NPP")
+    field(CALC, "A+1")
+}
+
+
+record(bo, "$(P)ABRT") {
+    field(ZNAM, "Abort")
+    field(ONAM, "Abort")
+    field(OUT , "$(P)ABRT_.PROC PP")
+    field(TPRO, "$(TPRO=)")
+}
+
+record(calc, "$(P)ABRT_") {
+    field(INPA, "$(P)ABRT_ NPP")
+    field(CALC, "A+1")
+}
+
+
+record(mbbi, "$(P)STS") {
+    field(ZRST, "Crash")
+    field(ONST, "Complete")
+    field(TWST, "Running")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(TPRO, "$(TPRO=)")
+}

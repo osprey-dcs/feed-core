@@ -18,6 +18,8 @@ DB += feed_wf_acquire_stats.template
 DB += rfs_base.template
 DB += rfs_slow_scalar16.template
 
+DB += launcher.template
+
 # install expanded and unexpanded
 
 DB += rfs_logic.substitutions
