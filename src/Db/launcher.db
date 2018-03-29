@@ -1,0 +1,22 @@
+record(mbbo, "$(P)RUN") {
+    field(ZRST, "Stop")
+    field(ONST, "Start")
+    field(TWST, "Abort")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+}
+
+record(mbbi, "$(P)STS") {
+    field(ZRST, "Crash")
+    field(ONST, "Complete")
+    field(TWST, "Running")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+}
+
+record(aai, "$(P)MSG") {
+    field(FTVL, "CHAR")
+    field(NELM, "1024")
+}
