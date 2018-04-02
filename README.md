@@ -206,25 +206,28 @@ Tools
 -----
 
 ```sh
-$ ./leep.py -h
-usage: leep.py [-h] [-d] [-q] [-l] [-t TIMEOUT]
-               host[:port] {reg,list,dump,json,template} ...
+$ python -m leep.cli -h
+usage: cli.py [-h] [-d] [-q] [-t TIMEOUT] [-i INST]
+              URI {reg,acquire,decim,list,dump,json,drvinfo,template} ...
 
 positional arguments:
-  host[:port]           Server address
-  {reg,list,dump,json,template}
+  URI                   Server address. ca://Prefix or leep://host[:port]
+  {reg,acquire,decim,list,dump,json,drvinfo,template}
     reg                 read/write registers
+    acquire             Waveform acquisition
+    decim               Set decimation
     list                list registers
     dump                dump registers
     json                print json
+    drvinfo             print drive info json (ca:// only)
     template            Generate MSI substitutions file
 
 optional arguments:
   -h, --help            show this help message and exit
   -d, --debug
   -q, --quiet
-  -l, --list            List register names
   -t TIMEOUT, --timeout TIMEOUT
+  -i INST, --inst INST
 ```
 
 ```sh
@@ -236,7 +239,7 @@ Simulator Usage
 ---------------
 
 A JSON file is needed to run the simulator.
-Either extract one from a live device with `leep.py list` or
+Either extract one from a live device with `python -m leep.cli list` or
 use the testing file.
 
 ```sh
@@ -248,14 +251,14 @@ In another terminate run:
 To dump register infomation as JSON.
 
 ```sh
-./leep.py localhost list
+python -m leep.cli localhost list
 ```
 
 To read register(s) by name or address.
 Example names token from tests/jblob.json
 
 ```sh
-./leep.py localhost reg prc_dsp_prl_gain trace_i_buf
+python -m leep.cli localhost reg prc_dsp_prl_gain trace_i_buf
 prc_dsp_prl_gain[0]     00000000
  ...
 ```
@@ -263,7 +266,7 @@ prc_dsp_prl_gain[0]     00000000
 To write a register
 
 ```sh
-$ ./leep.py localhost reg prc_dsp_prl_gain prc_dsp_prl_gain=42 prc_dsp_prl_gain
+$ python -m leep.cli localhost reg prc_dsp_prl_gain prc_dsp_prl_gain=42 prc_dsp_prl_gain
 prc_dsp_prl_gain[0]     00000000
 prc_dsp_prl_gain[0]     0000002a
 prc_dsp_prl_gain[0]     0000002a
@@ -273,7 +276,7 @@ To print all non-zero register values in a format suitable
 to use simulator initial values.
 
 ```sh
-./leep.py localhost dump -Z > initial.dat
+python -m leep.cli localhost dump -Z > initial.dat
 ```
 
 Simulator Logic
@@ -300,8 +303,8 @@ Snapshot and Simulate
 To snapshot a actual device for simulation, run:
 
 ```sh
-./leep.py <ip> json > capture.json
-./leep.py <ip> dump -Z > capture.initial
+python -m leep.cli <ip> json > capture.json
+python -m leep.cli <ip> dump -Z > capture.initial
 ```
 
 This snapshot can then be simulated later:
