@@ -178,7 +178,9 @@ JSON Information
 ----------------
 
 The JSON blob encoded in the Configuration ROM will contain a Object (aka. mapping or dictionary).
-The keys of this dictionary are symbolic register names.
+The keys of this dictionary are symbolic register names,
+with the exception of a special name "__metadata__" which is used
+to hold device wide information.
 
 The value associated with each register is also an Object containing the keys:
 
@@ -214,6 +216,7 @@ An arbitrary string describing this register.
 ### Example
 
 <pre>
+{
     "J18_debug": {
         "access": "r",
         "addr_width": 0,
@@ -221,4 +224,8 @@ An arbitrary string describing this register.
         "data_width": 4,
         "sign": "unsigned"
     },
+    "__metadata__": {
+        "special": "sauce"
+    }
+}
 </pre>
