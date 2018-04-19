@@ -89,6 +89,19 @@ record(calc, "$(PREF)RX_RATE") {
     field(INPA, "$(PREF)RX_CNT")
     field(CALC, "C:=A-B;B:=A;C")
     field(EGU , "pkt/s")
+    field(FLNK, "$(PREF)RXB_CNT")
+}
+record(longin, "$(PREF)RXB_CNT") {
+    field(DTYP, "FEED Counter")
+    field(INP , "@name=$(NAME) offset=6")
+    field(FLNK, "$(PREF)RXB_RATE")
+}
+record(calc, "$(PREF)RXB_RATE") {
+    field(INPA, "$(PREF)RXB_CNT")
+    field(INPD, "1048576") # 1M
+    field(CALC, "C:=A-B;B:=A;C/D*8")
+    field(EGU , "Mb/s")
+    field(PREC, "3")
     field(FLNK, "$(PREF)IGNORE_CNT")
 }
 record(longin, "$(PREF)IGNORE_CNT") {

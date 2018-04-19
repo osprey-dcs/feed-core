@@ -19,6 +19,9 @@
 int feedNumInFlight = 1;
 // timeout for reply (in sec.)
 double feedTimeout = 1.0;
+// Size of IP and UDP headers.
+// I don't know how to determine this programatically, so make it configurable.
+int feedUDPHeaderSize = 42;
 
 namespace {
 const size_t pkt_size_limit = (DevMsg::nreg+1)*8;
@@ -207,6 +210,7 @@ Device::Device(const std::string &name, osiSockAddr &ep)
     ,current(Idle)
     ,cnt_sent(0u)
     ,cnt_recv(0u)
+    ,cnt_recv_bytes(0u)
     ,cnt_ignore(0u)
     ,cnt_timo(0u)
     ,cnt_err(0u)
@@ -897,6 +901,7 @@ void Device::run()
                                 addrs[i] = peer;
                                 doProcess[i] = true;
                                 cnt_recv++;
+                                cnt_recv_bytes += unsigned(feedUDPHeaderSize) + bufs[i].size();
                             }catch(SocketBusy&){
                                 break;
                             }
@@ -967,7 +972,7 @@ void Device::show(std::ostream& strm, int lvl) const
           " Peer: "<<peer_name<<"\n"
           " Msg: "<<last_message<<"\n"
           " Cnt Tx: "<<cnt_sent<<"\n"
-          " Cnt Rx: "<<cnt_recv<<"\n"
+          " Cnt Rx: "<<cnt_recv<<" ("<<cnt_recv_bytes<<" bytes)\n"
           " Cnt Ig: "<<cnt_ignore<<"\n"
           " Cnt TM: "<<cnt_timo<<"\n"
           " Cnt ER: "<<cnt_err<<"\n"

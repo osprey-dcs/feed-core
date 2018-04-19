@@ -192,6 +192,7 @@ long read_counter(longinRecord *prec)
         case 3: prec->val = device->cnt_timo; break;
         case 4: prec->val = device->cnt_err; break;
         case 5: prec->val = device->send_seq; break;
+        case 6: prec->val = device->cnt_recv_bytes; break;
         default:
             (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
         }

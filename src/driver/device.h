@@ -183,6 +183,7 @@ struct epicsShareClass Device : public epicsThreadRunable
 
     epicsUInt32 cnt_sent,
                 cnt_recv,
+                cnt_recv_bytes,
                 cnt_ignore,
                 cnt_timo,
                 cnt_err,
@@ -260,5 +261,6 @@ struct epicsShareClass Device : public epicsThreadRunable
 
 extern int feedNumInFlight;
 extern double feedTimeout;
+extern int feedUDPHeaderSize;
 
 #endif // DEVICE_H

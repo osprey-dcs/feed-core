@@ -48,6 +48,7 @@ driver(drvFEED)
 registrar(feedRegistrar)
 variable(feedTimeout, double)
 variable(feedNumInFlight, int)
+variable(feedUDPHeaderSize, int)
 
 # utilities
 registrar(asubFEEDRegistrar)
