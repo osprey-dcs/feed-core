@@ -189,6 +189,9 @@ struct epicsShareClass Device : public epicsThreadRunable
                 cnt_err,
                 send_seq;
 
+    std::vector<double> roundtriptimes;
+    size_t rtt_ptr;
+
     std::string last_message;
 
     // non-JSON info extracted from ROM

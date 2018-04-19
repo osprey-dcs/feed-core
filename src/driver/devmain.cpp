@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 
+#include <epicsMath.h>
 #include <epicsStdlib.h>
 #include <alarm.h>
 #include <errlog.h>
@@ -197,6 +198,30 @@ long read_counter(longinRecord *prec)
             (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
         }
         return 0;
+    }CATCH()
+}
+
+long read_rtt(aiRecord *prec)
+{
+    TRY {
+        Guard G(device->lock);
+
+        double sum = 0.0;
+        for(size_t i=0; i<device->roundtriptimes.size(); i++) {
+            sum += device->roundtriptimes[i];
+        }
+        sum /= device->roundtriptimes.size();
+
+        if(prec->linr) {
+            if(prec->eslo) sum *= prec->eslo;
+            sum += prec->eoff;
+        }
+        if(prec->aslo) sum *= prec->aslo;
+        sum += prec->aoff;
+
+        prec->val = sum;
+        prec->udf = isnan(sum);
+        return 2;
     }CATCH()
 }
 
@@ -402,6 +427,7 @@ DSET(devBoFEEDCommit, bo, init_common<RecInfo>::fn, NULL, write_commit)
 DSET(devMbbiFEEDDevState, mbbi, init_common<RecInfo>::fn, get_dev_changed_intr, read_dev_state)
 DSET(devAaiFEEDInfo, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_jsoninfo)
 DSET(devLiFEEDCounter, longin, init_common<RecInfo>::fn, get_dev_changed_intr, read_counter)
+DSET(devAiFEEDrtt, ai, init_common<RecInfo>::fn, get_dev_changed_intr, read_rtt)
 DSET(devAaiFEEDError, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_error)
 DSET(devAaiFEEDJBlob, aai, init_common<RecInfo>::fn, get_dev_changed_intr, read_jblob)
 DSET(devLiFEEDConnect, longin, init_common<RecInfo>::fn, get_on_connect_intr, read_inc)

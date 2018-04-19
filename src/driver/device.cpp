@@ -214,6 +214,7 @@ Device::Device(const std::string &name, osiSockAddr &ep)
     ,cnt_ignore(0u)
     ,cnt_timo(0u)
     ,cnt_err(0u)
+    ,rtt_ptr(0u)
     ,reg_rom(new DevReg(this, gblrom.jrom_info, true))
     ,reg_id(new DevReg(this, gblrom.jid_info, true))
     ,inflight(feedNumInFlight)
@@ -228,6 +229,8 @@ Device::Device(const std::string &name, osiSockAddr &ep)
             epicsThreadPriorityHigh)
 {
     memset(&peer_addr, 0, sizeof(peer_addr));
+
+    roundtriptimes.resize(100);
 
     epicsTimeStamp now;
     epicsTimeGetCurrent(&now);
@@ -548,6 +551,9 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
 
         msg.reg[j] = 0;
     }
+
+    roundtriptimes[rtt_ptr] = loop_time-msg.due+feedTimeout;
+    rtt_ptr = (rtt_ptr+1)%roundtriptimes.size();
 
     msg.clear();
 }

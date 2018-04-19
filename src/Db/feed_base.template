@@ -141,6 +141,13 @@ record(calc, "$(PREF)ERR_RATE") {
     field(EGU , "pkt/s")
     field(HIGH, "0.0001") # small non-zero
     field(HSV , "MAJOR")
+    field(FLNK, "$(PREF)RTT")
+}
+record(ai, "$(PREF)RTT") {
+    field(DTYP, "FEED RTT")
+    field(INP , "@name=$(NAME)")
+    field(ASLO, "1e6")
+    field(EGU , "us")
 }
 
 record(aai, "$(PREF)JINFO") {
