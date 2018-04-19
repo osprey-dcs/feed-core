@@ -359,14 +359,15 @@ void Device::handle_send(Guard& G)
             continue;
         // found available message slot
 
-        DevReg *R = reg_send.front();
-
-        assert(R->inprogress());
-        assert(R->next_send < R->mem_tx.size() );
-
-        for(unsigned j=0; j<DevMsg::nreg && R->next_send < R->mem_tx.size(); j++) {
+        for(unsigned j=0; j<DevMsg::nreg && !reg_send.empty(); j++) {
             if(msg.reg[j])
                 continue;
+
+            DevReg *R = reg_send.front();
+
+            assert(R->inprogress());
+            assert(R->next_send < R->mem_tx.size() );
+
             // found available address slot in message
 
             msg.buf.resize(2*j + 4);
@@ -385,11 +386,11 @@ void Device::handle_send(Guard& G)
             msg.reg[j] = R;
             msg.buf[2*j + 2] = htonl(addr);
             msg.buf[2*j + 3] = val;
-        }
 
-        if(R->next_send>=R->mem_tx.size()) {
-            // all addresses of this register have been sent
-            reg_send.pop_front();
+            if(R->next_send>=R->mem_tx.size()) {
+                // all addresses of this register have been sent
+                reg_send.pop_front();
+            }
         }
 
         if(msg.reg[0]) {
