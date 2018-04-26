@@ -113,6 +113,8 @@ long force_error(stringoutRecord *prec)
 
         device->error_requested = true;
 
+        device->poke_runner();
+
         return 0;
     }CATCH()
 }
