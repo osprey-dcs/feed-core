@@ -20,6 +20,8 @@ DB += rfs_slow_scalar16.template
 
 DB += launcher.template
 
+DB += rfs_test.template
+
 # install expanded and unexpanded
 
 DB += rfs_logic.substitutions
