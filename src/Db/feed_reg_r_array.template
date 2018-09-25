@@ -1,6 +1,6 @@
 record(aai, "$(PREF)_RBV") {
     field(DTYP, "FEED Register Read")
-    #field(DESC, "$(DESC=Reg $(REG))")
+    field(DESC, "$(REG)")
     field(INP , "@name=$(NAME) reg=$(REG) signal=$(NAME):$(REG)")
     field(FTVL, "LONG")
     field(NELM, "$(SIZE)")
