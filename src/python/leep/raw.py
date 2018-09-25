@@ -18,7 +18,7 @@ from .base import DeviceBase, IGNORE, WARN, ERROR
 
 import numpy
 
-if sys.version_info>=(3,0):
+if sys.version_info >= (3, 0):
     unicode = str
 
 be32 = numpy.dtype('>u4')
@@ -155,7 +155,7 @@ class LEEPDevice(DeviceBase):
         self.reg_write([('chan_keep', chans)], instance=instance)
 
     def get_channel_mask(self, instance=[]):
-        chans, =  self.reg_write(['chan_keep'], instance=instance)
+        chans, =  self.reg_read(['chan_keep'], instance=instance)
         return chans
 
     def wait_for_acq(self, tag=False, toggle_tag=False, timeout=5.0, instance=[]):
@@ -358,7 +358,7 @@ class LEEPDevice(DeviceBase):
         self.jsonhash = None
         self.regmap = None
 
-        values = self.exchange(range(self.rom_addr, self.rom_addr+0x200))
+        values = self.exchange(range(self.rom_addr, self.rom_addr+0x800))
 
         values = numpy.frombuffer(values, be16)
         _log.debug("ROM[0] %08x", values[0])
