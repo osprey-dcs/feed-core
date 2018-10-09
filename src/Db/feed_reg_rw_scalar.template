@@ -1,6 +1,5 @@
 record(longout, "$(PREF)") {
     field(DTYP, "FEED Register Write")
-    field(DESC, "$(REG)")
     field(OUT , "@name=$(NAME) reg=$(REG)")
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
@@ -8,7 +7,6 @@ record(longout, "$(PREF)") {
 }
 record(longin, "$(PREF)_RBV") {
     field(DTYP, "FEED Register Read")
-    field(DESC, "$(REG)")
     field(INP , "@name=$(NAME) reg=$(REG)")
     field(SCAN, "$(REGSCAN)")
     field(TSE , "-2")

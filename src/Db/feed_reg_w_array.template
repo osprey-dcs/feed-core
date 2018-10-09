@@ -1,6 +1,5 @@
 record(aao, "$(PREF)") {
     field(DTYP, "FEED Register Write")
-    field(DESC, "$(REG)")
     field(OUT , "@name=$(NAME) reg=$(REG) offset=$(OFF=0)")
     field(FTVL, "LONG")
     field(NELM, "$(SIZE)")
