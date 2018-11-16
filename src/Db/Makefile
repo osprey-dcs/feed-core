@@ -30,6 +30,12 @@ DB += rfs_logic.db
 DB += rfs_registers.substitutions
 DB += rfs_registers.db
 
+DB += res_logic.substitutions
+DB += res_logic.db
+
+DB += res_registers.substitutions
+DB += res_registers.db
+
 # 'short' = abbreviated register PV names
 DB += rfs_registers_short.substitutions
 DB += rfs_registers_short.db
