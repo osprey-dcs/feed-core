@@ -137,7 +137,7 @@
         "description": "",
         "sign": "unsigned"
     },
-    "banyan_buf": {
+    "banyan_data": {
         "access": "r",
         "addr_width": 16,
         "base_addr": 1179648,
@@ -1476,7 +1476,7 @@
         "description": "",
         "sign": "signed"
     },
-    "qsfp_buf": {
+    "qsfp_result": {
         "access": "r",
         "addr_width": 8,
         "base_addr": 1388544,
