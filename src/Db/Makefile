@@ -30,6 +30,9 @@ DB += rfs_logic.db
 DB += rfs_registers.substitutions
 DB += rfs_registers.db
 
+DB += prc_logic.substitutions
+DB += prc_logic.db
+
 DB += res_logic.substitutions
 DB += res_logic.db
 
@@ -46,6 +49,11 @@ DB += res_registers_short.db
 # RF support databases
 DB += chas.template
 DB += cav.template
+DB += cav_step.template
+DB += cav_pzt_50.substitutions
+DB += cav_pzt_50.db
+DB += cav_pzt_100.substitutions
+DB += cav_pzt_100.db
 
 include $(TOP)/configure/RULES
 #----------------------------------------
