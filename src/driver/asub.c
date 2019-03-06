@@ -224,11 +224,13 @@ long asub_setamp(aSubRecord *prec)
 	ssa_minx  = *(double *)prec->j,
 	ssa_ped   = *(double *)prec->k,
 	max_magn  = *(double *)prec->l,
-	max_imag  = *(double *)prec->m;
+	max_imag  = *(double *)prec->m,
+	sel_aset  = *(double *)prec->p;
 
     short amp_close = *(short *)prec->g,
 	pha_close   = *(short *)prec->h,
-	rfctrl      = *(short *)prec->n;
+	rfctrl      = *(short *)prec->n,
+	rfmodectrl  = *(short *)prec->o;
 
     /* Intermediate results */
     double *sqrtu = (double *)prec->vala,
@@ -243,6 +245,8 @@ long asub_setamp(aSubRecord *prec)
        	*y_lo     = (double *)prec->valm,
 	*y_hi     = (double *)prec->valn;
     double x_lo_final, x_hi_final;
+
+    epicsInt32 sel_lim, sel_lim_max;
 
     /* Outputs */
     epicsInt32 *setm = (epicsInt32 *)prec->vale,
@@ -265,11 +269,34 @@ long asub_setamp(aSubRecord *prec)
     unsigned short MASKERR = 0;
 
     if (debug) {
-	printf("setAmpl: input values ades %f MV imped %f ohms freq %f MHz qloaded %f "
+	printf("setAmpl: input values rfctrl %i rfmodectrl %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
 		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
-		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f\n",
-		ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
-		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag);
+		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
+		rfctrl, rfmodectrl, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
+		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
+    }
+
+    /* SEL raw amplitude control */
+    if (rfmodectrl==3) {
+	sel_lim_max = (epicsInt32)(79500 * max_magn); /* 79500 max value of lims registers */ 
+	sel_lim = (epicsInt32)(floor((sel_aset/100)*(pow(2,17)-1)));
+	if ( sel_lim >= sel_lim_max )
+	    *lim_x_lo = *lim_x_hi = sel_lim_max;
+	else
+	    *lim_x_lo = *lim_x_hi = (epicsInt32)(floor((sel_aset/100)*(pow(2,17)-1)));
+	*lim_y_lo = *lim_y_hi = 0;
+	*setm = 0;    
+	/* If RF control is set off, do not push values.
+	 * Set error to 0, though, because this is not 
+	 * considered an error state and no accompanying
+	 * message should be necessary
+	 */
+	*error = 0;
+	*too_high = 0;
+	if (rfctrl == 0)
+	    return 0;
+	*mask = MASKOK;
+	return 0;
     }
 
     /* Policy maximum X/Y */
