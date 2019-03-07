@@ -268,6 +268,8 @@ long asub_setamp(aSubRecord *prec)
     unsigned short MASKOK  = 0xFF;
     unsigned short MASKERR = 0;
 
+    *mask = MASKERR; /* Initialize to do not write registers */
+
     if (debug) {
 	printf("setAmpl: input values rfctrl %i rfmodectrl %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
 		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
@@ -279,13 +281,17 @@ long asub_setamp(aSubRecord *prec)
     /* SEL raw amplitude control */
     if (rfmodectrl==3) {
 	sel_lim_max = (epicsInt32)(79500 * max_magn); /* 79500 max value of lims registers */ 
-	sel_lim = (epicsInt32)(floor((sel_aset/100)*(pow(2,17)-1)));
+	sel_lim = (epicsInt32)(floor((sel_aset/100)*79500));
 	if ( sel_lim >= sel_lim_max )
 	    *lim_x_lo = *lim_x_hi = sel_lim_max;
 	else
-	    *lim_x_lo = *lim_x_hi = (epicsInt32)(floor((sel_aset/100)*(pow(2,17)-1)));
-	*lim_y_lo = *lim_y_hi = 0;
-	*setm = 0;    
+	    *lim_x_lo = *lim_x_hi = sel_lim;
+	*lim_y_lo = *lim_y_hi = *setm = 0;
+	if ( debug ) {
+	  printf("setAmpl: SEL raw mode: max lim %i sel_lim %i limxlo %i limxyhi %i limylo %i limyhi %i\n",
+		 sel_lim_max, sel_lim, *lim_x_lo, *lim_x_hi, *lim_y_lo, *lim_y_hi);
+	}
+	  
 	/* If RF control is set off, do not push values.
 	 * Set error to 0, though, because this is not 
 	 * considered an error state and no accompanying
@@ -353,8 +359,6 @@ long asub_setamp(aSubRecord *prec)
     }
     *lim_y_lo = (epicsInt32)(79500 * (*y_lo));
     *lim_y_hi = (epicsInt32)(79500 * (*y_hi));
-
-    *mask = MASKERR; /* Initialize to do not write registers */
 
     /* If RF control is set off, do not push values.
      * Set error to 0, though, because this is not 
