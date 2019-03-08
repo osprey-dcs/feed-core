@@ -270,12 +270,29 @@ long asub_setamp(aSubRecord *prec)
 
     *mask = MASKERR; /* Initialize to do not write registers */
 
+/* If RF control is set off, do not push values.
+ * Set error to 0, though, because this is not 
+ * considered an error state and no accompanying
+ * message should be necessary
+ */
+
     if (debug) {
 	printf("setAmpl: input values rfctrl %i rfmodectrl %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
 		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
 		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
 		rfctrl, rfmodectrl, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
 		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
+    }
+
+    /* Pulse control */
+    if (rfmodectrl==4) {
+	*lim_x_lo = *lim_x_hi = *lim_y_lo = *lim_y_hi = *setm = 0;
+	*error = 0;
+	*too_high = 0;
+	if (rfctrl == 0)
+	    return 0;
+	*mask = MASKOK;
+	return 0;
     }
 
     /* SEL raw amplitude control */
@@ -292,11 +309,6 @@ long asub_setamp(aSubRecord *prec)
 		 sel_lim_max, sel_lim, *lim_x_lo, *lim_x_hi, *lim_y_lo, *lim_y_hi);
 	}
 	  
-	/* If RF control is set off, do not push values.
-	 * Set error to 0, though, because this is not 
-	 * considered an error state and no accompanying
-	 * message should be necessary
-	 */
 	*error = 0;
 	*too_high = 0;
 	if (rfctrl == 0)
@@ -360,11 +372,6 @@ long asub_setamp(aSubRecord *prec)
     *lim_y_lo = (epicsInt32)(79500 * (*y_lo));
     *lim_y_hi = (epicsInt32)(79500 * (*y_hi));
 
-    /* If RF control is set off, do not push values.
-     * Set error to 0, though, because this is not 
-     * considered an error state and no accompanying
-     * message should be necessary
-     */
     *error = 0;
     if (rfctrl == 0)
 	return 0;
