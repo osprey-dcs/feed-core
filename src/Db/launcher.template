@@ -47,6 +47,7 @@ record(mbbi, "$(P)STS") {
     field(ONVL, "1")
     field(TWVL, "2")
     field(TPRO, "$(TPRO=)")
+  info(autosaveFields, "VAL SEVR")
 }
 
 # The following are records to support
