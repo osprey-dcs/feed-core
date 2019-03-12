@@ -5,7 +5,7 @@
 #  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
 #  TIME - Record name of timebase
 #  SIG  - Record name of signal
-#  SIZE - Max signal length (eg. 8192)
+#  SIZE - Max signal length (eg. 16384)
 #
 
 # external db FLNK's here

@@ -12,7 +12,7 @@
 #  BASE - Record name prefix used with corresponding feed_wf_acquire_base.template
 #  REG  - array register name
 #  LETTER - letter of mask field (B -> M)
-#  SIZE - Max signal length (eg. 8192)
+#  SIZE - Max signal length (eg. 16384)
 
 # configuration logic
 
