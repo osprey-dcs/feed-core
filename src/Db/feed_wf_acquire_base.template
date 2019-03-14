@@ -11,7 +11,7 @@
 #  NAME - FEED Device name
 #  BIT  - Channel bit number (0 is first channel)
 #  MASK - Channel bit mask (1 is first channel)
-#  SIZE - Max signal length (eg. 16384)
+#  SIZE - Max signal length (eg. 8192)
 
 # local (re)initialization
 

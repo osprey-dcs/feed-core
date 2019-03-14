@@ -7,7 +7,7 @@
 #  SIGQ - Prefix of Q records (see _signal.template)
 #  BITI - Bit field letter for I (in _base.template)
 #  BITQ - Bit field letter for Q (in _base.template)
-#  SIZE - Max signal length (eg. 16384)
+#  SIZE - Max signal length (eg. 8192)
 #
 
 record(bo, "$(PREF)ENABLE") {
