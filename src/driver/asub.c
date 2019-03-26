@@ -5,6 +5,8 @@
 #include <alarm.h>
 #include <menuFtype.h>
 
+#include <epicsTypes.h>
+
 #include <subRecord.h>
 #include <aSubRecord.h>
 
@@ -411,6 +413,194 @@ asub_round(aSubRecord *prec)
 
 }
 
+/* Ported from lcls2_llrf res_ctl.py. See cav_pzt.template for more info. */
+static long
+asub_pzt_src_set(aSubRecord *prec)
+{
+
+    /* Inputs */
+    long src     = *(long *)prec->a; /* Source to set */
+    long chan    = *(long *)prec->b; /* Channel(s) to set source for */
+    long current = *(long *)prec->c; /* Latest reg value reading */
+
+    /* Outputs */
+    long *new = (long *)prec->vala; /* New register setting */
+
+    /* Intermediate values */
+    long mask, dismask;
+
+    short debug = (prec->tpro > 1) ? 1 : 0;
+
+    /* Get mask for correct source */
+    switch(src) {
+	case 0:
+	    mask = 0x0;
+	    break;
+	case 1:
+	    mask = 0x1;
+	    break;
+	case 2:
+	    mask = 0x2;
+	    break;
+	default:
+	    if (debug) {
+		printf("asub_pzt_src_set: %s Source %li not recognized. "
+			"Must be 0, 1, or 2.\n", prec->name, src);
+	    }
+	    (void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+	    return EINVAL;
+    }
+
+    /* Choose which piezo channel to get source */
+    switch(chan) {
+	case 0:
+            mask = (mask << 2) | mask;
+            dismask = 0xf;
+	    break;
+	case 1:
+            mask = mask;
+            dismask = 0x3;
+	    break;
+	case 2:
+            mask = mask << 2;
+            dismask = 0x3 << 2;
+	    break;
+	default:
+	    if (debug) {
+		printf("asub_pzt_src_set: %s Chan %li selection not recognized. "
+			"Must be 0, 1, or 2.\n", prec->name, src);
+	    }
+	    (void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+	    return EINVAL;
+    }
+
+    /* Get current value and write-back value with correct bits set */
+    *new = (~(dismask) & current) | mask;
+
+    if (debug) {
+	printf("asub_pzt_src_set: %s Source %li chan %li current %li " 
+		"mask %li dismask %li new %li\n", prec->name, src, 
+		chan, current, mask, dismask, *new);
+    }
+
+
+    return 0;
+}
+
+static long
+asub_pzt_src_get(aSubRecord *prec)
+{
+
+    /* Inputs */
+    long chan    = *(long *)prec->a; /* Channel(s) to get source for; 0 for A, 1 for B */
+    long current = *(long *)prec->b; /* Latest reg value reading */
+
+    /* Outputs */
+    long *src = (long *)prec->vala; /* Current source setting for this channel */
+
+    /* Intermediate values */
+    int shift;
+
+    short debug = (prec->tpro > 1) ? 1 : 0;
+
+    switch(chan) {
+	case 0:
+	    shift = 0;
+	    break;
+	case 1:
+	    shift = 2;
+	    break;
+	default:
+	    if (debug) {
+		printf("asub_pzt_src_get: %s Channel %li not recognized. "
+			"Must be 0 for ch A or 1 for ch B.\n", prec->name, chan);
+	    }
+	    (void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+	    return EINVAL;
+    }
+
+    *src = (current & (0x3<<shift)) >> shift;
+
+    if (debug) {
+	printf("asub_pzt_src_get: %s chan %li current %li output src %li\n",
+		prec->name, chan, current, *src);
+    }
+
+    return 0;
+}
+
+/* Extract unsigned integer from word */
+static long
+asub_mask(aSubRecord *prec)
+{
+    epicsUInt32 input =  *(epicsUInt32 *)prec->a,
+		mask   = *(epicsUInt32 *)prec->b,
+		lshift = *(epicsUInt32 *)prec->c,
+		rshift = *(epicsUInt32 *)prec->d;
+
+    epicsUInt32 *output = (epicsUInt32 *)prec->vala;
+
+    short debug = (prec->tpro > 1) ? 1 : 0;
+
+    *output = (input & (mask << lshift)) >> rshift;
+
+    if (debug) {
+	printf("asub_mask: %s input %u mask %u lshift %u rshift %u output %u\n",
+		prec->name, input, mask, lshift, rshift, *output);
+	printf("asub_mask: (mask << lshift)) %u (input & (mask << lshift)) %u\n", (mask << lshift), (input & (mask << lshift)));
+    }
+
+    return 0;
+}
+
+/* Convert to signed number.
+ * Optionally apply linear scaling, scale and/or offset: 
+ *  INPC = scale
+ *  INPD = offset 
+ */
+static long
+asub_signed(aSubRecord *prec)
+{
+    epicsUInt32 input =  *(epicsUInt32 *)prec->a,
+		nbits =  *(epicsUInt32 *)prec->b; /* Number of bits of signed integer--
+						   * counting sign bit 
+						   */
+    double *output = (double *)prec->vala;
+
+    short debug = (prec->tpro > 1) ? 1 : 0;
+
+    *output = (double)((input > (pow(2,nbits)/2 - 1)) ? input - pow(2,nbits) : input);
+
+    if (debug) {
+	printf("asub_signed: %s input %u nbits %u output %f\n",
+		prec->name, input, nbits, *output);
+    }
+
+    if ( prec->ftc==menuFtypeDOUBLE ) {
+	double scale = *(double *)prec->c;
+	if (scale != 0) {
+	    *(double *)prec->valb = *output * scale;
+	    if (debug) {
+		printf("asub_signed: %s applied scale factor %f new value %f\n",
+		    prec->name, scale, *(double *)prec->valb);
+	    }
+	}
+    }
+
+    if ( prec->ftd==menuFtypeDOUBLE ) {
+	double offset = *(double *)prec->d;
+	if (offset != 0) {
+	    *(double *)prec->valb =  *(double *)prec->valb + offset;
+	    if (debug) {
+		printf("asub_signed: %s applied offset %f new value %f\n",
+		    prec->name, offset, *(double *)prec->valb);
+	    }
+	}
+    }
+
+    return 0;
+}
+
 static
 void asubFEEDRegistrar(void)
 {
@@ -421,5 +611,9 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
     registryFunctionAdd("asub_round", (REGISTRYFUNCTION)&asub_round);
+    registryFunctionAdd("asub_pzt_src_set", (REGISTRYFUNCTION)&asub_pzt_src_set);
+    registryFunctionAdd("asub_pzt_src_get", (REGISTRYFUNCTION)&asub_pzt_src_get);
+    registryFunctionAdd("asub_mask", (REGISTRYFUNCTION)&asub_mask);
+    registryFunctionAdd("asub_signed", (REGISTRYFUNCTION)&asub_signed);
 }
 epicsExportRegistrar(asubFEEDRegistrar);
