@@ -39,3 +39,19 @@ include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 
+ifeq ($(OS_CLASS),Linux)
+cppcheck:
+	cppcheck \
+ --std=posix --std=c99 --std=c++03 --enable=all \
+ -D__GNUC__ \
+ $(filter -D%,$(CPPFLAGS)) \
+ $(filter -U%,$(CPPFLAGS)) \
+ $(INCLUDES) \
+ ../driver ../util ../sim ../../tests
+
+else
+cppcheck:
+	echo "no configuration to use cppcheck for $(OS_CLASS) targets.  (not run in O.<arch> sub-dir?)"
+endif
+
+.PHONY: cppcheck
