@@ -346,7 +346,7 @@ void Device::reset(bool error)
         if(it->second->reg && it->second->reg->bootstrap)
             continue;
 
-        // break association with register
+        // break association with (now deleted) register
         it->second->reg = 0;
         scanIoRequest(it->second->changed);
     }
@@ -413,12 +413,15 @@ void Device::handle_send(Guard& G)
         if(msg.state!=DevMsg::Ready)
             continue;
 
+        // some devices require a minimum message length
         while(msg.buf.size()<8) {
             // pad with reads of offset zero ("Hell" register)
             msg.buf.push_back(htonl(0x10000000));
             msg.buf.push_back(0);
         }
 
+        // encode both message slot offset (to simplify our RX processing)
+        // and a sequence number (to reject duplicate/late messages)
         msg.seq = (i<<24) | ((send_seq++)&0x00ffffff);
 
         msg.buf[0] = htonl(0xfeedc0de);
@@ -444,7 +447,8 @@ void Device::handle_send(Guard& G)
 
 void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
 {
-    if(buf.size()<32) {
+    // check for minimum message size
+    if(buf.size()<8u*4u) {
         cnt_ignore++;
         IFDBG(0, "Ignore short %zu byte message from %s", buf.size(), addr.c_str());
         return;
@@ -509,7 +513,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
         }
 
         if(!reg->received.at(offset)) {
-            reg->received.at(offset) = true;
+            reg->received[offset] = true;
             reg->nremaining--;
         }
 

@@ -110,6 +110,11 @@ struct DevReg
 
 struct DevMsg
 {
+    // max. ops per message.  Based on 1500 ethernet MTU assuming no IP header options
+    //    1500 >= Headers + (180 + 1)*8
+    //    Ethernet+IP+UDP headers <= 52 bytes
+    // If this is too large (IP header has options) then messages will be fragmented,
+    // which our devices don't know how to reassemble...
     static const unsigned nreg = 180;
 
     enum state_t {Free, Ready, Sent} state;
