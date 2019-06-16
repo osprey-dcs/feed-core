@@ -102,7 +102,7 @@ struct Socket
     size_t trysend(const char* buf, size_t buflen) const;
 
     void sendall(const char* buf, size_t buflen) const;
-    void recvall(char* buf, size_t buflen) const;
+    size_t recvsome(char* buf, size_t buflen) const;
 
     void sendto(const osiSockAddr& dest, const char* buf, size_t buflen) const;
     void sendto(const osiSockAddr& dest, const std::vector<char>& buf) const

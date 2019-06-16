@@ -167,7 +167,7 @@ void Simulator::exec()
                     fds[1].revents &= ~POLLIN;
 
                     char temp;
-                    wakeupRx.recvall(&temp, 1);
+                    wakeupRx.recvsome(&temp, 1);
                     stop = true;
                 }
 

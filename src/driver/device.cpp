@@ -893,7 +893,7 @@ void Device::run()
                         fds[1].revents &= ~POLLIN;
 
                         char temp[16];
-                        wakeupRx.recvall(temp, 16);
+                        wakeupRx.recvsome(temp, 16);
                     }
 
                     if(fds[0].revents&POLLIN) {
