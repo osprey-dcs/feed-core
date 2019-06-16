@@ -45,7 +45,7 @@
 
 namespace {
 
-#define TRY RecInfo *info = (RecInfo*)prec->dpvt; if(!info) { \
+#define TRY RecInfo *info = static_cast<RecInfo*>(prec->dpvt); if(!info) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
     Device *device=info->device; (void)device; try
 

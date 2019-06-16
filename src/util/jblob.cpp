@@ -43,7 +43,7 @@ struct context {
     context() :depth(0), in_metadata(false), ignore_scratch(false) {}
 };
 
-#define TRY context *self = (context*)ctx; try
+#define TRY context *self = static_cast<context*>(ctx); try
 
 #define CATCH() catch(std::exception& e) { if(self->err.empty()) self->err = e.what(); return 0; }
 
@@ -230,7 +230,7 @@ yajl_callbacks jblob_cbs = {
 
 struct handler {
     yajl_handle handle;
-    handler(yajl_handle handle) :handle(handle)
+    explicit handler(yajl_handle handle) :handle(handle)
     {
         if(!handle)
             throw std::runtime_error("Failed to allocate yajl handle");

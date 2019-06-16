@@ -70,6 +70,8 @@ DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
     ,received(1u<<info.addr_width, false)
     ,nremaining(0u)
     ,next_send(mem_rx.size())
+    ,stat(UDF_ALARM)
+    ,sevr(INVALID_ALARM)
 {}
 
 DevReg::~DevReg()
@@ -191,7 +193,7 @@ const char *Device::current_name[5] = {
 
 static void feed_shutdown(void *raw)
 {
-    Device *dev = (Device*)raw;
+    Device *dev = static_cast<Device*>(raw);
 
     {
         Guard G(dev->lock);

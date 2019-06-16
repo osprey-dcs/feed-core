@@ -48,7 +48,7 @@ struct epicsShareClass SocketError : public std::exception
     const int code;
 
     SocketError() :code(0) {}
-    SocketError(int code) throw() :code(code) {}
+    explicit SocketError(int code) throw() :code(code) {}
     virtual ~SocketError() throw() {}
 
     const char *what() const throw();
@@ -127,7 +127,7 @@ struct PrintAddr
     char buf[4*3 + 3 + 1 + 5 + 1];
 
     PrintAddr() {clear();}
-    PrintAddr(const osiSockAddr& addr)
+    explicit PrintAddr(const osiSockAddr& addr)
         :init(false), addr(addr)
     {}
     PrintAddr& operator=(const osiSockAddr& addr) {

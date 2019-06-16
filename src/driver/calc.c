@@ -585,7 +585,7 @@ long unwrap(aSubRecord* prec)
     size_t i;
     double *in = (double*)prec->a,
             *out= (double*)prec->vala,
-            delta, thres;
+            thres;
     epicsUInt32 len=MIN(prec->nea, prec->nova);
 
     if(prec->dpvt==BADMAGIC) {
@@ -623,7 +623,7 @@ long unwrap(aSubRecord* prec)
     out[0]=in[0]; // start at same point
 
     for(i=1; i<len; i++) {
-        delta = in[i] - in[i-1];
+        double delta = in[i] - in[i-1];
 
         // the following will only work for wrapping
         // at shallow angles

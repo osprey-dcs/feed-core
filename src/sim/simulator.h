@@ -25,7 +25,7 @@ struct SimReg {
     storage_t storage;
 
     SimReg() :base(0), mask(0), readable(false), writable(false) {}
-    SimReg(const JRegister& reg);
+    explicit SimReg(const JRegister& reg);
 };
 
 class epicsShareClass Simulator
