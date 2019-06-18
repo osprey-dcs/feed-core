@@ -232,8 +232,9 @@ long asub_setamp(aSubRecord *prec)
     short amp_close = *(short *)prec->g,
 	pha_close   = *(short *)prec->h,
 	rfctrl      = *(short *)prec->n,
-	rfmodectrl  = *(short *)prec->o;
-
+	rfmodectrl  = *(short *)prec->o,
+	rfmodeprev  = *(short *)prec->r;
+ 
     /* Intermediate results */
     double *sqrtu = (double *)prec->vala,
 	*ssa      = (double *)prec->valb, /* SSA target */
@@ -257,8 +258,11 @@ long asub_setamp(aSubRecord *prec)
 	*lim_y_lo    = (epicsInt32 *)prec->valo,
 	*lim_y_hi    = (epicsInt32 *)prec->valp;
     short *too_high  = (short *)prec->valq,
-	  *error     = (short *)prec->valt;
+	  	*error     = (short *)prec->valt,
+		*rfmodecurr= (short *)prec->valu;
     char  *msg       = (char *)prec->vals;
+
+	*rfmodecurr = rfmodectrl;
 
     unsigned short *mask = (unsigned short *)prec->valr;
 
@@ -279,21 +283,22 @@ long asub_setamp(aSubRecord *prec)
  */
 
     if (debug) {
-	printf("setAmpl: input values rfctrl %i rfmodectrl %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
+	printf("setAmpl: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
 		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
 		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
-		rfctrl, rfmodectrl, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
+		rfctrl, rfmodectrl, rfmodeprev, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
 		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
     }
 
-    /* Pulse control */
-    if (rfmodectrl==4) {
-	*lim_x_lo = *lim_x_hi = *lim_y_lo = *lim_y_hi = *setm = 0;
+	/* Pulse control. Set lim/mag registers to 0 if transitioning
+	   from CW to pulsed */
+	if (rfmodectrl==4) {
 	*error = 0;
 	*too_high = 0;
-	if (rfctrl == 0)
-	    return 0;
+	if (rfmodeprev!=4) {
+	*lim_x_lo = *lim_x_hi = *lim_y_lo = *lim_y_hi = *setm = 0;
 	*mask = MASKOK;
+	}
 	return 0;
     }
 
