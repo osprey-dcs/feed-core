@@ -301,8 +301,8 @@ long convert_iq2ap(aSubRecord* prec)
            *A = (double*)prec->vala,
            *P = (double*)prec->valb,
            *PW= pow_out ? (double*)prec->valc : NULL,
-	   *IROT = (double*)prec->vald,
-	   *QROT = (double*)prec->vale;
+		   *IROT = (double*)prec->vald,
+		   *QROT = (double*)prec->vale;
 
     if(prec->fta!=menuFtypeDOUBLE
             || prec->ftb!=menuFtypeDOUBLE
