@@ -8,6 +8,7 @@
 #include <aSubRecord.h>
 #include <recGbl.h>
 #include <alarm.h>
+#include <dbAccess.h>
 
 #include <registryFunction.h>
 #include <postfix.h>
@@ -306,7 +307,9 @@ long convert_iq2ap(aSubRecord* prec)
     if(prec->fta!=menuFtypeDOUBLE
             || prec->ftb!=menuFtypeDOUBLE
             || prec->ftva!=menuFtypeDOUBLE
-            || prec->ftvb!=menuFtypeDOUBLE)
+            || prec->ftvb!=menuFtypeDOUBLE
+            || prec->ftvd!=menuFtypeDOUBLE
+            || prec->ftve!=menuFtypeDOUBLE)
     {
         (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return 1;
@@ -335,6 +338,10 @@ long convert_iq2ap(aSubRecord* prec)
         len = prec->novb;
     if(pow_out && len > prec->novc)
         len = prec->novc;
+    if(len > prec->novd)
+        len = prec->novd;
+    if(len > prec->nove)
+        len = prec->nove;
 
     for(i=0; i<len; i++) {
         A[i] = sqrt(I[i]*I[i] + Q[i]*Q[i]);
@@ -342,11 +349,11 @@ long convert_iq2ap(aSubRecord* prec)
         P[i] = phase_wrap(P[i] + zero_angle);
         if(PW)
             PW[i] = pow_scale * A[i] * A[i];
-	IROT[i] = I[i]*cos(disp_angle) - Q[i]*sin(disp_angle);
-	QROT[i] = I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
+		IROT[i] = I[i]*cos(disp_angle) - Q[i]*sin(disp_angle);
+		QROT[i] = I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
     }
 
-    prec->neva = prec->nevb = len;
+    prec->neva = prec->nevb = prec->nevd = prec->neve = len;
     if(pow_out)
         prec->nevc = len;
 
@@ -643,6 +650,153 @@ long unwrap(aSubRecord* prec)
     return 0;
 }
 
+/* Calculate PI controller output */
+static
+long calc_ctrl(aSubRecord* prec)
+{
+	short debug = (prec->tpro > 1) ? 1 : 0;
+
+	size_t i;
+	epicsUInt32 len = prec->neb; /* actual output length */
+	double sel_poff = 0.0, gain = 1.0;
+
+	double *DACI = (double*)prec->b,
+		*DACQ  = (double*)prec->c,
+		*CAVP  = (double*)prec->d,
+		*CTRLI = (double*)prec->vala,
+		*CTRLQ = (double*)prec->valb,
+		*CTRLP = (double*)prec->valc,
+		*CTRLA = (double*)prec->vald,
+		*DACP  = (double*)prec->vale,
+		*ROTP  = (double*)prec->valf;
+
+	if(prec->ftb!=menuFtypeDOUBLE
+		|| prec->ftc!=menuFtypeDOUBLE
+		|| prec->ftd!=menuFtypeDOUBLE
+		|| prec->ftva!=menuFtypeDOUBLE
+		|| prec->ftvb!=menuFtypeDOUBLE
+		|| prec->ftvc!=menuFtypeDOUBLE
+		|| prec->ftvd!=menuFtypeDOUBLE
+		|| prec->ftve!=menuFtypeDOUBLE
+		|| prec->ftvf!=menuFtypeDOUBLE)
+	{
+		(void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
+		return 1;
+	}
+
+	if(prec->fta==menuFtypeDOUBLE) {
+		sel_poff = *(double*)prec->a;
+	}
+
+	if(prec->fte==menuFtypeDOUBLE) {
+		gain = *(double*)prec->e;
+	}
+
+	epicsTimeStamp daci, dacq, cavp;
+	double t1, t2;
+    dbGetTimeStamp(&prec->inpb, &daci);
+    dbGetTimeStamp(&prec->inpc, &dacq);
+    dbGetTimeStamp(&prec->inpd, &cavp);
+    t1 =epicsTimeDiffInSeconds(&daci,&dacq);
+    t2 =epicsTimeDiffInSeconds(&daci,&cavp);
+    if ( (0.0 != t1) || (0.0 != t2) ) {
+        if ( debug ) {
+            printf("calc_ctrl %s: I, Q, amplitude timestamps do not match: deltas %.2f s %.2f s\n",
+            prec->name, t1, t2);
+        }
+        /* Do not process outputs */
+        return -1;
+    }
+	double rot = 0.0;
+
+	if(len > prec->nec)
+		len = prec->nec;
+	if(len > prec->ned)
+		len = prec->ned;
+	if(len > prec->nova)
+		len = prec->nova;
+	if(len > prec->novb)
+		len = prec->novb;
+	if(len > prec->novc)
+		len = prec->novc;
+	if(len > prec->novd)
+		len = prec->novd;
+	if(len > prec->nove)
+		len = prec->nove;
+	if(len > prec->novf)
+		len = prec->novf;
+
+	for(i=0; i<len; i++) {
+		ROTP[i] = CAVP[i] - sel_poff;
+		rot = (ROTP[i])* PI/180; 
+		CTRLI[i] = (DACI[i]*cos(-rot) - DACQ[i]*sin(-rot))*gain;
+		CTRLQ[i] = (DACI[i]*sin(-rot) + DACQ[i]*cos(-rot))*gain;
+        CTRLP[i] = atan2(CTRLQ[i], CTRLI[i]) * 180 / PI;
+        CTRLA[i] = sqrt(pow(CTRLI[i],2) + pow(CTRLQ[i],2));
+        DACP[i] = atan2(DACQ[i], DACI[i]) * 180 / PI;
+        if ( debug ) {
+			printf("rot %f p %f selpoff %f i %f q %f p %f a %f gain %f\n",
+				rot, CAVP[i], sel_poff, CTRLI[i], CTRLQ[i], CTRLP[i], CTRLA[i], gain);
+		}
+	}
+
+	prec->neva = prec->nevb = prec->nevc = prec->nevd = prec->neve = prec->nevf = len;
+
+	return 0;
+}
+
+static
+long ctrl_lims(aSubRecord* prec)
+{
+	short debug = (prec->tpro > 1) ? 1 : 0;
+
+	/* Amplitude/phase control limit register values */
+	epicsInt32  amp_l_in = *(epicsInt32*)prec->a,
+				amp_h_in = *(epicsInt32*)prec->b,
+				pha_l_in = *(epicsInt32*)prec->c,
+				pha_h_in = *(epicsInt32*)prec->d;
+
+	/* Normalized limits for graphic */
+	double  *amp = (double*)prec->vala,
+		    *pha = (double*)prec->valb,
+			*amp_l = (double*)prec->valc,
+			*amp_h = (double*)prec->vald,
+			*pha_l = (double*)prec->vale,
+			*pha_h = (double*)prec->valf;
+
+	double cordic = 1.64676; /* From Larry */
+
+	double tmp;
+
+	*amp_l = amp[0] = amp[1] = amp[4] = (double)amp_l_in * cordic/(131072.0);
+	*amp_h = amp[2] = amp[3] = (double)amp_h_in * cordic/(131071.0);
+	*pha_l = pha[0] = pha[3] = pha[4] = (double)pha_l_in * cordic/(131072.0);
+	*pha_h = pha[1] = pha[2] = (double)pha_h_in * cordic/(131071.0);
+
+	/* If drive limits equal, add some width
+	 * for visual aid
+	 */
+	if ( *amp_l == *amp_h ) {
+		tmp = *amp_l * 1.01;
+		amp[0] = amp[1] = amp[4] = tmp;
+		tmp = *amp_h * 0.99;
+		amp[2] = amp[3] = tmp;
+	}
+	if ( *pha_l == *pha_h ) {
+		tmp = *pha_l + .01;
+		pha[0] = pha[3] = pha[4] = tmp;
+		tmp = *pha_h - .01;
+		pha[1] = pha[2] = tmp;
+	}
+
+	if ( debug ) {
+		printf("%s: amp l %f h %f pha l %f h %f\n",
+		prec->name, *amp_l, *amp_h, *pha_l, *pha_h);
+	}
+
+	return 0;
+}
+
 static registryFunctionRef asub_seq[] = {
     {"IQ2AP", (REGISTRYFUNCTION) &convert_iq2ap},
     {"AP2IQ", (REGISTRYFUNCTION) &convert_ap2iq},
@@ -650,6 +804,8 @@ static registryFunctionRef asub_seq[] = {
     {"WG Init", (REGISTRYFUNCTION) &init_waveform},
     {"Wf Stats", (REGISTRYFUNCTION) &wf_stats},
     {"Phase Unwrap", (REGISTRYFUNCTION) &unwrap},
+    {"Controller Output", (REGISTRYFUNCTION) &calc_ctrl},
+    {"Controller Limits", (REGISTRYFUNCTION) &ctrl_lims},
 };
 
 static
