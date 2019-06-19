@@ -97,7 +97,7 @@ long sub_count_bits(subRecord *prec)
  *
  *
 record(asub, "$(N)") {
-    field(SNAM, "asub_feed_timebase")
+    field(SNAM, "asub_split_bits")
     field(FTA , "LONG")  # mask
     field(FTVA, "LONG")  # number of bits set
     field(FTVB, "LONG")  # -1 or number of bits set at or below
@@ -137,6 +137,47 @@ long asub_split_bits(aSubRecord *prec)
 
     prec->neva = 1;
 
+    return 0;
+}
+
+/* parse <=32 bit mask (alternative to asub_split_bits)
+ *
+record(sub, "$(N)") {
+    field(SNAM, "sub_feed_nset_bits")
+    field(INPA, "mybit") # bit index
+    field(INPB, "bitmask") # search in this bitmask
+}
+ * For bit index A:
+ *  if A is not set in B, result is -1.
+ *  if A is set, then result is number of set bits in B with an index less than B.
+ *
+ * eg.
+ *  A=2 and B=5 (0b0111) yields 2
+ *  A=2 and B=5 (0b0101) yields 1
+ *  A=2 and B=4 (0b0100) yields 0
+ *  A=2 and B=1 (0b0001) yields -1
+ *  A=2 and B=8 (0b1000) yields -1
+ */
+static
+long sub_feed_nset_bits(subRecord *prec)
+{
+    epicsUInt32 mybit = (unsigned long)prec->a;
+    epicsUInt32 mymask = 1u<<mybit;
+    epicsUInt32 bitmask = (unsigned long)prec->b;
+    epicsInt32 nbits = -1;
+
+    /* only count if mybit is set */
+    if(bitmask & mymask) {
+        /* count mybit, and lower */
+        epicsUInt32 countmask = bitmask & (mymask | (mymask-1));
+
+        for(;countmask; countmask>>=1) {
+            if(countmask&1u)
+                nbits++;
+        }
+    }
+
+    prec->val = nbits;
     return 0;
 }
 
@@ -380,6 +421,7 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_split_bits", (REGISTRYFUNCTION)&asub_split_bits);
     registryFunctionAdd("sub_count_bits", (REGISTRYFUNCTION)&sub_count_bits);
     registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
+    registryFunctionAdd("sub_feed_nset_bits", (REGISTRYFUNCTION)&sub_feed_nset_bits);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
     registryFunctionAdd("asub_round", (REGISTRYFUNCTION)&asub_round);
