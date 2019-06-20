@@ -45,15 +45,19 @@ struct RecInfo : public RegInterest
     virtual void configure(const pairs_t& pairs);
 
     // reset after error/exception in dset function
+    // with record locked
     virtual void cleanup();
 
     // RegInterest::complete()
+    // record not locked
     virtual void complete() override;
 
     // RegInterest::show()
+    // record not locked
     virtual void show(std::ostream& strm, int lvl) override;
 
     // RegInterest::getInfo()
+    // record not locked
     virtual void getInfo(infos_t&) const override;
 };
 
