@@ -37,6 +37,8 @@ CHECK_RELEASE = YES
 
 USR_CPPFLAGS += -DUSE_TYPED_RSET
 
+PYTHON = python
+
 # These allow developers to override the CONFIG_SITE variable
 # settings without having to modify the configure/CONFIG_SITE
 # file itself.

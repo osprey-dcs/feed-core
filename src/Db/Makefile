@@ -50,3 +50,6 @@ DB += cav.template
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
+
+%.substitutions: ../%.json ../feed_logic.py
+	$(PYTHON) ../feed_logic.py $< $@
