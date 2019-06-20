@@ -28,7 +28,6 @@ struct RecInfo : public RegInterest
 
     double scale;
 
-    bool autocommit;
     bool wait;
 
     // registry of logical signal names

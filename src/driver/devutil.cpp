@@ -197,7 +197,7 @@ RecInfo::RecInfo(dbCommon *prec, Device *device)
     ,offset(0u)
     ,step(1)
     ,scale(1.0)
-    ,autocommit(true), wait(true)
+    ,wait(true)
 {}
 
 RecInfo::~RecInfo()
@@ -211,7 +211,6 @@ void RecInfo::configure(const pairs_t& pairs) {
     get_pair(pairs, "offset", offset);
     get_pair(pairs, "step", step);
     get_pair(pairs, "scale", scale);
-    get_pair(pairs, "autocommit", autocommit);
     get_pair(pairs, "wait", wait);
 }
 
