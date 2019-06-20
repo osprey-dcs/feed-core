@@ -49,13 +49,13 @@ struct RecInfo : public RegInterest
     virtual void cleanup();
 
     // RegInterest::complete()
-    virtual void complete();
+    virtual void complete() override;
 
     // RegInterest::show()
-    virtual void show(std::ostream& strm, int lvl);
+    virtual void show(std::ostream& strm, int lvl) override;
 
     // RegInterest::getInfo()
-    virtual void getInfo(infos_t&) const;
+    virtual void getInfo(infos_t&) const override;
 };
 
 // Find INP/OUT

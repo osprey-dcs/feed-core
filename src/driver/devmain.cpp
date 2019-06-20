@@ -306,7 +306,7 @@ struct SyncInfo : public RecInfo
         ,wait_for(0u)
     {}
 
-    void complete() {
+    void complete() override final {
         bool done = true;
         try {
             Guard G(device->lock);
@@ -330,7 +330,7 @@ struct SyncInfo : public RecInfo
             RecInfo::complete();
     }
 
-    void cleanup() {
+    void cleanup() override final {
         RecInfo::cleanup();
         wait_for = 0u;
     }
@@ -392,7 +392,7 @@ struct MetaInfo : public RecInfo
         ,defval(0u)
     {}
 
-    virtual void configure(const pairs_t& pairs)
+    virtual void configure(const pairs_t& pairs) override final
     {
         has_default = get_pair(pairs, "default", defval);
     }

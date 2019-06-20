@@ -44,14 +44,14 @@ struct WaitInfo : public RecInfo
         callbackSetUser(this, &cb);
     }
 
-    virtual void configure(const pairs_t& pairs) {
+    virtual void configure(const pairs_t& pairs) override final {
         RecInfo::configure(pairs);
         get_pair(pairs, "mask", mask);
         get_pair(pairs, "value", value);
         get_pair(pairs, "retry", retry);
     }
 
-    virtual void cleanup() {
+    virtual void cleanup() override final {
         RecInfo::cleanup();
         if(cb_inprogress) {
             callbackCancelDelayed(&cb);
@@ -59,7 +59,7 @@ struct WaitInfo : public RecInfo
         }
     }
 
-    virtual void complete()
+    virtual void complete() override final
     {
         WaitInfo * const info = this;
         bool done = true;

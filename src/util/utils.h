@@ -13,6 +13,11 @@
 #include <epicsGuard.h>
 #include <shareLib.h>
 
+#if __cplusplus<201103L
+#  define final
+#  define override
+#endif
+
 typedef epicsGuard<epicsMutex> Guard;
 typedef epicsGuardRelease<epicsMutex> UnGuard;
 
