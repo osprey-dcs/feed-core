@@ -47,9 +47,15 @@ DB += res_registers_short.db
 DB += chas.template
 DB += cav.template
 
+DB += hires_logic.db
+DB += hires_registers.substitutions
+DB += hires_registers.db
+
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 
 %.substitutions: ../%.json ../feed_logic.py
 	$(PYTHON) ../feed_logic.py $< $@
+
+.PRECIOUS: %.substitutions
