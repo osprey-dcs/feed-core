@@ -20,6 +20,7 @@ LIB_SRCS += utils.cpp
 SRC_DIRS += $(TOP)/src/sim
 LIB_SRCS += simulator.cpp
 LIB_SRCS += simulator_rfs.cpp
+LIB_SRCS += simulator_hires.cpp
 
 SRC_DIRS += $(TOP)/src/driver
 LIB_SRCS += device.cpp

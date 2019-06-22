@@ -107,8 +107,42 @@ private:
     double phase;
     epicsUInt16 circle_count;
 
-    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval);
+    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval) override final;
     void acquire(unsigned instance);
+};
+
+class epicsShareClass Simulator_HIRES : public Simulator
+{
+public:
+    Simulator_HIRES(const osiSockAddr& ep,
+                  const JBlob& blob,
+                  const values_t& initial);
+    virtual ~Simulator_HIRES();
+
+private:
+    struct WF {
+        SimReg *buffer;
+        SimReg *reset;
+        SimReg *status;
+        SimReg *mask;
+        epicsUInt32 valid;
+        unsigned reset_bit;
+        unsigned status_bit;
+        epicsUInt32 seed;
+        WF()
+            :buffer(0), reset(0), status(0), mask(0)
+            ,reset_bit(0u), status_bit(0u)
+            ,seed(0u)
+        {}
+        void process();
+    };
+    WF banyan,
+       trace_odata,
+       decay_data,
+       abuf_data,
+       adcbuf_dataB;
+
+    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval) override final;
 };
 
 #endif // SIMULATOR_H
