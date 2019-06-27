@@ -57,7 +57,7 @@ record(longout, "$(BASE)STEP") {
 
 # scaling factor
 
-record(ao, "$(PREF)SCALE") {
+record(ao, "$(BASE)SCALE") {
     field(DTYP, "FEED Signal Scale")
     field(OUT , "@signal=$(BASE)")
     field(PINI, "YES")
