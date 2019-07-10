@@ -2,25 +2,27 @@
 """
 FEED acquisition device logic substitution generator
 
-{
-    "signal_group":{
+[
+    {
         # required
         "reset":{"name":"reg_reset","bit": 0}
         ,"status":{"name":"reg_status","bit": 1	}
+        ,"trg:prefix:"
         # optional
-        ,"readback":{
-            "scalar1":{"name":"reg_name"}
+        ,"readback":[
+            "scalar1":{"name":"reg_name", "prefix":"SCLR1:"}
             ,"wf1":{
                 "name":"reg_name1"
                 ,"max_size":8196,
                 ,"mask":"mask_reg"
+                ,"prefix":"WF1:"
                 ,"signals":[
-                    {"name":"CH1"}
+                    {"prefix":"WF1:CH1:"}
                 ]
             }
-        }
+        ]
     }
-}
+]
 """
 
 from __future__ import print_function
@@ -82,10 +84,14 @@ class Main(object):
             ('feed_logic_signal.template', []),
         ])
 
-        for gname, gconf in conf.items():
+        for gconf in conf:
             #out.write('### Start Signal Group: %s\n#\n'%gname)
             #for line in json.dumps(gconf, indent='  ').splitlines():
             #    out.write('%s\n'%line)
+
+            gname = gconf.get('prefix')
+            if not gname:
+                continue
 
             self.signal_group(gname, gconf)
 
@@ -124,14 +130,15 @@ file "%s"
         # de-mux of signals from array registers.
         # these will be synchronously processed through a set of fanouts
         fanout2 = []
-        for rname, rconf in gconf.get('readback', {}).items():
+        for rconf in gconf.get('readback', []):
+            rname = rconf.get('prefix') or rconf['name']
             signals = rconf.get('signals', [])
             mask = hex((1<<len(signals))-1)
 
             if mask and 'mask' in rconf:
                 # this register has a mask
                 ent = OrderedDict([
-                    ('BASE', '$(PREF)%s%s:'%(gname, rname)),
+                    ('BASE', '$(PREF)%s%s'%(gname, rname)),
                     ('REG', rconf['mask'])
                 ])
                 mask = ent['BASE']+'MASK CP MSI'
@@ -139,7 +146,7 @@ file "%s"
 
             for idx, signal in enumerate(signals):
                 ent = OrderedDict([
-                    ('BASE', '$(PREF)%s%s:%s'%(gname, rname, signal['name'])),
+                    ('BASE', '$(PREF)%s'%signal['prefix']),
                     ('REG', rconf['name']),
                     ('SIZE', str(rconf.get('max_size', 8196))),
                     ('IDX', str(idx)),
@@ -166,9 +173,10 @@ file "%s"
             self.out['feed_logic_fanout.template'].append(ent)
 
         # read back registers
-        for rname, rconf in gconf.get('readback', {}).items():
+        for rconf in gconf.get('readback', []):
+            rname = rconf.get('prefix') or rconf['name']
             ent = OrderedDict([
-                ('BASE', '$(PREF)%s%s'%(gname, rname)),
+                ('BASE', '$(PREF)%s'%rname),
                 ('REG', rconf['name']),
                 ('FLNK', nextrec),
             ])
