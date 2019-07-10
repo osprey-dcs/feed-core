@@ -26,6 +26,10 @@ struct SimReg {
 
     SimReg() :base(0), mask(0), readable(false), writable(false) {}
     explicit SimReg(const JRegister& reg);
+
+    inline size_t size() const { return storage.size(); }
+    inline epicsUInt32& operator[](size_t idx) { return storage.at(idx); }
+    inline const epicsUInt32& operator[](size_t idx) const { return storage.at(idx); }
 };
 
 class epicsShareClass Simulator

@@ -82,19 +82,19 @@ void Simulator_HIRES::WF::process()
         // clear reset
         reset->storage[0] &= ~(1u<<reset_bit);
 
-        const epicsUInt32 selected = mask ? mask->storage[0] : valid;
+        const epicsUInt32 selected = mask ? (*mask)[0] : valid;
 
-        for(size_t t=0, idx=0; selected && idx<buffer->storage.size(); t++) {
-            for(size_t sig=0; sig<32u && idx<buffer->storage.size(); sig++) {
+        for(size_t t=0, idx=0; selected && idx<buffer->size(); t++) {
+            for(size_t sig=0; sig<32u && idx<buffer->size(); sig++) {
                 if(!(selected & (1u<<sig)))
                     continue;
 
-                buffer->storage[idx++] = seed + sig*10u + t*(sig&1 ? -5 : 5);
+                (*buffer)[idx++] = seed + sig*10u + t*(sig&1 ? -5 : 5);
             }
         }
 
         // indicate ready
-        status->storage[0] |= 1u<<status_bit;
+        (*status)[0] |= 1u<<status_bit;
 
         seed++;
     }
