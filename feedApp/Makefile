@@ -22,8 +22,6 @@ feedioc_SRCS += feedioc_registerRecordDeviceDriver.cpp
 ifneq ($(BUSY),)
 feedioc_DBD += busySupport.dbd
 feedioc_LIBS += busy
-else
-$(error Set BUSY= in configure/RELEASE or configure/RELEASE.local)
 endif
 
 feedioc_LIBS += feed
