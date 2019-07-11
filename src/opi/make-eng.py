@@ -9,16 +9,16 @@ def getargs():
     P = ArgumentParser()
     P.add_argument('-d','--debug',action='store_const', const=logging.DEBUG, default=logging.INFO)
     P.add_argument('-q','--quiet',action='store_const', const=logging.WARN, dest='debug')
-    P.add_argument('--prefix', default='TST:reg:')
-    P.add_argument('output')
-    P.add_argument('pvlist')
+    P.add_argument('--prefix', default='$(REG)')
+    P.add_argument('output', help='output .opi file')
+    P.add_argument('json', help='input json register map')
     return P.parse_args()
 
 def main(args):
     import xml.etree.ElementTree as ET
     T = ET.parse(os.path.join(datadir, 'base.opi')).getroot()
 
-    with open(args.pvlist, 'r') as F:
+    with open(args.json, 'r') as F:
         blob = json.load(F)
 
     # sort by register name for stability
@@ -31,8 +31,8 @@ def main(args):
             continue
         W = ET.parse(os.path.join(datadir, 'TextUpdate.opi')).getroot()
 
-        read_pv_name = "%s%s-I"%(args.prefix, name)
-        set_pv_name = "%s%s-SP"%(args.prefix, name)
+        read_pv_name = "%s%s_RBV"%(args.prefix, name)
+        set_pv_name = "%s%s"%(args.prefix, name)
 
         NY = 0
         for W in list(W.findall('widget')):
