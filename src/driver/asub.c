@@ -245,7 +245,7 @@ long asub_setamp(aSubRecord *prec)
 	*lowslope = (double *)prec->valh,
 	*x_lo     = (double *)prec->vali,
 	*x_hi     = (double *)prec->valj,
-       	*y_lo     = (double *)prec->valm,
+	*y_lo     = (double *)prec->valm,
 	*y_hi     = (double *)prec->valn;
     double x_lo_final, x_hi_final;
 
@@ -348,7 +348,7 @@ long asub_setamp(aSubRecord *prec)
     /* Calculate values for X limit registers */
     *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
     if (amp_close) { 
-	*x_lo = ssa_slope * *ssan * 0.85;
+	*x_lo = ssa_slope * *ssan * 0.75;
 	*x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
 	*x_hi = MIN(*x_hi, *lowslope * *ssan * 1.15);
     }
