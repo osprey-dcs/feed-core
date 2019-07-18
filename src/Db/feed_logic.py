@@ -138,7 +138,7 @@ file "%s"
             if mask and 'mask' in rconf:
                 # this register has a mask
                 ent = OrderedDict([
-                    ('BASE', '$(PREF)%s%s'%(gname, rname)),
+                    ('BASE', '$(PREF)%s'%rname),
                     ('REG', rconf['mask'])
                 ])
                 mask = ent['BASE']+'MASK CP MSI'
