@@ -33,8 +33,8 @@ DB += rfs_registers.db
 DB += prc_logic.substitutions
 DB += prc_logic.db
 
-DB += res_logic.substitutions
-DB += res_logic.db
+DB += res_logic2.substitutions
+DB += res_logic2.db
 
 DB += res_registers.substitutions
 DB += res_registers.db
