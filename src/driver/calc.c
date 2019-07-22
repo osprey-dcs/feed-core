@@ -730,7 +730,7 @@ long calc_ctrl(aSubRecord* prec)
 		ROTP[i] = CAVP[i] - sel_poff;
 		rot = (ROTP[i])* PI/180; 
 		CTRLI[i] = (DACI[i]*cos(-rot) - DACQ[i]*sin(-rot))*gain;
-		CTRLQ[i] = (DACI[i]*sin(-rot) + DACQ[i]*cos(-rot))*gain;
+		CTRLQ[i] = -((DACI[i]*sin(-rot) + DACQ[i]*cos(-rot))*gain);
         CTRLP[i] = atan2(CTRLQ[i], CTRLI[i]) * 180 / PI;
         CTRLA[i] = sqrt(pow(CTRLI[i],2) + pow(CTRLQ[i],2));
         DACP[i] = atan2(DACQ[i], DACI[i]) * 180 / PI;
@@ -762,37 +762,56 @@ long ctrl_lims(aSubRecord* prec)
 			*amp_l = (double*)prec->valc,
 			*amp_h = (double*)prec->vald,
 			*pha_l = (double*)prec->vale,
-			*pha_h = (double*)prec->valf;
+	  *pha_h = (double*)prec->valf,
+	  *amp_l_line = (double*)prec->valg,
+	  *amp_h_line = (double*)prec->valh,
+	  *pha_l_line = (double*)prec->vali,
+	  *pha_h_line = (double*)prec->valj;
+
+	double amp_l_disp, amp_h_disp, pha_l_disp, pha_h_disp;
+
+	epicsUInt32 len = prec->nee; /* actual output length */
 
 	double cordic = 1.64676; /* From Larry */
 
-	double tmp;
+	int i;
 
-	*amp_l = amp[0] = amp[1] = amp[4] = (double)amp_l_in * cordic/(131072.0);
-	*amp_h = amp[2] = amp[3] = (double)amp_h_in * cordic/(131071.0);
-	*pha_l = pha[0] = pha[3] = pha[4] = (double)pha_l_in * cordic/(131072.0);
-	*pha_h = pha[1] = pha[2] = (double)pha_h_in * cordic/(131071.0);
+	*amp_l = amp_l_disp = (double)amp_l_in * cordic/(131072.0);
+	*amp_h = amp_h_disp = (double)amp_h_in * cordic/(131071.0);
+	*pha_l = pha_l_disp = (double)pha_l_in * cordic/(131072.0);	
+	*pha_h = pha_h_disp = (double)pha_h_in * cordic/(131071.0);
 
 	/* If drive limits equal, add some width
 	 * for visual aid
 	 */
 	if ( *amp_l == *amp_h ) {
-		tmp = *amp_l * 1.01;
-		amp[0] = amp[1] = amp[4] = tmp;
-		tmp = *amp_h * 0.99;
-		amp[2] = amp[3] = tmp;
+		amp_l_disp = *amp_l * 1.01;
+		amp_h_disp = *amp_h * 0.99;
 	}
 	if ( *pha_l == *pha_h ) {
-		tmp = *pha_l + .01;
-		pha[0] = pha[3] = pha[4] = tmp;
-		tmp = *pha_h - .01;
-		pha[1] = pha[2] = tmp;
+		pha_l_disp = *pha_l + .01;
+		pha_h_disp = *pha_h - .01;
+	}
+	amp[0] = amp[1] = amp[4] = amp_l_disp;
+	amp[2] = amp[3] = amp_h_disp;
+	pha[0] = pha[3] = pha[4] = pha_l_disp;
+	pha[1] = pha[2] = pha_h_disp;
+
+	for ( i = 0; i < len; i++ ) {
+	  amp_l_line[i] = amp_l_disp;
+	  amp_h_line[i] = amp_h_disp;
+	  pha_l_line[i] = pha_l_disp;
+	  pha_h_line[i] = pha_h_disp;	  
 	}
 
 	if ( debug ) {
 		printf("%s: amp l %f h %f pha l %f h %f\n",
 		prec->name, *amp_l, *amp_h, *pha_l, *pha_h);
+		printf("%s: disp amp l %f h %f pha l %f h %f\n",
+		prec->name, amp_l_disp, amp_h_disp, pha_l_disp, pha_h_disp);
 	}
+
+	prec->nevg = prec->nevh = prec->nevi = prec->nevj = len;
 
 	return 0;
 }
