@@ -820,8 +820,10 @@ long ctrl_lims(aSubRecord* prec)
 }
 
 /* Detuning waveform calculator
-/* This is supposed to mirror the calculation done in the FPGA's digaree module
-based on piezo_sf_consts.  The BCOEF complex number provided here is in units of 1/s, matches the value given to digaree in piezo_sf_consts */
+ * This is supposed to mirror the calculation done in the FPGA's digaree module
+ * based on piezo_sf_consts.  The BCOEF complex number provided here is in units 
+ * of 1/s, matches the value given to digaree in piezo_sf_consts 
+ */
 static
 long calc_df(aSubRecord* prec)
 {
@@ -832,7 +834,7 @@ long calc_df(aSubRecord* prec)
 	double bcoefm = 0.0, bcoefp = 0.0,
 		cavscl = 1.0, fwdscl = 1.0, sampt = 1.0;
 
-	double complex dvdt, mr, fwd, cav, a;
+	double complex dvdt_cmplx, bcoef_cmplx, fwd_cmplx, cav_cmplx, a_cmplx;
 
 	double *CAVI = (double*)prec->a,
 		*CAVQ  = (double*)prec->b,
@@ -889,11 +891,6 @@ long calc_df(aSubRecord* prec)
 		/* Do not process outputs */
 		return -1;
     }
-	else {
-		if ( debug ) {
-			printf("timestamps match\n"); 
-		}
-	}
 
 	if(len > prec->neb)
 		len = prec->neb;
@@ -910,7 +907,14 @@ long calc_df(aSubRecord* prec)
 	if(len > prec->novd)
 		len = prec->novd;
 
-	for(i=0; i<len; i++) {
+	/* investigate writing this as bcoefm * exp(bcoefp*PI/180*_Complex_I) */
+	bcoef_cmplx = bcoefm * cos(bcoefp*PI/180.0)  + (bcoefm * sin(bcoefp*PI/180.0))*_Complex_I;
+	if ( debug ) {
+		printf("\nbcoefm %f bcoefp %f bcoef_cmplx %f +i %f sampt %f cavscl %fwdscl %f\n", 
+				bcoefm, bcoefp, creal(bcoef_cmplx), cimag(bcoef_cmplx), sampt, cavscl, fwdscl);
+	}
+
+	for (i=0; i<len; i++) {
 		if ( i < len - 1 ) {
 			DVDTI[i] = (CAVI[i+1] - CAVI[i])/sampt/cavscl;
 			DVDTQ[i] = (CAVQ[i+1] - CAVQ[i])/sampt/cavscl;
@@ -919,25 +923,20 @@ long calc_df(aSubRecord* prec)
 			DVDTI[i] = DVDTI[i-1];
 			DVDTQ[i] = DVDTQ[i-1];
 		}
-	}
-	
-	/* investigate writing this as bcoefm * exp(bcoefp*PI/180*_Complex_I) */
-	mr = bcoefm * cos(bcoefp*PI/180.0)  + (bcoefm * sin(bcoefp*PI/180.0))*_Complex_I;
-	if ( debug ) {
-		printf("bcoefm %f bcoefp %f mr %f +i %f, sampt %f\n", bcoefm, bcoefp, creal(mr), cimag(mr), sampt);
-	}
+		dvdt_cmplx = DVDTI[i] + DVDTQ[i]*_Complex_I;
+		fwd_cmplx = FWDI[i]/fwdscl + (FWDQ[i]/fwdscl)*_Complex_I;
+		cav_cmplx = CAVI[i]/cavscl + (CAVQ[i]/cavscl)*_Complex_I;
+		a_cmplx= (dvdt_cmplx - (bcoef_cmplx * fwd_cmplx)) / (2 * PI *cav_cmplx);  /* give output in Hz, not radians/sec */
 
-	for (i=0; i<len; i++) {
-		dvdt = DVDTI[i] + DVDTQ[i]*_Complex_I;
-		fwd = FWDI[i]/fwdscl + (FWDQ[i]/fwdscl)*_Complex_I;
-		cav = CAVI[i]/cavscl + (CAVQ[i]/cavscl)*_Complex_I;
-		a = (dvdt - (mr * fwd)) / (2 * PI *cav);  /* give output in Hz, not radians/sec */
-
-		DF[i] = cimag( a );
-		BW[i] = -creal( a );
-	if ( debug ) {
-			printf("DVDTI %f DVDTQ %f FWDI %f FWDQ %f CAVI %f CAVQ %f fwd %f +i %f cav %f +i %f a %f +i %f DF %f BW %f cavscl %f fwdscl %f\n",
-				DVDTI[i], DVDTQ[i], FWDI[i], FWDQ[i], CAVI[i], CAVQ[i], creal(fwd), cimag(fwd), creal(cav), cimag(cav), creal(a), cimag(a), DF[i], BW[i], cavscl, fwdscl);
+		DF[i] = cimag( a_cmplx);
+		BW[i] = -creal( a_cmplx);
+		/* Todo: remove this debug print: */
+		if ( debug ) {
+			printf("DVDTI %f DVDTQ %f FWDI %f FWDQ %f CAVI %f CAVQ %f fwd %f +i "
+					"%f cav %f +i %f a %f +i %f DF %f BW %f cavscl %f fwdscl %f\n",
+					DVDTI[i], DVDTQ[i], FWDI[i], FWDQ[i], CAVI[i], CAVQ[i], creal(fwd_cmplx), 
+					cimag(fwd_cmplx), creal(cav_cmplx), cimag(cav_cmplx), 
+					creal(a_cmplx), cimag(a_cmplx), DF[i], BW[i], cavscl, fwdscl);
 		}
 	}
 
