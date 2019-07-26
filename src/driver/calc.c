@@ -1,6 +1,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <complex.h>
 
 #include <errlog.h>
 
@@ -15,6 +16,8 @@
 
 #include <epicsMath.h>
 #include <epicsTypes.h>
+
+#undef I /* avoid conflict between complex.h and variables in this file */
 
 #define PI 3.14159265359
 
@@ -816,6 +819,133 @@ long ctrl_lims(aSubRecord* prec)
 	return 0;
 }
 
+/* Detuning waveform calculator
+/* This is supposed to mirror the calculation done in the FPGA's digaree module
+based on piezo_sf_consts.  The BCOEF complex number provided here is in units of 1/s, matches the value given to digaree in piezo_sf_consts */
+static
+long calc_df(aSubRecord* prec)
+{
+	short debug = (prec->tpro > 1) ? 1 : 0;
+
+	size_t i;
+	epicsUInt32 len = prec->nea; /* actual output length */
+	double bcoefm = 0.0, bcoefp = 0.0,
+		cavscl = 1.0, fwdscl = 1.0, sampt = 1.0;
+
+	double complex dvdt, mr, fwd, cav, a;
+
+	double *CAVI = (double*)prec->a,
+		*CAVQ  = (double*)prec->b,
+		*FWDI  = (double*)prec->c,
+		*FWDQ = (double*)prec->d,
+		*DF = (double*)prec->vala,
+		*BW = (double*)prec->valb,
+		*DVDTI = (double*)prec->valc,
+		*DVDTQ = (double*)prec->vald;
+
+	if(prec->fta!=menuFtypeDOUBLE
+		|| prec->ftb!=menuFtypeDOUBLE
+		|| prec->ftc!=menuFtypeDOUBLE
+		|| prec->ftd!=menuFtypeDOUBLE
+		|| prec->ftva!=menuFtypeDOUBLE
+		|| prec->ftvb!=menuFtypeDOUBLE
+		|| prec->ftvc!=menuFtypeDOUBLE
+		|| prec->ftvd!=menuFtypeDOUBLE)
+	{
+		(void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
+		return 1;
+	}
+
+	if(prec->fte==menuFtypeDOUBLE) {
+		bcoefm = *(double*)prec->e;
+	}
+	if(prec->ftf==menuFtypeDOUBLE) {
+		bcoefp = *(double*)prec->f;
+	}
+	if(prec->ftg==menuFtypeDOUBLE) {
+		cavscl = *(double*)prec->g;
+	}
+	if(prec->fth==menuFtypeDOUBLE) {
+		fwdscl = *(double*)prec->h;
+	}
+	if(prec->fti==menuFtypeDOUBLE) {
+		sampt = *(double*)prec->i;
+	}
+
+	epicsTimeStamp cavi, cavq, fwdi, fwdq;
+	double t1, t2, t3;
+    dbGetTimeStamp(&prec->inpa, &cavi);
+    dbGetTimeStamp(&prec->inpb, &cavq);
+    dbGetTimeStamp(&prec->inpc, &fwdi);
+    dbGetTimeStamp(&prec->inpd, &fwdq);
+    t1 =epicsTimeDiffInSeconds(&cavi,&cavq);
+    t2 =epicsTimeDiffInSeconds(&fwdi,&cavq);
+    t3 =epicsTimeDiffInSeconds(&fwdq,&cavq);
+    if ( (0.0 != t1) || (0.0 != t2) || (0.0 != t3) ) {
+		if ( debug ) {
+	    	printf("calc_df %s: Cav, Fwd, I, Q, amplitude timestamps do not all match: deltas %.2f s %.2f s %.2f s\n",
+	    	prec->name, t1, t2, t3);
+		}
+		/* Do not process outputs */
+		return -1;
+    }
+	else {
+		if ( debug ) {
+			printf("timestamps match\n"); 
+		}
+	}
+
+	if(len > prec->neb)
+		len = prec->neb;
+	if(len > prec->nec)
+		len = prec->nec;
+	if(len > prec->ned)
+		len = prec->ned;
+	if(len > prec->nova)
+		len = prec->nova;
+	if(len > prec->novb)
+		len = prec->novb;
+	if(len > prec->novc)
+		len = prec->novc;
+	if(len > prec->novd)
+		len = prec->novd;
+
+	for(i=0; i<len; i++) {
+		if ( i < len - 1 ) {
+			DVDTI[i] = (CAVI[i+1] - CAVI[i])/sampt/cavscl;
+			DVDTQ[i] = (CAVQ[i+1] - CAVQ[i])/sampt/cavscl;
+		}
+		else {
+			DVDTI[i] = DVDTI[i-1];
+			DVDTQ[i] = DVDTQ[i-1];
+		}
+	}
+	
+	/* investigate writing this as bcoefm * exp(bcoefp*PI/180*_Complex_I) */
+	mr = bcoefm * cos(bcoefp*PI/180.0)  + (bcoefm * sin(bcoefp*PI/180.0))*_Complex_I;
+	if ( debug ) {
+		printf("bcoefm %f bcoefp %f mr %f +i %f, sampt %f\n", bcoefm, bcoefp, creal(mr), cimag(mr), sampt);
+	}
+
+	for (i=0; i<len; i++) {
+		dvdt = DVDTI[i] + DVDTQ[i]*_Complex_I;
+		fwd = FWDI[i]/fwdscl + (FWDQ[i]/fwdscl)*_Complex_I;
+		cav = CAVI[i]/cavscl + (CAVQ[i]/cavscl)*_Complex_I;
+		a = (dvdt - (mr * fwd)) / (2 * PI *cav);  /* give output in Hz, not radians/sec */
+
+		DF[i] = cimag( a );
+		BW[i] = -creal( a );
+	if ( debug ) {
+			printf("DVDTI %f DVDTQ %f FWDI %f FWDQ %f CAVI %f CAVQ %f fwd %f +i %f cav %f +i %f a %f +i %f DF %f BW %f cavscl %f fwdscl %f\n",
+				DVDTI[i], DVDTQ[i], FWDI[i], FWDQ[i], CAVI[i], CAVQ[i], creal(fwd), cimag(fwd), creal(cav), cimag(cav), creal(a), cimag(a), DF[i], BW[i], cavscl, fwdscl);
+		}
+	}
+
+	prec->neva = prec->nevb = prec->nevc = prec->nevd = len;
+
+	return 0;
+}
+
 static registryFunctionRef asub_seq[] = {
     {"IQ2AP", (REGISTRYFUNCTION) &convert_iq2ap},
     {"AP2IQ", (REGISTRYFUNCTION) &convert_ap2iq},
@@ -825,6 +955,7 @@ static registryFunctionRef asub_seq[] = {
     {"Phase Unwrap", (REGISTRYFUNCTION) &unwrap},
     {"Controller Output", (REGISTRYFUNCTION) &calc_ctrl},
     {"Controller Limits", (REGISTRYFUNCTION) &ctrl_lims},
+	{"Calculate Detune", (REGISTRYFUNCTION) &calc_df},
 };
 
 static
