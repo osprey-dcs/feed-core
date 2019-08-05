@@ -106,3 +106,13 @@ record(calc, "$(BASE)RATE") {
     field(EGU , "Hz")
     field(PREC, "2")
 }
+
+# time base reference period
+
+record(ao, "$(BASE)PERIOD") {
+    field(VAL , "$(PERIOD=1.0)")
+    field(PREC, "9")
+    field(EGU , "s")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}

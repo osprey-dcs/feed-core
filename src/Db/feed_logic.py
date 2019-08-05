@@ -82,6 +82,7 @@ class Main(object):
             ('feed_logic_array_mask.template', []),
             ('feed_logic_fanout.template', []),
             ('feed_logic_signal.template', []),
+            ('feed_logic_decim.template', []),
         ])
 
         for gconf in conf:
@@ -123,6 +124,15 @@ file "%s"
             F.write(fd.getvalue())
 
     def signal_group(self, gname, gconf):
+        decim = None
+        if 'decim' in gconf:
+            ent = OrderedDict([
+                ('BASE', '$(PREF)'+(gconf['decim'].get('prefix') or gname)),
+                ('REG', gconf['decim']['name']),
+            ])
+            self.out['feed_logic_decim.template'].append(ent)
+            decim = ent['BASE']+'DECIM_RBV CP MSI'
+
         # we append template blocks in reverse order to simplify accounting of next record.
         # start with the last link in the chain, which then re-arms
         nextrec = '$(PREF)%sREARM'%gname
@@ -151,7 +161,12 @@ file "%s"
                     ('SIZE', str(rconf.get('max_size', 8196))),
                     ('IDX', str(idx)),
                     ('MASK', mask),
+                    ('TBREF', '$(PREF)%sPERIOD CP MSI'%gname),
                 ])
+                if decim:
+                    ent['TBDIV'] = decim
+                if 'scale' in signal:
+                    ent['SCALE'] = signal['scale']
                 fanout2.append(ent['BASE']+'E_')
                 self.out['feed_logic_signal.template'].append(ent)
 
@@ -191,6 +206,7 @@ file "%s"
             ('ARM_MASK', hex(1<<gconf['reset']['bit'])),
             ('RDY_REG', gconf['status']['name']),
             ('RDY_MASK', hex(1<<gconf['status']['bit'])),
+            ('PERIOD', gconf.get('tsamp', 1.0)),
             ('NEXT', nextrec),
         ]))
 

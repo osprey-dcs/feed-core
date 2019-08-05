@@ -53,6 +53,15 @@ long asub_feed_timebase(aSubRecord *prec)
         return EINVAL;
     }
 
+    if(step==0.0)
+        step = 1.0;
+
+    if(prec->ftd==menuFtypeDOUBLE && prec->ned>=0) {
+        double div = *(double*)prec->d;
+        if(div!=0.0)
+            step *= div;
+    }
+
     for(i=0; i<limit; i++, val += step) {
         out[i] = val;
     }
