@@ -24,6 +24,7 @@
 
 # Optional
 #BUSY = /path/to/busy
+#ASYN = /path/to/asyn
 #AUTOSAVE = /path/to/autosave
 
 # EPICS_BASE should appear last so earlier modules can override stuff:
