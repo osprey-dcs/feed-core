@@ -24,6 +24,13 @@ feedioc_DBD += busySupport.dbd
 feedioc_LIBS += busy
 endif
 
+ifneq ($(AUTOSAVE),)
+feedioc_DBD += asSupport.dbd
+feedioc_LIBS += autosave
+
+DB_INSTALLS += $(firstword $(wildcard $(AUTOSAVE)/asApp/Db/save_restoreStatus.db $(AUTOSAVE)/db/save_restoreStatus.db))
+endif
+
 feedioc_LIBS += feed
 feedioc_LIBS += $(EPICS_BASE_IOC_LIBS)
 
