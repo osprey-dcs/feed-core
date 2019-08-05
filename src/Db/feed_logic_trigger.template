@@ -116,3 +116,18 @@ record(ao, "$(BASE)PERIOD") {
     field(PINI, "YES")
     info(autosaveFields_pass0, "VAL")
 }
+
+# common window for all waveform stats
+
+record(ao, "$(BASE)STAT_START") {
+    field(PREC, "6")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(BASE)STAT_WIDTH") {
+    field(PREC, "6")
+    field(VAL , "1")
+    field(PINI, "YES")
+    info(autosaveFields_pass0, "VAL")
+}

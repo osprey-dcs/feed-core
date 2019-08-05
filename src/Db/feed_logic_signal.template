@@ -91,7 +91,7 @@ record(aai, "$(BASE)WF") {
 record(longin, "$(BASE)NORD") {
     field(INP , "$(BASE)WF.NORD")
 
-    field(FLNK, "$(FLNK=)")
+    field(FLNK, "$(BASE)STAT_CALC_")
 }
 
 # timebase
@@ -116,8 +116,64 @@ record(aSub, "$(BASE)TWF_") {
     field(OUTA, "$(BASE)TWF PP MSI")
 }
 
+# stats using both signal and timebase
+
 record(aai, "$(BASE)TWF") {
     field(FTVL, "DOUBLE")
     field(NELM, "$(SIZE)")
     field(TSEL, "$(BASE)TWF_.TIME")
+}
+record(aSub, "$(BASE)STAT_CALC_") {
+  field(SNAM, "Wf Stats")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
+  field(FTD , "DOUBLE")
+  field(FTE , "LONG")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
+  field(INPA, "$(BASE)WF NPP MSI")
+  field(INPB, "$(BASE)TWF NPP MSI")
+  field(INPC, "$(TRIGGER)STAT_START") # window start (in feed_logic_trigger.template)
+  field(INPD, "$(TRIGGER)STAT_WIDTH") # window width
+  field(INPE, "$(PHASWRAP=0)")
+  field(OUTA, "$(BASE)MEAN PP MSI")
+  field(OUTB, "$(BASE)STD PP MSI")
+  field(OUTC, "$(BASE)MIN PP MSI")
+  field(OUTD, "$(BASE)MAX PP MSI")
+  field(OUTE, "$(BASE)RSTD PP MSI")
+  field(FLNK, "$(FLNK=)")
+  field(TSEL, "$(BASE)WF.TIME")
+}
+
+record(ai, "$(BASE)MEAN") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(BASE)WF.TIME")
+}
+
+record(ai, "$(BASE)STD") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(BASE)WF.TIME")
+}
+
+record(ai, "$(BASE)MIN") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(BASE)WF.TIME")
+}
+
+record(ai, "$(BASE)MAX") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(BASE)WF.TIME")
+}
+
+record(ai, "$(BASE)RSTD") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(BASE)WF.TIME")
 }

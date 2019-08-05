@@ -157,6 +157,7 @@ file "%s"
             for idx, signal in enumerate(signals):
                 ent = OrderedDict([
                     ('BASE', '$(PREF)%s'%signal['prefix']),
+                    ('TRIGGER', '$(PREF)'+gname),
                     ('REG', rconf['name']),
                     ('SIZE', str(rconf.get('max_size', 8196))),
                     ('IDX', str(idx)),
