@@ -70,6 +70,7 @@ Allowed keys are:
 * offset=
 * step=
 * wait=
+* rbv=
 * mask=
 * value=
 * retry=
@@ -116,6 +117,7 @@ record(aai, "...") {
     # optional in OUT
     #  offset=0  Index in register from which a (first) value taken
     #  wait=true Whether to read a value from the Device, or use the previous read value.
+    #  rbv=false Whether to copy the most recently read value (false) or most recently written (true)
     #  step=1  With aai, increment of Index between array elements
 }
 ```

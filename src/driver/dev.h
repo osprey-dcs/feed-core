@@ -29,6 +29,10 @@ struct RecInfo : public RegInterest
     double scale;
 
     bool wait;
+    // effects input records
+    // false - use data from previous read op
+    // true  - use data from previous write op
+    bool rbv;
 
     // registry of logical signal names
     typedef std::map<std::string, RecInfo*> signals_t;

@@ -198,6 +198,7 @@ RecInfo::RecInfo(dbCommon *prec, Device *device)
     ,step(1)
     ,scale(1.0)
     ,wait(true)
+    ,rbv(false)
 {}
 
 RecInfo::~RecInfo()
@@ -212,6 +213,7 @@ void RecInfo::configure(const pairs_t& pairs) {
     get_pair(pairs, "step", step);
     get_pair(pairs, "scale", scale);
     get_pair(pairs, "wait", wait);
+    get_pair(pairs, "rbv", rbv);
 }
 
 void RecInfo::cleanup() {
