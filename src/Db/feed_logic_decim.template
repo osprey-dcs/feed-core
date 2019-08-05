@@ -18,7 +18,7 @@ record(longout, "$(BASE)DECIM") {
 
 record(longin, "$(BASE)DECIM_RBV") {
     field(DTYP, "FEED Register Read")
-    field(INP , "@name=$(NAME) reg=$(REG)")
+    field(INP , "@name=$(NAME) reg=$(REG) rbv=true") # use last written value
     field(SCAN, "I/O Intr") # process after any read/write
     field(TSE , "-2")
 }
