@@ -54,6 +54,7 @@ DB += cav_pzt_50.substitutions
 DB += cav_pzt_50.db
 DB += cav_pzt_100.substitutions
 DB += cav_pzt_100.db
+DB += rfs_intlk.template
 DB += rfs_intlk_cav.db
 
 include $(TOP)/configure/RULES
