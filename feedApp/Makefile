@@ -21,7 +21,7 @@ feedioc_SRCS += feedioc_registerRecordDeviceDriver.cpp
 
 ifneq ($(BUSY),)
 feedioc_DBD += busySupport.dbd
-feedioc_LIBS += busy
+feedioc_LIBS += busy asyn
 endif
 
 ifneq ($(AUTOSAVE),)
