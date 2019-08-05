@@ -39,7 +39,7 @@ record(ao, "$(BASE)HLDOFF") {
     field(VAL , "1.0")
     field(EGU , "s")
     field(PREC, "2")
-    info(autosaveFields_pass0, "VAL")
+    info(autosaveFields_pass0, "VAL DRVH DRVL")
 }
 
 record(bo, "$(BASE)CMD") {

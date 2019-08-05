@@ -12,6 +12,7 @@ record(longin, "$(BASE)DECIMI_") {
 record(longout, "$(BASE)DECIM") {
     field(DTYP, "FEED Register Write")
     field(OUT , "@name=$(NAME) reg=$(REG)")
+    field(VAL , "1")
     info(autosaveFields_pass0, "VAL")
 }
 
