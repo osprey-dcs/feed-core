@@ -50,11 +50,20 @@ DB += hires_logic.db
 DB += hires_registers.substitutions
 DB += hires_registers.db
 
+hires_registers_FLAGS = -M plain
+
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 
-%.substitutions: ../%.json ../feed_logic.py
+%_logic.substitutions: ../%_logic.json ../feed_logic.py
 	$(PYTHON) ../feed_logic.py $< $@
+
+%_registers.substitutions: ../%_registers.json
+	echo $(*)_registers_FLAGS
+	PYTHONPATH="$(TOP)/src/python:${PYTHONPATH}" $(PYTHON) -m leep.cli file://$< template $($(notdir $(*))_registers_FLAGS) $@
+
+%_registers.substitutions$(DEP): ../%_registers.json ../Makefile
+	echo "$(COMMONDEP_TARGET) : ../Makefile" > $@
 
 .PRECIOUS: %.substitutions
