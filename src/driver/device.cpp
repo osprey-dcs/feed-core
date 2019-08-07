@@ -219,7 +219,7 @@ Device::Device(const std::string &name, osiSockAddr &ep)
     ,rtt_ptr(0u)
     ,reg_rom(new DevReg(this, gblrom.jrom_info, true))
     ,reg_id(new DevReg(this, gblrom.jid_info, true))
-    ,inflight(feedNumInFlight)
+    ,inflight(std::max(1, std::min(feedNumInFlight, 255))) // limit to [0, 255] as we choose to encode offset in request header
     ,want_to_send(false)
     ,runner_stop(false)
     ,reset_requested(false)
