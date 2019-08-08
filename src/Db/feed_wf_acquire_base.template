@@ -266,9 +266,60 @@ record(longin, "$(BASE)TAG2_RBV") {
     field(DESC, "Tag at end of acq.")
     field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=33 wait=false")
     field(TSEL, "$(BASE)CIRCRAW_.TIME")
-    field(FLNK, "$(BASE)NEXT_FOUT_")
+# Original FLNK to FOUT
+#    field(FLNK, "$(BASE)NEXT_FOUT_")
+    field(FLNK, "$(BASE)_STATUS_CALC_")
     field(TPRO, "$(TPRO=0)")
     info(feed:info:tag2, "$(BASE)TAG2_RBV")
+}
+
+# Slow data status bytes
+# Store in PVs here, sooner than
+# other slow data, because it contains 
+# information needed in waveform handling
+record(aai, "$(BASE)STATUS_RAW_") {
+    field(DTYP, "FEED Register Read")
+    field(INP , "@name=$(NAME) reg=shell_$(BIT)_slow_data offset=19 wait=false")
+    field(FTVL, "UCHAR")
+    field(NELM, "2")
+}
+
+record(aSub, "$(BASE)_STATUS_CALC_") {
+    field(SNAM, "asub_feed_bcat")
+    field(FTA , "UCHAR")
+    field(FTVA, "ULONG")
+    field(INPA, "$(BASE)STATUS_RAW_ PP MSI")
+    field(NOA , "2")
+    field(OUTA, "$(BASE)STATUS_ PP MSI")
+}
+
+record(longin, "$(BASE)STATUS_") {
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+	field(FLNK, "$(BASE)STATUS")
+}
+
+record(mbbiDirect, "$(BASE)STATUS") {
+	field(INP,  "$(BASE)STATUS_")
+	field(TSEL, "$(BASE)CIRCRAW_.TIME")
+	field(FLNK, "$(BASE)CIRC_START_")
+}
+
+# Calculate read offset for fault data
+record(calcout, "$(BASE)CIRC_START_") {
+    field(INPA, "$(BASE)STATUS")
+    field(INPB, "0x3FFF") # least significant 14 bits contain address
+    field(INPC, "$(BASE)MASK3_.VALA")
+    field(CALC, "(A & B) / C")
+    field(OUT, "$(BASE)CIRC_START.PROC PP")
+	field(FLNK, "$(BASE)NEXT_FOUT_")
+}
+
+record(longin, "$(BASE)CIRC_START") {
+    field(SDIS, "$(BASE)STATUS.BF")
+    field(DISV, "1")
+    field(DESC, "Fault buffer start address")
+    field(DTYP, "Soft Channel")
+    field(INP, "$(BASE)CIRC_START_")
 }
 
 # does downstream processing

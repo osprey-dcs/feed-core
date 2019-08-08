@@ -110,12 +110,96 @@ record(aai, "$(PREF)AWF") {
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
   field(TSEL, "$(PREF)IWF.TIME")
+  field(FLNK, "$(PREF)AWF_FLT_FO_")
+}
+
+record(fanout, "$(PREF)AWF_FLT_FO_") {
+# only process 'normal' wf
+  field(LNK1, "$(PREF)AWF_LAST PP")
+# only process 'fault' wf
+  field(LNK2, "$(PREF)AWF_FLT_CALC_")
+}
+
+record(aai, "$(PREF)AWF_LAST") {
+  field(SDIS, "$(BASE)STATUS.BF")
+  field(DISV, "0")
+  field(INP,  "$(PREF)AWF NPP")
+  field(DESC, "Last Amplitude")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE=8192)")
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(aSub, "$(PREF)AWF_FLT_CALC_") {
+  field(SDIS, "$(BASE)STATUS.BF")
+  field(DISV, "1")
+  field(SNAM, "Fault Unwrap")
+  field(FTA , "DOUBLE")
+  field(FTB , "USHORT")
+  field(FTC , "USHORT")
+  field(FTD , "DOUBLE")
+  field(NOA , "$(SIZE=8192)")
+  field(NOD , "$(SIZE=8192)")
+  field(NOVA, "$(SIZE=8192)")
+  field(INPA, "$(PREF)AWF MS NPP")
+  field(INPB, "$(BASE)CIRC_START")
+  field(INPC, "$(BASE)STATUS.BE")
+  field(INPD, "$(PREF)AWF_LAST MS NPP")
+  field(OUTA, "$(PREF)AWF_FLT PP")
+}
+
+record(aai, "$(PREF)AWF_FLT") {
+  field(NELM, "$(SIZE=8192)")
+  field(FTVL, "DOUBLE")
+  field(TSEL, "$(PREF)IWF.TIME")
 }
 
 record(aai, "$(PREF)PWRWF") {
   field(DESC, "Power")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
+  field(TSEL, "$(PREF)IWF.TIME")
+  field(FLNK, "$(PREF)PWRWF_FLT_FO_")
+}
+
+record(fanout, "$(PREF)PWRWF_FLT_FO_") {
+# only process 'normal' wf
+  field(LNK1, "$(PREF)PWRWF_LAST PP")
+# only process 'fault' wf
+  field(LNK2, "$(PREF)PWRWF_FLT_CALC_")
+}
+
+record(aai, "$(PREF)PWRWF_LAST") {
+  field(SDIS, "$(BASE)STATUS.BF")
+  field(DISV, "0")
+  field(INP,  "$(PREF)PWRWF NPP")
+  field(DESC, "Last Amplitude")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE=8192)")
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(aSub, "$(PREF)PWRWF_FLT_CALC_") {
+  field(SDIS, "$(BASE)STATUS.BF")
+  field(DISV, "1")
+  field(SNAM, "Fault Unwrap")
+  field(FTA , "DOUBLE")
+  field(FTB , "USHORT")
+  field(FTC , "USHORT")
+  field(FTD , "DOUBLE")
+  field(NOA , "$(SIZE=8192)")
+  field(NOD , "$(SIZE=8192)")
+  field(NOVA, "$(SIZE=8192)")
+  field(INPA, "$(PREF)PWRWF MS NPP")
+  field(INPB, "$(BASE)CIRC_START")
+  field(INPC, "$(BASE)STATUS.BE")
+  field(INPD, "$(PREF)PWRWF_LAST MS NPP")
+  field(OUTA, "$(PREF)PWRWF_FLT PP")
+}
+
+record(aai, "$(PREF)PWRWF_FLT") {
+  field(NELM, "$(SIZE=8192)")
+  field(FTVL, "DOUBLE")
   field(TSEL, "$(PREF)IWF.TIME")
 }
 
@@ -124,8 +208,50 @@ record(aai, "$(PREF)PWF") {
   field(EGU , "deg.")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
-  field(FLNK, "$(PREF)PWF_CALC_")
+  field(FLNK, "$(PREF)PWF_FLT_FO_")
   field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(fanout, "$(PREF)PWF_FLT_FO_") {
+# only process 'normal' wf
+  field(LNK1, "$(PREF)PWF_LAST PP")
+# only process 'fault' wf
+  field(LNK2, "$(PREF)PWF_FLT_CALC_")
+}
+
+record(aai, "$(PREF)PWF_LAST") {
+  field(SDIS, "$(BASE)STATUS.BF")
+  field(DISV, "0")
+  field(INP,  "$(PREF)PWF NPP")
+  field(DESC, "Last Amplitude")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE=8192)")
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(aSub, "$(PREF)PWF_FLT_CALC_") {
+  field(SDIS, "$(BASE)STATUS.BF")
+  field(DISV, "1")
+  field(SNAM, "Fault Unwrap")
+  field(FTA , "DOUBLE")
+  field(FTB , "USHORT")
+  field(FTC , "USHORT")
+  field(FTD , "DOUBLE")
+  field(NOA , "$(SIZE=8192)")
+  field(NOD , "$(SIZE=8192)")
+  field(NOVA, "$(SIZE=8192)")
+  field(INPA, "$(PREF)PWF MS NPP")
+  field(INPB, "$(BASE)CIRC_START")
+  field(INPC, "$(BASE)STATUS.BE")
+  field(INPD, "$(PREF)PWF_LAST MS NPP")
+  field(OUTA, "$(PREF)PWF_FLT PP")
+}
+
+record(aai, "$(PREF)PWF_FLT") {
+  field(NELM, "$(SIZE=8192)")
+  field(FTVL, "DOUBLE")
+  field(TSEL, "$(PREF)IWF.TIME")
+  field(FLNK, "$(PREF)PWF_CALC_")
 }
 
 record(aSub, "$(PREF)PWF_CALC_") {

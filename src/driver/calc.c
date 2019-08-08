@@ -945,6 +945,79 @@ long calc_df(aSubRecord* prec)
 	return 0;
 }
 
+/* Unwrap Fault
+ *
+ * Fault waveform from circle buffer needs to be unwrapped in order
+ * to recover a casual time scale, based on information from buffer
+ * status of start_address and wrapped bit.
+ *
+ * If wrapped, means write is faster than read, simply np.roll the
+ * waveform * by -offset, where offset = start_address / 2*n_chan_keep.
+ * If not wrapped, means read is faster than write (shouldn't happen),
+ * full waveform needs to be concatenated by two bank of buffers.
+ * Hence the bank has to be flipped and read twice. This is not easy
+ * to implement in current structure. TBD
+ *
+ * record(aSub, "$(N)") {
+ *  field(SNAM, "Fault Unwrap")
+ *  field(FTA , "DOUBLE")
+ *  field(FTB , "USHORT")
+ *  field(FTC , "USHORT")
+ *  field(FTD , "DOUBLE")
+ *  field(NOA , "128")
+ *  field(NOVA, "128")
+ *  field(INPA, "Wrapped Fault WF")
+ *  field(INPB, "Offset")
+ *  field(INPC, "Wrapped bit")
+ *  field(INPD, "Last Wrapped Fault WF")
+ *  field(OUTA, "Unwrapped Fault WF")
+ */
+
+static
+long unwrap_fault(aSubRecord* prec)
+{
+	short debug = (prec->tpro > 1) ? 1 : 0;
+
+    double *in = (double*)prec->a,
+           *in_last = (double*) prec->d,
+            *out= (double*)prec->vala;
+
+    epicsUInt16 i;
+    epicsUInt16 offset;
+    epicsUInt16 wrap;
+
+    epicsUInt32 len=MIN(prec->nea, prec->nova);
+
+    if(prec->ftb!=menuFtypeUSHORT) {
+        errlogPrintf("%s: B has to be type USHORT\n", prec->name);
+        return 1;
+    }
+
+    if(len==0) {
+        recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+        return 0;
+    }
+
+    offset = *(epicsUInt16*)prec->b;
+    wrap = *(epicsUInt16*)prec->c & 1;
+
+	if ( debug ) {
+		errlogPrintf("%s: len=%d, offset=%u, wrap=%u\n", prec->name, len, offset, wrap);
+	}
+
+    ++offset;
+
+    for(i=0; i<offset; i++) {
+        out[len-offset+i] = in[i];
+    }
+    for(i=offset; i<len; i++) {
+        out[i-offset] = wrap ? in[i] : in_last[i];
+    }
+
+    prec->neva = len;
+    return 0;
+}
+
 static registryFunctionRef asub_seq[] = {
     {"IQ2AP", (REGISTRYFUNCTION) &convert_iq2ap},
     {"AP2IQ", (REGISTRYFUNCTION) &convert_ap2iq},
@@ -955,6 +1028,7 @@ static registryFunctionRef asub_seq[] = {
     {"Controller Output", (REGISTRYFUNCTION) &calc_ctrl},
     {"Controller Limits", (REGISTRYFUNCTION) &ctrl_lims},
 	{"Calculate Detune", (REGISTRYFUNCTION) &calc_df},
+    {"Fault Unwrap", (REGISTRYFUNCTION) &unwrap_fault},
 };
 
 static
