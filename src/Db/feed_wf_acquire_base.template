@@ -298,6 +298,18 @@ record(longin, "$(BASE)STATUS_") {
 	field(FLNK, "$(BASE)STATUS")
 }
 
+# From L. Doolittle 8/2019
+# The 16-bit circle buffer status register read out in the slow chain
+# should have 14 lsb for address (padded if needed, but we're now at
+# the maximum actual address width), followed to the left by circle_wrap
+# and circle_fault.  In Verilog,
+#   circle_stat = {circle_fault, circle_wrap, circle_addr}
+#
+# .B0 - .BD = fault data offset
+# .BE = 1 if data spread across current buffer and previous
+#     = 0 if all data in current 
+# .BF = 1 if not fault
+#     = 0 if fault
 record(mbbiDirect, "$(BASE)STATUS") {
 	field(INP,  "$(BASE)STATUS_")
 	field(TSEL, "$(BASE)CIRCRAW_.TIME")
@@ -311,6 +323,7 @@ record(calcout, "$(BASE)CIRC_START_") {
     field(INPC, "$(BASE)MASK3_.VALA")
     field(CALC, "(A & B) / C")
     field(OUT, "$(BASE)CIRC_START.PROC PP")
+	field(TSEL, "$(BASE)CIRCRAW_.TIME")
 	field(FLNK, "$(BASE)NEXT_FOUT_")
 }
 
@@ -319,7 +332,16 @@ record(longin, "$(BASE)CIRC_START") {
     field(DISV, "1")
     field(DESC, "Fault buffer start address")
     field(DTYP, "Soft Channel")
-    field(INP, "$(BASE)CIRC_START_")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+    field(INP,  "$(BASE)CIRC_START_")
+    field(FLNK, "$(BASE)FLT_TS")
+}
+
+record(stringin, "$(BASE)FLT_TS") {
+    field(DESC, "Timestamp of last fault")
+    field(DTYP, "Soft Timestamp")
+    field(TSEL, "$(BASE)CIRCRAW_.TIME")
+    field(INP, "@%b %d %Y %H:%M:%S")
 }
 
 # does downstream processing
