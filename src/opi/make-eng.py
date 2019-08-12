@@ -10,13 +10,13 @@ def getargs():
     P.add_argument('-d','--debug',action='store_const', const=logging.DEBUG, default=logging.INFO)
     P.add_argument('-q','--quiet',action='store_const', const=logging.WARN, dest='debug')
     P.add_argument('--prefix', default='$(REG)')
-    P.add_argument('output', help='output .opi file')
+    P.add_argument('output', help='output .bob file')
     P.add_argument('json', help='input json register map')
     return P.parse_args()
 
 def main(args):
     import xml.etree.ElementTree as ET
-    T = ET.parse(os.path.join(datadir, 'base.opi')).getroot()
+    T = ET.parse(os.path.join(datadir, 'base.bob')).getroot()
 
     with open(args.json, 'r') as F:
         blob = json.load(F)
@@ -28,25 +28,34 @@ def main(args):
     nextrow = 0
     for name, info in blob:
         if info.get('addr_width',0)!=0:
-            continue
-        W = ET.parse(os.path.join(datadir, 'TextUpdate.opi')).getroot()
+            continue # don't emit for waveforms
+
+        if info.get('data_width',0)==1:
+            fname = 'BinaryUpdate.bob'
+        elif info.get('access', '').find('w')!=-1:
+            fname = 'TextEntry.bob'
+        else:
+            fname = 'TextUpdate.bob'
+        W = ET.parse(os.path.join(datadir, fname)).getroot()
 
         read_pv_name = "%s%s_RBV"%(args.prefix, name)
         set_pv_name = "%s%s"%(args.prefix, name)
 
         NY = 0
         for W in list(W.findall('widget')):
-            Y = int(W.find('y').text)
-            W.find('y').text = str(Y+nextrow)
+            Y = W.find('y') or ET.SubElement(W, 'y')
+            Y.text = str(int(Y.text or '0')+nextrow)
 
             NY = max(NY, int(W.find('height').text))
 
-            if W.find('name').text in ['Label', 'Readback', 'Setting']:
-                W.find('text').text = name
+            if W.find('name').text in ['Label', 'Readback', 'Setting', 'Slider']:
+                txt = W.find('text')
+                if txt is not None:
+                    txt.text = name
 
             if W.find('name').text in ['Readback', 'Scan']:
                 W.find('pv_name').text = read_pv_name
-            elif W.find('name').text in ['Setting']:
+            elif W.find('name').text in ['Setting', 'Slider']:
                 W.find('pv_name').text = set_pv_name
 
             T.append(W)
