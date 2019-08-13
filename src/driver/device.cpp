@@ -625,7 +625,7 @@ void Device::do_timeout(unsigned i)
     msg.clear();
 }
 
-void Device::handle_inspect()
+void Device::handle_inspect(Guard &G)
 {
     // Process ROM to extract JSON
 
@@ -752,9 +752,22 @@ void Device::handle_inspect()
 
     dev_infos.clear();
     zdeflate(dev_infos, jstring.c_str(), jstring.size(), 9);
+
+    {
+        UnGuard U(G);
+
+        for(reg_interested_t::iterator it(reg_interested.begin()), end(reg_interested.end());
+            it != end; ++it)
+        {
+            RegInterest * const interest = it->second;
+
+            if(interest->reg)
+                interest->connected(); // allowed to lock record and force post meta-data fields
+        }
+    }
 }
 
-void Device::handle_state()
+void Device::handle_state(Guard &G)
 {
     state_t prev = current;
     if(reset_requested || error_requested) {
@@ -787,7 +800,7 @@ void Device::handle_state()
 
     case Inspecting:
         if(reg_rom->state==DevReg::InSync) {
-            handle_inspect();
+            handle_inspect(G);
             IFDBG(3, "Request on_connect scan");
             scanIoRequest(on_connect);
             current = Running;
@@ -961,7 +974,7 @@ void Device::run()
 
             handle_timeout();
 
-            handle_state();
+            handle_state(G);
 
         } catch(std::exception& e) {
             cnt_err++;

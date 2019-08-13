@@ -41,9 +41,11 @@ struct RegInterest
     // callback after register read/write is complete
     virtual void complete() =0;
     // debug
-    virtual void show(std::ostream&, int lvl) {}
+    virtual void show(std::ostream& strm, int lvl) {}
     // called when building Device::dev_info
-    virtual void getInfo(infos_t&) const {}
+    virtual void getInfo(infos_t& infos) const {}
+    // called after (re)connect
+    virtual void connected() {};
 };
 
 // Device Register
@@ -253,9 +255,9 @@ struct epicsShareClass Device : public epicsThreadRunable
     // timeout inflight[i]
     void do_timeout(unsigned i);
     // process ROM and prepare for transition to Running
-    void handle_inspect();
+    void handle_inspect(Guard &G);
     // state machine logic
-    void handle_state();
+    void handle_state(Guard &G);
 
     // main loop
     virtual void run() override final;

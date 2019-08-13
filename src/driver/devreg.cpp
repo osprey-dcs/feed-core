@@ -18,6 +18,7 @@
 #include <osiSock.h>
 
 #include <dbAccess.h>
+#include <dbEvent.h>
 #include <recSup.h>
 #include <dbStaticLib.h>
 #include <callback.h>
@@ -44,6 +45,17 @@
 #define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 namespace {
+
+template<typename Rec>
+struct RecRegInfo : public RecInfo
+{
+    RecRegInfo(dbCommon *prec, Device *device)
+        :RecInfo(prec, device)
+    {}
+    virtual ~RecRegInfo() {}
+
+    virtual void connected() override;
+};
 
 #define TRY RecInfo *info = static_cast<RecInfo*>(prec->dpvt); if(!info) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
@@ -281,16 +293,55 @@ long read_register_aai(aaiRecord *prec)
     return ret;
 }
 
+template<typename fld_t>
+void maybePost(dbCommon *prec, fld_t *fld, epicsInt64 value)
+{
+    fld_t fval = value;
+    if(fval!=*fld) {
+        *fld = value;
+        db_post_events(prec, fld, DBE_VALUE);
+        db_post_events(prec, NULL, DBE_PROPERTY);
+    }
+}
+
+template<> void RecRegInfo<longoutRecord>::connected() {
+    if(meta) {
+        longoutRecord *prec = (longoutRecord*)this->prec;
+        assert(reg);
+        maybePost(this->prec, &prec->drvl, reg->info.min());
+        maybePost(this->prec, &prec->lopr, reg->info.min());
+        maybePost(this->prec, &prec->drvh, reg->info.max());
+        maybePost(this->prec, &prec->hopr, reg->info.max());
+    }
+}
+
+template<> void RecRegInfo<aoRecord>::connected() {}
+template<> void RecRegInfo<mbboRecord>::connected() {}
+template<> void RecRegInfo<aaoRecord>::connected() {}
+
+template<> void RecRegInfo<longinRecord>::connected() {
+    if(meta) {
+        longinRecord *prec = (longinRecord*)this->prec;
+        assert(reg);
+        maybePost(this->prec, &prec->lopr, reg->info.min());
+        maybePost(this->prec, &prec->hopr, reg->info.max());
+    }
+}
+
+template<> void RecRegInfo<aiRecord>::connected() {}
+template<> void RecRegInfo<mbbiRecord>::connected() {}
+template<> void RecRegInfo<aaiRecord>::connected() {}
+
 } // namespace
 
 // register writes
-DSET(devLoFEEDWriteReg, longout, init_common<RecInfo>::fn, NULL, write_register_lo)
-DSET(devAoFEEDWriteReg, ao, init_common<RecInfo>::fn, NULL, write_register_ao)
-DSET(devMbboFEEDWriteReg, mbbo, init_common<RecInfo>::fn, NULL, write_register_mbbo)
-DSET(devAaoFEEDWriteReg, aao, init_common<RecInfo>::fn, NULL, write_register_aao)
+DSET(devLoFEEDWriteReg, longout, init_common<RecRegInfo<longoutRecord> >::fn, NULL, write_register_lo)
+DSET(devAoFEEDWriteReg, ao, init_common<RecRegInfo<aoRecord> >::fn, NULL, write_register_ao)
+DSET(devMbboFEEDWriteReg, mbbo, init_common<RecRegInfo<mbboRecord> >::fn, NULL, write_register_mbbo)
+DSET(devAaoFEEDWriteReg, aao, init_common<RecRegInfo<aaoRecord> >::fn, NULL, write_register_aao)
 
 // register reads
-DSET(devLiFEEDWriteReg, longin, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_li)
-DSET(devAiFEEDWriteReg, ai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_ai)
-DSET(devMbbiFEEDWriteReg, mbbi, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_mbbi)
-DSET(devAaiFEEDWriteReg, aai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_aai)
+DSET(devLiFEEDWriteReg, longin, init_common<RecRegInfo<longinRecord> >::fn, get_reg_changed_intr, read_register_li)
+DSET(devAiFEEDWriteReg, ai, init_common<RecRegInfo<aiRecord> >::fn, get_reg_changed_intr, read_register_ai)
+DSET(devMbbiFEEDWriteReg, mbbi, init_common<RecRegInfo<mbbiRecord> >::fn, get_reg_changed_intr, read_register_mbbi)
+DSET(devAaiFEEDWriteReg, aai, init_common<RecRegInfo<aaiRecord> >::fn, get_reg_changed_intr, read_register_aai)

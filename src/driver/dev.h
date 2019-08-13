@@ -33,6 +33,8 @@ struct RecInfo : public RegInterest
     // false - use data from previous read op
     // true  - use data from previous write op
     bool rbv;
+    // push meta-data to record
+    bool meta;
 
     // registry of logical signal names
     typedef std::map<std::string, RecInfo*> signals_t;
@@ -62,7 +64,7 @@ struct RecInfo : public RegInterest
 
     // RegInterest::getInfo()
     // record not locked
-    virtual void getInfo(infos_t&) const override;
+    virtual void getInfo(infos_t& infos) const override;
 };
 
 // Find INP/OUT
