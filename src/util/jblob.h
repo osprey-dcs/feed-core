@@ -8,7 +8,7 @@
 #include <epicsTypes.h>
 #include <shareLib.h>
 
-struct JRegister {
+struct epicsShareClass JRegister {
     std::string name,
                 description;
     epicsUInt32 base_addr;
@@ -29,6 +29,9 @@ struct JRegister {
     }
 
     JRegister() {clear();}
+
+    epicsInt64 min() const;
+    epicsInt64 max() const;
 };
 
 struct epicsShareClass JBlob {

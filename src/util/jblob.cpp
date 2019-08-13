@@ -341,3 +341,21 @@ std::ostream& operator<<(std::ostream& strm, const JRegister& reg)
           "}";
     return strm;
 }
+
+
+epicsInt64 JRegister::min() const {
+    if(sign==Unsigned) {
+        return 0;
+    } else {
+        epicsUInt64 signmask = 0;
+        signmask = 0xffffffffffffffff << (data_width-1);
+        return (epicsInt64)signmask;
+    }
+}
+epicsInt64 JRegister::max() const
+{
+    unsigned nbits = data_width;
+    if(sign==Signed)
+        nbits--;
+    return (epicsInt64(1)<<nbits)-1;
+}
