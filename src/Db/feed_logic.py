@@ -82,6 +82,8 @@ class Main(object):
             ('feed_logic_array_mask.template', []),
             ('feed_logic_fanout.template', []),
             ('feed_logic_signal.template', []),
+            ('feed_logic_pair.template', []),
+            ('feed_logic_stats.template', []),
             ('feed_logic_decim.template', []),
         ])
 
@@ -137,6 +139,8 @@ file "%s"
         # start with the last link in the chain, which then re-arms
         nextrec = '$(PREF)%sREARM'%gname
 
+        stats = []
+
         # de-mux of signals from array registers.
         # these will be synchronously processed through a set of fanouts
         fanout2 = []
@@ -157,7 +161,6 @@ file "%s"
             for idx, signal in enumerate(signals):
                 ent = OrderedDict([
                     ('BASE', '$(PREF)%s'%signal['prefix']),
-                    ('TRIGGER', '$(PREF)'+gname),
                     ('REG', rconf['name']),
                     ('SIZE', str(rconf.get('max_size', 8196))),
                     ('IDX', str(idx)),
@@ -168,8 +171,38 @@ file "%s"
                     ent['TBDIV'] = decim
                 if 'scale' in signal:
                     ent['SCALE'] = signal['scale']
+                ent['FLNK'] = ent['BASE']+'SE_'
+                stats.append((ent['BASE'], ent['BASE']+"WF", ent['BASE']+"TWF", ent['SIZE'], None))
+
                 fanout2.append(ent['BASE']+'E_')
                 self.out['feed_logic_signal.template'].append(ent)
+
+            for iq in rconf.get('iq') or []:
+                ent = OrderedDict([
+                    ('BASE', '$(PREF)%s'%iq['prefix']),
+                    ('IBASE', '$(PREF)%s'%iq['iprefix']),
+                    ('QBASE', '$(PREF)%s'%iq['qprefix']),
+                    ('SIZE', str(rconf.get('max_size', 8196))),
+                ])
+                fanout2.append(ent['BASE']+'E_')
+                ent['FLNK'] = ent['BASE']+'ASE_'
+                self.out['feed_logic_pair.template'].append(ent)
+                stats.append((ent['BASE']+'A', ent['BASE']+'AWF', ent['BASE']+'TWF', ent['SIZE'], ent['BASE']+'PSE_'))
+                stats.append((ent['BASE']+'P', ent['BASE']+'PWF', ent['BASE']+'TWF', ent['SIZE'], None))
+
+
+        for statprefix, sig, tsig, size, flnk in stats:
+            ent = OrderedDict([
+                ('BASE', statprefix),
+                ('SIGNAL', sig),
+                ('TIME', tsig),
+                ('TRIGGER', '$(PREF)'+gname),
+                ('SIZE', size),
+                # ('PHASWRAP', '0'),
+            ])
+            if flnk:
+                ent['FLNK'] = flnk
+            self.out['feed_logic_stats.template'].append(ent)
 
         nextfo = itertools.count(1)
         fanout2 = list(batchby(fanout2, 6))

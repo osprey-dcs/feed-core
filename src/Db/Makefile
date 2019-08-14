@@ -66,4 +66,4 @@ include $(TOP)/configure/RULES
 %_registers.substitutions$(DEP): ../%_registers.json ../Makefile
 	echo "$(COMMONDEP_TARGET) : ../Makefile" > $@
 
-.PRECIOUS: %.substitutions
+.PRECIOUS: %_logic.substitutions %_registers.substitutions
