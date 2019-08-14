@@ -38,8 +38,8 @@ def main(args):
             fname = 'TextUpdate.bob'
         W = ET.parse(os.path.join(datadir, fname)).getroot()
 
-        read_pv_name = "%s%s_RBV"%(args.prefix, name)
-        set_pv_name = "%s%s"%(args.prefix, name)
+        read_pv_name = "%sreg_%s_RBV"%(args.prefix, name)
+        set_pv_name = "%sreg_%s"%(args.prefix, name)
 
         NY = 0
         for W in list(W.findall('widget')):

@@ -50,7 +50,7 @@ DB += hires_logic.db
 DB += hires_registers.substitutions
 DB += hires_registers.db
 
-hires_registers_FLAGS = -M plain
+hires_registers_FLAGS = -M long
 
 include $(TOP)/configure/RULES
 #----------------------------------------
