@@ -49,6 +49,8 @@ DB += res_registers_short.db
 # RF support databases
 DB += chas.template
 DB += cav.template
+DB += cav_faultwf.substitutions
+DB += cav_faultwf.db
 DB += cav_step.template
 DB += cav_pzt_50.substitutions
 DB += cav_pzt_50.db
