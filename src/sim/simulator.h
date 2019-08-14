@@ -129,14 +129,15 @@ private:
         SimReg *reset;
         SimReg *status;
         SimReg *mask;
+        SimReg *decim;
         epicsUInt32 valid;
         unsigned reset_bit;
         unsigned status_bit;
-        epicsUInt32 seed;
+        double phase;
         WF()
             :buffer(0), reset(0), status(0), mask(0)
             ,reset_bit(0u), status_bit(0u)
-            ,seed(0u)
+            ,phase(0.0)
         {}
         void process();
     };

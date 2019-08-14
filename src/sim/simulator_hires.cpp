@@ -36,6 +36,7 @@ Simulator_HIRES::Simulator_HIRES(const osiSockAddr& ep,
     trace_odata.buffer = &(*this)["trace_odata"];
     trace_odata.valid = 0xffffff; // 22 channels
     trace_odata.mask = &(*this)["keep"];
+    trace_odata.decim = &(*this)["wave_samp_per"];
 
     decay_data.reset = &(*this)["decay_reset"];
     decay_data.reset_bit = 0u;
@@ -83,19 +84,36 @@ void Simulator_HIRES::WF::process()
         reset->storage[0] &= ~(1u<<reset_bit);
 
         const epicsUInt32 selected = mask ? (*mask)[0] : valid;
+        epicsUInt32 decim = this->decim ? (*this->decim)[0] : 1.0;
 
-        for(size_t t=0, idx=0; selected && idx<buffer->size(); t++) {
+        for(size_t t=0, idx=0; selected && idx<buffer->size(); t+=decim) {
+            phase += decim*2*PI/2048;
+
             for(size_t sig=0; sig<32u && idx<buffer->size(); sig++) {
                 if(!(selected & (1u<<sig)))
                     continue;
 
-                (*buffer)[idx++] = seed + sig*10u + t*(sig&1 ? -5 : 5);
+                size_t pair = sig>>1; // signals are pairs of I/Q
+                bool Q = sig&1;
+
+                double ph = phase + 2*PI*pair/32.0;
+
+                double v = 0.0;
+                // simulate pulse w/ constant amplitude and linear phase change
+                if(t>=100 && t<1000) {
+                    if(!Q) {
+                        v = cos(ph) - sin(ph);
+                    } else {
+                        v = sin(ph) + cos(ph);
+                    }
+                    v *= 1024.0;
+                }
+
+                (*buffer)[idx++] = v;
             }
         }
 
         // indicate ready
         (*status)[0] |= 1u<<status_bit;
-
-        seed++;
     }
 }
