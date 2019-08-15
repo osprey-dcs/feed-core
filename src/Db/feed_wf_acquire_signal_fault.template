@@ -98,5 +98,6 @@ record(ao, "$(PREF)SCALE") {
     field(PREC, "9")
     field(OMSL, "closed_loop")
     field(DOL,  "$(SRC)SCALE")
+    field(FLNK, "$(FLTFLNK=)")
     info(autosaveFields_pass0, "VAL")
 }
