@@ -1,6 +1,9 @@
 TOP=..
 
 include $(TOP)/configure/CONFIG
+ifneq ($(PYDEVSUP),)
+include $(PYDEVSUP)/configure/CONFIG_PY
+endif
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 #=============================
@@ -31,11 +34,19 @@ feedioc_LIBS += autosave
 DB_INSTALLS += $(firstword $(wildcard $(AUTOSAVE)/asApp/Db/save_restoreStatus.db $(AUTOSAVE)/db/save_restoreStatus.db))
 endif
 
+ifneq ($(PYDEVSUP),)
+feedioc_DBD += pyDevSup.dbd
+feedioc_LIBS += pyDevSup$(PY_LD_VER)
+endif
+
 feedioc_LIBS += feed
 feedioc_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 #===========================
 
 include $(TOP)/configure/RULES
+ifneq ($(PYDEVSUP),)
+include $(PYDEVSUP)/configure/RULES_PY
+endif
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE

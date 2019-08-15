@@ -87,7 +87,7 @@ void Simulator_HIRES::WF::process()
         epicsUInt32 decim = this->decim ? (*this->decim)[0] : 1.0;
 
         for(size_t t=0, idx=0; selected && idx<buffer->size(); t+=decim) {
-            phase += decim*2*PI/2048;
+            phase += decim*2*PI/3600.;
 
             for(size_t sig=0; sig<32u && idx<buffer->size(); sig++) {
                 if(!(selected & (1u<<sig)))
@@ -107,6 +107,7 @@ void Simulator_HIRES::WF::process()
                         v = sin(ph) + cos(ph);
                     }
                     v *= 1024.0;
+                    v += rand()*15.0/double(RAND_MAX);
                 }
 
                 (*buffer)[idx++] = v;
