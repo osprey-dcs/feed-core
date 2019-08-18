@@ -56,8 +56,8 @@ include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 
-%_logic.substitutions: ../%_logic.json ../feed_logic.py
-	$(PYTHON) ../feed_logic.py $< $@
+%_logic.substitutions: ../%_logic.json
+	PYTHONPATH="$(TOP)/src/python:${PYTHONPATH}" $(PYTHON) -m leep.logic $< $@
 
 %_registers.substitutions: ../%_registers.json
 	echo $(*)_registers_FLAGS
