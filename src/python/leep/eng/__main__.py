@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 
-import os, logging, json
+import os, sys, logging, json
 
 datadir = os.path.dirname(__file__)
 
 def getargs():
     from argparse import ArgumentParser
-    P = ArgumentParser()
+    P = ArgumentParser('%s -m leep.eng'%sys.executable, description='Engineering screen (cs-studio/display builder) generator')
     P.add_argument('-d','--debug',action='store_const', const=logging.DEBUG, default=logging.INFO)
     P.add_argument('-q','--quiet',action='store_const', const=logging.WARN, dest='debug')
-    P.add_argument('--prefix', default='$(REG)')
+    P.add_argument('--prefix', default='$(REG)',
+                   help="Record name prefix.  default: '$(REG)'")
     P.add_argument('output', help='output .bob file')
     P.add_argument('json', help='input json register map')
     return P.parse_args()
