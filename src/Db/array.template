@@ -1,9 +1,11 @@
 record(aai, "$(RECNAME)") {
-	field(DESC, "$(DESC=)")
+    field(DESC, "$(DESC=)")
+    field(DTYP, "$(DTYP=)")
     field(INP , "$(INP)")
     field(FTVL, "$(FTVL)")
     field(NELM, "$(SIZE)")
-    field(SCAN, "$(SCAN=)")
+    field(SCAN, "$(SCAN=Passive)")
     field(TSE , "-2")
     field(FLNK, "$(FLNK=)")
+    $(INFO=)
 }
