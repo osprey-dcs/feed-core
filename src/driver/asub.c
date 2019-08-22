@@ -609,7 +609,7 @@ asub_signed(aSubRecord *prec)
     return 0;
 }
 
-/* Calculate quench detection coefficients (RFS) */
+/* Calculate quench detection coefficients and threshold (RFS) */
 static long
 asub_quench(aSubRecord *prec)
 {
@@ -623,8 +623,19 @@ asub_quench(aSubRecord *prec)
 	       imped       = *(double *)prec->f, /* shunt impedance R/Q */
 	       thresh_w    = *(double *)prec->g; /* quench trip threshold */
 
-	double *quench_const = (double *)prec->vala;
+	double *consts = (double *)prec->vala;
+	short  *override = (short *)prec->valb;
 	unsigned nelm = 4, i;
+	double max;
+
+	double freq_rad = 2 * PI * freq_mhz * 1e6,
+	       filter_gain = 80, /* FIR filter */
+	       dt = 32 * 33 * 14 / 1320e6,
+	       dudt_scale  = 16;
+
+	double denom = freq_rad * imped * dt * filter_gain * dudt_scale;
+
+	*override = 0;
 
     if(prec->nova != nelm) {
     	if(debug)
@@ -638,7 +649,7 @@ asub_quench(aSubRecord *prec)
 			prec->name, cav_scale, fwd_scale, rev_scale, fullscale_w, freq_mhz, imped, thresh_w);
 	}
 
-    if((cav_scale<=0.0) || (fwd_scale<=0.0) || (rev_scale<=0.0) || (fullscale_w<=0.0)
+    if((cav_scale<=0.0) || (fwd_scale<=0.0) || (rev_scale<=0.0)
 		|| (freq_mhz<=0.0) || (imped<=0.0) || (thresh_w<=0.0)) {
     	if(debug)
         	errlogPrintf("%s one or more inputs is <= 0. See above.\n", prec->name);
@@ -646,39 +657,44 @@ asub_quench(aSubRecord *prec)
         return EINVAL;
 	}
 
-	quench_const[0] = pow(rev_scale, 2) / fullscale_w;
-	quench_const[1] = pow(fwd_scale, 2) / fullscale_w;
+	consts[0] = pow(rev_scale,2);
+	consts[1] = pow(fwd_scale,2);
+	consts[2] = pow(cav_scale * 1e6, 2) / denom;
+	consts[3] = thresh_w;
 
-	double freq_rad = 2 * PI * freq_mhz * 1e6,
-	       filter_gain = 80, /* FIR filter */
-	       dt = 32 * 33 * 14 / 1320e6,
-	       dudt_scale  = 16;
+	printf("     full-scale will be max of rev %.1f fwd %.1f cav %.1f thresh %.1f and fullscale_w\n",
+		consts[0], consts[1], consts[2], consts[3]);
 
-	double denom = freq_rad * imped * dt * filter_gain * dudt_scale;
-
-	quench_const[2] = pow(cav_scale * 1e6, 2) / denom / fullscale_w;
-	quench_const[3] = thresh_w / fullscale_w; /* normalized trip threshold */	       
+	max = 1.001 * MAX(consts[0], MAX(consts[1], MAX(consts[2], consts[3])));
+	if (max > fullscale_w) {
+		fullscale_w = max;
+		*override = 1;
+		if (debug) {
+			printf("     Overriding input full-scale value. Using %.1f.\n", fullscale_w);
+		}
+	}
 
 	if (debug) {
 		printf("     intermediate values: dt %.3e dudt_scale %.1f denom %.1f\n",
 			dt, dudt_scale, denom);
-    	printf("     normalized constant array %.5f %.5f %.5f %.5f\n",
-			quench_const[0], quench_const[1],quench_const[2], quench_const[3]);
 	}
 
 	for (i = 0; i < nelm; i++) {
-    	if(quench_const[i] >= 1.0) {
+		consts[i] = consts[i]/fullscale_w;
+    	printf("     normalized constant array element %i %.5f\n",
+			i, consts[i]);
+    	if(consts[i] >= 1.0) {
     		if(debug)
-        		errlogPrintf("%s const index %i value %.5f is >= 1\n", prec->name, i, quench_const[i]);
+        		errlogPrintf("%s const index %i value %.5f is >= 1\n", prec->name, i, consts[i]);
         	(void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
         	return EINVAL;
 		}
-		quench_const[i] = floor(quench_const[i] * pow(2,19));
+		consts[i] = floor(consts[i] * pow(2,19));
 	}
 
 	if (debug) {
 		printf("     final output array: rev %.0f fwd %.0f cav %.0f thres %.0f\n",
-			quench_const[0], quench_const[1], quench_const[2], quench_const[3]);
+			consts[0], consts[1], consts[2], consts[3]);
 	}
 
     return 0;
