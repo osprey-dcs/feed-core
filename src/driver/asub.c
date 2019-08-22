@@ -209,7 +209,7 @@ long asub_feed_bcat(aSubRecord *prec)
     return 0;
 }
 
-/* Subroutine to set cavity amplitude */
+/* Subroutine to set cavity amplitude (RFS) */
 static 
 long asub_setamp(aSubRecord *prec)
 {
@@ -418,7 +418,9 @@ asub_round(aSubRecord *prec)
 
 }
 
-/* Ported from lcls2_llrf res_ctl.py. See cav_pzt.template for more info. */
+/* Ported from lcls2_llrf res_ctl.py. See cav_pzt.template for more info. 
+ * (Resonance)
+ */
 static long
 asub_pzt_src_set(aSubRecord *prec)
 {
@@ -492,6 +494,7 @@ asub_pzt_src_set(aSubRecord *prec)
     return 0;
 }
 
+/* (Resonance) */
 static long
 asub_pzt_src_get(aSubRecord *prec)
 {
@@ -534,7 +537,7 @@ asub_pzt_src_get(aSubRecord *prec)
     return 0;
 }
 
-/* Extract unsigned integer from word */
+/* Extract unsigned integer from word (Currently used only in resonance) */
 static long
 asub_mask(aSubRecord *prec)
 {
@@ -558,7 +561,7 @@ asub_mask(aSubRecord *prec)
     return 0;
 }
 
-/* Convert to signed number.
+/* Convert to signed number. (Currently used only in resonance)
  * Optionally apply linear scaling, scale and/or offset: 
  *  INPC = scale
  *  INPD = offset 
@@ -606,6 +609,81 @@ asub_signed(aSubRecord *prec)
     return 0;
 }
 
+/* Calculate quench detection coefficients (RFS) */
+static long
+asub_quench(aSubRecord *prec)
+{
+    short debug = (prec->tpro > 1) ? 1 : 0;
+
+	double cav_scale   = *(double *)prec->a,
+	       fwd_scale   = *(double *)prec->b,
+	       rev_scale   = *(double *)prec->c,
+	       fullscale_w = *(double *)prec->d,
+	       freq_mhz    = *(double *)prec->e, /* cavity frequency */
+	       imped       = *(double *)prec->f, /* shunt impedance R/Q */
+	       thresh_w    = *(double *)prec->g; /* quench trip threshold */
+
+	double *quench_const = (double *)prec->vala;
+	unsigned nelm = 4, i;
+
+    if(prec->nova != nelm) {
+    	if(debug)
+        	errlogPrintf("%s nova must be 4 but is %u\n", prec->name, (unsigned)prec->nova);
+        (void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+	}
+
+	if (debug) {
+		printf("asub_quench: %s\n     inputs: cav_scale %.1f fwd_scale %.1f rev_scale %.1f\n"
+			"     fullscale_w %.1f freq %.1f R/Q %.1f thresh_w %.1f\n",
+			prec->name, cav_scale, fwd_scale, rev_scale, fullscale_w, freq_mhz, imped, thresh_w);
+	}
+
+    if((cav_scale<=0.0) || (fwd_scale<=0.0) || (rev_scale<=0.0) || (fullscale_w<=0.0)
+		|| (freq_mhz<=0.0) || (imped<=0.0) || (thresh_w<=0.0)) {
+    	if(debug)
+        	errlogPrintf("%s one or more inputs is <= 0. See above.\n", prec->name);
+        (void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+        return EINVAL;
+	}
+
+	quench_const[0] = pow(rev_scale, 2) / fullscale_w;
+	quench_const[1] = pow(fwd_scale, 2) / fullscale_w;
+
+	double freq_rad = 2 * PI * freq_mhz * 1e6,
+	       filter_gain = 80, /* FIR filter */
+	       dt = 32 * 33 * 14 / 1320e6,
+	       dudt_scale  = 16;
+
+	double denom = freq_rad * imped * dt * filter_gain * dudt_scale;
+
+	quench_const[2] = pow(cav_scale * 1e6, 2) / denom / fullscale_w;
+	quench_const[3] = thresh_w / fullscale_w; /* normalized trip threshold */	       
+
+	if (debug) {
+		printf("     intermediate values: dt %.3e dudt_scale %.1f denom %.1f\n",
+			dt, dudt_scale, denom);
+    	printf("     normalized constant array %.5f %.5f %.5f %.5f\n",
+			quench_const[0], quench_const[1],quench_const[2], quench_const[3]);
+	}
+
+	for (i = 0; i < nelm; i++) {
+    	if(quench_const[i] >= 1.0) {
+    		if(debug)
+        		errlogPrintf("%s const index %i value %.5f is >= 1\n", prec->name, i, quench_const[i]);
+        	(void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
+        	return EINVAL;
+		}
+		quench_const[i] = floor(quench_const[i] * pow(2,19));
+	}
+
+	if (debug) {
+		printf("     final output array: rev %.0f fwd %.0f cav %.0f thres %.0f\n",
+			quench_const[0], quench_const[1], quench_const[2], quench_const[3]);
+	}
+
+    return 0;
+}
+
 static
 void asubFEEDRegistrar(void)
 {
@@ -620,5 +698,6 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_pzt_src_get", (REGISTRYFUNCTION)&asub_pzt_src_get);
     registryFunctionAdd("asub_mask", (REGISTRYFUNCTION)&asub_mask);
     registryFunctionAdd("asub_signed", (REGISTRYFUNCTION)&asub_signed);
+    registryFunctionAdd("asub_quench_coef", (REGISTRYFUNCTION)&asub_quench);
 }
 epicsExportRegistrar(asubFEEDRegistrar);
