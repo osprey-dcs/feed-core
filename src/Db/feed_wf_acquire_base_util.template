@@ -60,14 +60,14 @@ record(calcout, "$(BASE)PERIOD") {
 #==================================# 
 # Set how much of fault waveform buffer
 # is pre- and post- fault event
-# 100% = full waveform buffer is pre-fault
-# 0% = full waveform buffer is post-fault
+# 0%   - full waveform buffer is pre-fault
+# 100% - full waveform buffer is post-fault
 #==================================
 record(ao, "$(BASE)FLT_DELAY") {
     field(DESC, "Fault wf trigger delay")
     field(DRVH, "100.0")
     field(DRVL, "0")
-    field(VAL , "100.0")
+    field(VAL , "0")
     field(EGU , "%")
     field(PREC, "1")
     field(PINI, "YES")
@@ -75,21 +75,10 @@ record(ao, "$(BASE)FLT_DELAY") {
     info(autosaveFields_pass0, "VAL")
 }
 
-# From L. Doolittle 8/2019
-#  One time-step in the waveform is 
-#    2 * 255 * 33 * 14 / 1320e6 = 1.785e-4 s
-#  One count of this time delay register will 
-#  not have that first factor-of-two so is 
-#    255 * 33 * 14 / 1320e6 = 8.925e-5 s.
-#  That factor-of-two discrepancy originates 
-#  in the decimation created by a half-band-filter,
-#  inserted in the data path just before storing samples
-#  in the waveform buffers.
 record(calc, "$(BASE)FLT_DELAY_") {
-    field(INPA, "$(BASE)SAMP_PERIOD CP") # spacing between waveform points
+    field(INPA, "$(BASE)NORD CP") # waveform number of elements
     field(INPB, "$(BASE)FLT_DELAY")
-    field(INPC, "$(BASE)PERIOD CP") # total duration of waveform cycle
-    field(CALC, "FLOOR(B * C / 100 / A / 2)")
+    field(CALC, "FLOOR(33 * 2 * A * B / 100)")
     field(PREC, "0")
     field(FLNK, "$(BASE)FLT_DELAY_TICKS")
 }
@@ -99,7 +88,8 @@ record(longout, "$(BASE)FLT_DELAY_TICKS") {
     field(DTYP, "FEED Register Write")
     field(OMSL, "closed_loop")
     field(DOL,  "$(BASE)FLT_DELAY_")
+    field(DRVH, "65535")
     field(EGU,  "ticks")
-    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_cbuf_post_delay wait=false")
+    field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_cbuf_post_delay wait=false")
     info(feed:info:setting, "$(BASE)FLT_DELAY_TICKS")
 }
