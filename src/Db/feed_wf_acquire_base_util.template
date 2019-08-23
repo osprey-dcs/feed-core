@@ -1,3 +1,20 @@
+# waveform support outside of primary processing chain
+#
+# Macros
+#  BASE - Record name prefix
+#  NAME - FEED Device name
+
+# local (re)initialization
+
+record(longin, "$(BASE)UTIL_INIT1_") {
+    field(DTYP, "FEED On Connect")
+    field(INP , "@name=$(NAME)")
+    field(SCAN, "I/O Intr")
+    field(PHAS, "0")
+    field(FLNK, "$(BASE)FLT_DELAY")
+    field(TPRO, "$(TPRO=0)")
+}
+
 #==================================
 # Determine waveform period length
 # based on number of active waveforms
