@@ -666,7 +666,7 @@ asub_quench(aSubRecord *prec)
 		*fullscale_w_inuse = max;
 		*override = 1;
 		if (debug) {
-			printf("     Overriding input full-scale value. Using %.1f.\n", fullscale_w);
+			printf("     Overriding input full-scale value. Using %.1f.\n", *fullscale_w_inuse);
 		}
 	}
 
@@ -680,7 +680,7 @@ asub_quench(aSubRecord *prec)
 		if (debug) {
     		printf("     normalized constant array element %i %.5f\n", i, consts[i]);
 		}
-    	if((consts[i] >= 1.0) || (consts[i] <= 1.0) || (isnan(consts[i]))) {
+    	if((consts[i] >= 1.0) || (consts[i] <= 0.0) || (isnan(consts[i]))) {
     		if(debug)
         		errlogPrintf("%s const index %i value %.5f illegal value\n", prec->name, i, consts[i]);
         	(void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
