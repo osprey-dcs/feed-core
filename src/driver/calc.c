@@ -1005,7 +1005,7 @@ long unwrap_fault(aSubRecord* prec)
 		errlogPrintf("%s: len=%d, offset=%u, wrap=%u\n", prec->name, len, offset, wrap);
 	}
 
-    ++offset;
+    //offset;
 
     for(i=0; i<offset; i++) {
         out[len-offset+i] = in[i];
