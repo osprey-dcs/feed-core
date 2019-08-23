@@ -623,7 +623,8 @@ asub_quench(aSubRecord *prec)
 	       imped       = *(double *)prec->f, /* shunt impedance R/Q */
 	       thresh_w    = *(double *)prec->g; /* quench trip threshold */
 
-	double *consts = (double *)prec->vala;
+	double *consts = (double *)prec->vala,
+	       *fullscale_w_inuse = (double *)prec->valc;
 	short  *override = (short *)prec->valb;
 	unsigned nelm = 4, i;
 	double max;
@@ -635,6 +636,7 @@ asub_quench(aSubRecord *prec)
 
 	double denom = freq_rad * imped * dt * filter_gain * dudt_scale;
 
+	*fullscale_w_inuse = fullscale_w;
 	*override = 0;
 
     if(prec->nova != nelm) {
@@ -649,25 +651,19 @@ asub_quench(aSubRecord *prec)
 			prec->name, cav_scale, fwd_scale, rev_scale, fullscale_w, freq_mhz, imped, thresh_w);
 	}
 
-    if((cav_scale<=0.0) || (fwd_scale<=0.0) || (rev_scale<=0.0)
-		|| (freq_mhz<=0.0) || (imped<=0.0) || (thresh_w<=0.0)) {
-    	if(debug)
-        	errlogPrintf("%s one or more inputs is <= 0. See above.\n", prec->name);
-        (void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
-        return EINVAL;
-	}
-
 	consts[0] = pow(rev_scale,2);
 	consts[1] = pow(fwd_scale,2);
 	consts[2] = pow(cav_scale * 1e6, 2) / denom;
 	consts[3] = thresh_w;
 
-	printf("     full-scale will be max of rev %.1f fwd %.1f cav %.1f thresh %.1f and fullscale_w\n",
-		consts[0], consts[1], consts[2], consts[3]);
+	if (debug) {
+		printf("     full-scale will be max of rev %.1f fwd %.1f cav %.1f thresh %.1f and fullscale_w\n",
+			consts[0], consts[1], consts[2], consts[3]);
+	}
 
 	max = 1.001 * MAX(consts[0], MAX(consts[1], MAX(consts[2], consts[3])));
 	if (max > fullscale_w) {
-		fullscale_w = max;
+		*fullscale_w_inuse = max;
 		*override = 1;
 		if (debug) {
 			printf("     Overriding input full-scale value. Using %.1f.\n", fullscale_w);
@@ -680,12 +676,13 @@ asub_quench(aSubRecord *prec)
 	}
 
 	for (i = 0; i < nelm; i++) {
-		consts[i] = consts[i]/fullscale_w;
-    	printf("     normalized constant array element %i %.5f\n",
-			i, consts[i]);
-    	if(consts[i] >= 1.0) {
+		consts[i] = consts[i] / *fullscale_w_inuse;
+		if (debug) {
+    		printf("     normalized constant array element %i %.5f\n", i, consts[i]);
+		}
+    	if((consts[i] >= 1.0) || (consts[i] <= 1.0) || (isnan(consts[i]))) {
     		if(debug)
-        		errlogPrintf("%s const index %i value %.5f is >= 1\n", prec->name, i, consts[i]);
+        		errlogPrintf("%s const index %i value %.5f illegal value\n", prec->name, i, consts[i]);
         	(void)recGblSetSevr(prec, CALC_ALARM, INVALID_ALARM);
         	return EINVAL;
 		}
