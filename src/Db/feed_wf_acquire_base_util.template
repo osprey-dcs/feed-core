@@ -95,7 +95,7 @@ record(ao, "$(BASE)FLT_DELAY") {
 record(calc, "$(BASE)FLT_DELAY_") {
     field(INPA, "$(BASE)NORD CP") # waveform number of elements
     field(INPB, "$(BASE)FLT_DELAY")
-    field(CALC, "FLOOR(33 * 2 * A * B / 100)")
+    field(CALC, "FLOOR(2 * A * B / 100)")
     field(PREC, "0")
     field(FLNK, "$(BASE)FLT_DELAY_TICKS")
 }
