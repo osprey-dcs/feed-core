@@ -59,30 +59,40 @@ record(aai, "$(PREF)WF") {
 record(longin, "$(PREF)NORD") {
     field(INP , "$(PREF)WF.NORD")
     field(TPRO, "$(TPRO=0)")
+    field(FLNK, "$(PREF)TWF_CALC_")
+}
+
+# re-create time waveform if time base has changed 
+record(calcout, "$(PREF)TWF_CALC_") {
+    field(CALC, "(A#B)|(C#D)?1:0")
+    field(INPA, "$(BASE)SAMP_PERIOD MSI")
+    field(INPB, "$(PREF)TWF_.B")
+    field(INPC, "$(PREF)NORD")
+    field(INPD, "$(PREF)TWF_.C")
+    field(OOPT, "When Non-zero") 
+    field(OUT, "$(PREF)TWF_.PROC")
 # store current scale factor
     field(FLNK, "$(PREF)SCALE")
 }
 
 record(aSub, "$(PREF)TWF_") {
-    field(SDIS, "$(BASE)STATUS.BF")
-    field(DISV, "1")
     field(SNAM, "asub_feed_timebase")
     # first value
     field(FTA , "DOUBLE")
     field(INPA, "0.0")
     # step size
     field(FTB , "DOUBLE")
-    field(INPB, "$(BASE)SAMP_PERIOD CP MSI")
+    field(INPB, "$(BASE)SAMP_PERIOD MSI")
     # max element count limit
     # TODO: calulate real step size
     field(FTC , "ULONG")
-    field(INPC, "$(PREF)NORD CP MSI")
+    field(INPC, "$(PREF)NORD MSI")
     # output array
     field(FTVA, "DOUBLE")
     field(NOVA, "$(SIZE)")
     field(OUTA, "$(PREF)TWF PP MSI")
     field(TPRO, "$(TPRO=0)")
-    field(TSEL, "$(BASE)SAMP_PERIOD.TIME CA")
+    field(TSEL, "$(PREF)WF.TIME")
 }
 
 record(aai, "$(PREF)TWF") {
