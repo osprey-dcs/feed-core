@@ -39,6 +39,7 @@ struct WaitInfo : public RecInfo
         ,retry(1.0)
         ,cb_inprogress(false)
     {
+        memset(&cb, 0, sizeof(cb));
         callbackSetCallback(&expire, &cb);
         callbackSetPriority(prec->prio, &cb);
         callbackSetUser(this, &cb);
