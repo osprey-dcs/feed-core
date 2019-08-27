@@ -241,6 +241,8 @@ long asub_setamp(aSubRecord *prec)
 	rfctrl      = *(short *)prec->n,
 	rfmodectrl  = *(short *)prec->o,
 	rfmodeprev  = *(short *)prec->r;
+	epicsInt32 decim  = *(epicsInt32 *)prec->s, /* Current decimation factor  */
+	decimprev  = *(epicsInt32 *)prec->t; /* Decimation stored when last entered chirp mode */
  
     /* Intermediate results */
     double *sqrtu = (double *)prec->vala,
@@ -251,9 +253,8 @@ long asub_setamp(aSubRecord *prec)
 	*pol_y    = (double *)prec->valg,
 	*lowslope = (double *)prec->valh;
 /*
-	*x_lo     = (double *)prec->vali,
-	*x_hi     = (double *)prec->valj,
-	*y_lo     = (double *)prec->valm,
+	*y_hi     = (double *)prec->valj;
+	*y_hi     = (double *)prec->valm;
 	*y_hi     = (double *)prec->valn;
 */
 
@@ -270,7 +271,7 @@ long asub_setamp(aSubRecord *prec)
     short *too_high  = (short *)prec->valq,
 	  	*error     = (short *)prec->valt,
 		*rfmodecurr= (short *)prec->valu,
-		*chirp     = (short *)prec->vali;
+		*chirp     = (short *)prec->vali; /* chirp enable/disable */
     char  *msg     = (char *)prec->vals;
 
 	*rfmodecurr = rfmodectrl;
@@ -285,7 +286,10 @@ long asub_setamp(aSubRecord *prec)
     double adesv  = ades*1e6;
 
     unsigned short MASK_LIMS  = 0x1F;
-    unsigned short MASK_CHIRP = 0x20;
+    unsigned short MASK_CHIRP_DECIM_SAVE = 0x20;
+    unsigned short MASK_CHIRP_SETUP = 0x40;
+    unsigned short MASK_CHIRP_ENABLE = 0x80;
+    unsigned short MASK_CHIRP_DECIM_RESTORE = 0x100;
     unsigned short MASK_ERR = 0;
 
     *mask = MASK_ERR; /* Initialize to do not write registers */
@@ -297,12 +301,45 @@ long asub_setamp(aSubRecord *prec)
  */
 
     if (debug) {
-	printf("setAmpl: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
+	printf("%s: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
 		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
 		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
-		rfctrl, rfmodectrl, rfmodeprev, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
+		prec->name, rfctrl, rfmodectrl, rfmodeprev, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
 		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
     }
+
+	/* Chirp control. 
+	 * If entering mode, store decimation value and set up chirp parameters
+	 * If exiting mode, disable chirp and restore decimation
+	 * If request is on/chirp, enable chirp
+	 */
+	if (rfmodectrl==MODE_CHIRP) {
+		*error = 0;
+		*too_high = 0;
+		if (rfmodeprev != rfmodectrl) {
+			*mask |= MASK_CHIRP_DECIM_SAVE;
+			*mask |= MASK_CHIRP_SETUP;
+		}
+		if (rfctrl != 0) {
+			*chirp = 1;
+			*mask |= MASK_CHIRP_ENABLE;
+		}
+//		return 0;
+    }
+	else if (rfmodeprev == MODE_CHIRP) {
+		*mask |= MASK_CHIRP_ENABLE;
+		if (decimprev != -1 ) {
+			*mask |= MASK_CHIRP_DECIM_RESTORE;
+		}
+		else {
+			errlogPrintf("%s: could not restore decimation factor of %i\n", prec->name, decimprev);
+		}
+	}
+
+	if ( debug ) {
+  		printf("%s: current decim %i stored chirp decim %i mask 0x%x\n",
+	 		prec->name, decim, decimprev, *mask);
+	}
 
 	/* Pulse control. 
 	 * If entering mode, set lim/mag registers to 0 and disable chirp 
@@ -312,27 +349,10 @@ long asub_setamp(aSubRecord *prec)
 		*too_high = 0;
 		if (rfmodeprev != rfmodectrl) {
 			*lim_x_lo = *lim_x_hi = *lim_y_lo = *lim_y_hi = *setm = 0;
-			*mask = MASK_LIMS | MASK_CHIRP;
+			*mask |= MASK_LIMS | MASK_CHIRP_ENABLE;
 		}
 		return 0;
     }
-
-	/* Chirp control. 
-	 * If exiting mode, disable chirp
-	 * If request is on/chirp, enable chirp
-	 */
-	if (rfmodectrl==MODE_CHIRP) {
-		*error = 0;
-		*too_high = 0;
-		if (rfctrl != 0) {
-			*chirp = 1;
-			*mask |= MASK_CHIRP;
-		}
-		return 0;
-    }
-	else if (rfmodeprev == MODE_CHIRP) {
-		*mask |= MASK_CHIRP;
-	}
 
     /* SEL raw amplitude control */
     if (rfmodectrl==MODE_SEL_RAW) {
