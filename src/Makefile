@@ -32,6 +32,8 @@ LIB_SRCS += devhack.cpp
 LIB_SRCS += iocsh.cpp
 LIB_SRCS += asub.c
 LIB_SRCS += calc.c
+LIB_SRCS += chirp.c
+LIB_SRCS += rf_asub.c
 
 #===========================
 
