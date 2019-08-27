@@ -210,6 +210,13 @@ long asub_feed_bcat(aSubRecord *prec)
 }
 
 /* Subroutine to set cavity amplitude (RFS) */
+#define MODE_SELAP   0
+#define MODE_SELA    1
+#define MODE_SEL     2
+#define MODE_SEL_RAW 3
+#define MODE_PULSE   4
+#define MODE_CHIRP   5
+
 static 
 long asub_setamp(aSubRecord *prec)
 {
@@ -242,12 +249,15 @@ long asub_setamp(aSubRecord *prec)
 	*adcn     = (double *)prec->vald, /* Normalized cavity ADC */
 	*pol_x    = (double *)prec->valf,
 	*pol_y    = (double *)prec->valg,
-	*lowslope = (double *)prec->valh,
+	*lowslope = (double *)prec->valh;
+/*
 	*x_lo     = (double *)prec->vali,
 	*x_hi     = (double *)prec->valj,
 	*y_lo     = (double *)prec->valm,
 	*y_hi     = (double *)prec->valn;
-    double x_lo_final, x_hi_final;
+*/
+
+    double x_lo, x_hi, y_lo, y_hi, x_lo_final, x_hi_final;
 
     epicsInt32 sel_lim, sel_lim_max;
 
@@ -259,22 +269,26 @@ long asub_setamp(aSubRecord *prec)
 	*lim_y_hi    = (epicsInt32 *)prec->valp;
     short *too_high  = (short *)prec->valq,
 	  	*error     = (short *)prec->valt,
-		*rfmodecurr= (short *)prec->valu;
-    char  *msg       = (char *)prec->vals;
+		*rfmodecurr= (short *)prec->valu,
+		*chirp     = (short *)prec->vali;
+    char  *msg     = (char *)prec->vals;
 
 	*rfmodecurr = rfmodectrl;
 
     unsigned short *mask = (unsigned short *)prec->valr;
+
+	*chirp = 0;
 
     short debug = (prec->tpro > 1) ? 1 : 0;
 
     double freqhz = freq*1e6;
     double adesv  = ades*1e6;
 
-    unsigned short MASKOK  = 0xFF;
-    unsigned short MASKERR = 0;
+    unsigned short MASK_LIMS  = 0x1F;
+    unsigned short MASK_CHIRP = 0x20;
+    unsigned short MASK_ERR = 0;
 
-    *mask = MASKERR; /* Initialize to do not write registers */
+    *mask = MASK_ERR; /* Initialize to do not write registers */
 
 /* If RF control is set off, do not push values.
  * Set error to 0, though, because this is not 
@@ -290,38 +304,57 @@ long asub_setamp(aSubRecord *prec)
 		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
     }
 
-	/* Pulse control. Set lim/mag registers to 0 if transitioning
-	   from CW to pulsed */
-	if (rfmodectrl==4) {
-	*error = 0;
-	*too_high = 0;
-	if (rfmodeprev!=4) {
-	*lim_x_lo = *lim_x_hi = *lim_y_lo = *lim_y_hi = *setm = 0;
-	*mask = MASKOK;
-	}
-	return 0;
+	/* Pulse control. 
+	 * If entering mode, set lim/mag registers to 0 and disable chirp 
+	 */
+	if (rfmodectrl == MODE_PULSE) {
+		*error = 0;
+		*too_high = 0;
+		if (rfmodeprev != rfmodectrl) {
+			*lim_x_lo = *lim_x_hi = *lim_y_lo = *lim_y_hi = *setm = 0;
+			*mask = MASK_LIMS | MASK_CHIRP;
+		}
+		return 0;
     }
 
-    /* SEL raw amplitude control */
-    if (rfmodectrl==3) {
-	sel_lim_max = (epicsInt32)(79500 * max_magn); /* 79500 max value of lims registers */ 
-	sel_lim = (epicsInt32)(floor((sel_aset/100)*79500));
-	if ( sel_lim >= sel_lim_max )
-	    *lim_x_lo = *lim_x_hi = sel_lim_max;
-	else
-	    *lim_x_lo = *lim_x_hi = sel_lim;
-	*lim_y_lo = *lim_y_hi = *setm = 0;
-	if ( debug ) {
-	  printf("setAmpl: SEL raw mode: max lim %i sel_lim %i limxlo %i limxyhi %i limylo %i limyhi %i\n",
-		 sel_lim_max, sel_lim, *lim_x_lo, *lim_x_hi, *lim_y_lo, *lim_y_hi);
+	/* Chirp control. 
+	 * If exiting mode, disable chirp
+	 * If request is on/chirp, enable chirp
+	 */
+	if (rfmodectrl==MODE_CHIRP) {
+		*error = 0;
+		*too_high = 0;
+		if (rfctrl != 0) {
+			*chirp = 1;
+			*mask |= MASK_CHIRP;
+		}
+		return 0;
+    }
+	else if (rfmodeprev == MODE_CHIRP) {
+		*mask |= MASK_CHIRP;
 	}
+
+    /* SEL raw amplitude control */
+    if (rfmodectrl==MODE_SEL_RAW) {
+		sel_lim_max = (epicsInt32)(79500 * max_magn); /* 79500 max value of lims registers */ 
+		sel_lim = (epicsInt32)(floor((sel_aset/100)*79500));
+		if ( sel_lim >= sel_lim_max )
+	    	*lim_x_lo = *lim_x_hi = sel_lim_max;
+		else
+	    	*lim_x_lo = *lim_x_hi = sel_lim;
+		*lim_y_lo = *lim_y_hi = *setm = 0;
+		if ( debug ) {
+	  		printf("setAmpl: SEL raw mode: max lim %i sel_lim %i limxlo %i limxyhi %i limylo %i limyhi %i\n",
+		 		sel_lim_max, sel_lim, *lim_x_lo, *lim_x_hi, *lim_y_lo, *lim_y_hi);
+		}
 	  
-	*error = 0;
-	*too_high = 0;
-	if (rfctrl == 0)
-	    return 0;
-	*mask = MASKOK;
-	return 0;
+		*error = 0;
+		*too_high = 0;
+		if (rfctrl == 0) {
+			return 0;
+		}
+		*mask |= MASK_LIMS;
+		return 0;
     }
 
     /* Policy maximum X/Y */
@@ -348,18 +381,18 @@ long asub_setamp(aSubRecord *prec)
     /* Calculate values for X limit registers */
     *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
     if (amp_close) { 
-	*x_lo = ssa_slope * *ssan * 0.75;
-	*x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
-	*x_hi = MIN(*x_hi, *lowslope * *ssan * 1.15);
+	x_lo = ssa_slope * *ssan * 0.75;
+	x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
+	x_hi = MIN(x_hi, *lowslope * *ssan * 1.15);
     }
     else {
-	*x_lo = ssa_slope * *ssan;
-	*x_lo = MIN(*x_lo, *lowslope * *ssan);
-	*x_hi = *x_lo;
+	x_lo = ssa_slope * *ssan;
+	x_lo = MIN(x_lo, *lowslope * *ssan);
+	x_hi = x_lo;
     }
-    *too_high = (*x_hi > *pol_x) ? 1 : 0;
-    x_lo_final = MIN(*x_lo, *pol_x); 
-    x_hi_final = MIN(*x_hi, *pol_x); 
+    *too_high = (x_hi > *pol_x) ? 1 : 0;
+    x_lo_final = MIN(x_lo, *pol_x); 
+    x_hi_final = MIN(x_hi, *pol_x); 
     *lim_x_lo = (epicsInt32)(79500 * (x_lo_final));
     *lim_x_hi = (epicsInt32)(79500 * (x_hi_final));
 
@@ -371,13 +404,13 @@ long asub_setamp(aSubRecord *prec)
 	printf("setAmpl: to setmp adcn %f setm %i\n", *adcn, *setm);
 
     /* Calculate values for Y limit registers */
-    *y_lo = *y_hi = 0;
+    y_lo = y_hi = 0;
     if ( pha_close && (ades>0.0) ) {
-	*y_lo = - *pol_y;
-	*y_hi = *pol_y;
+	y_lo = - *pol_y;
+	y_hi = *pol_y;
     }
-    *lim_y_lo = (epicsInt32)(79500 * (*y_lo));
-    *lim_y_hi = (epicsInt32)(79500 * (*y_hi));
+    *lim_y_lo = (epicsInt32)(79500 * (y_lo));
+    *lim_y_hi = (epicsInt32)(79500 * (y_hi));
 
     *error = 0;
     if (rfctrl == 0)
@@ -402,7 +435,7 @@ long asub_setamp(aSubRecord *prec)
 	return 0;
     }
 
-    *mask = MASKOK;
+    *mask |= MASK_LIMS;
     return 0;
 }
 
