@@ -1007,9 +1007,22 @@ long unwrap_fault(aSubRecord* prec)
 
     //offset;
 
+    // Copy data from hardware to software
+    //
+    // In the fault (frozen) condition, the hardware buffer is split as
+    //   (possibly) early-time data segment [offset, len-1]
+    //   and (always) late-time data segment [0, offset-1]
+    // Assemble that into the output buffer, where
+    //   early time is [0, len-offset-1]
+    //   and late time is [len-offset, len-1]
+    // If the wrap bit is _not_ set, the early time data comes instead
+    //   from the previous buffer [offset, len-1]
+    //
+    // Handle the late-time segment
     for(i=0; i<offset; i++) {
         out[len-offset+i] = in[i];
     }
+    // Hnandle the early-time segment
     for(i=offset; i<len; i++) {
         out[i-offset] = wrap ? in[i] : in_last[i];
     }
