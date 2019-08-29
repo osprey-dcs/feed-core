@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <string.h>
 #include <complex.h>
@@ -352,8 +351,8 @@ long convert_iq2ap(aSubRecord* prec)
         P[i] = phase_wrap(P[i] + zero_angle);
         if(PW)
             PW[i] = pow_scale * A[i] * A[i];
-		IROT[i] = I[i]*cos(disp_angle) - Q[i]*sin(disp_angle);
-		QROT[i] = I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
+		IROT[i] = I[i]*cos(disp_angle) + Q[i]*sin(disp_angle);
+		QROT[i] = - I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
     }
 
     prec->neva = prec->nevb = prec->nevd = prec->neve = len;
