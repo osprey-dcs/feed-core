@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to LEEP documentation!
-==================================================================
+==============================
 
 Documentation for the LBNL Embedded Ethernet Protocol (LEEP)
 interface python module.
@@ -17,6 +17,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   building
+   devsup
    usage
    api
 

@@ -1,5 +1,5 @@
-API
-===
+Python API
+==========
 
 .. module:: leep
 
@@ -23,6 +23,6 @@ API
 
    .. automethod:: get_timebase
 
-   .. automethod:: load_xxx
+   .. automethod:: tgen_reg_sequence
 
-   .. automethod:: assemble_xxx
+   .. automethod:: assemble_tgen
