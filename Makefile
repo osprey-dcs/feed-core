@@ -7,6 +7,7 @@ DIRS += src
 src_DEPEND_DIRS = configure
 
 DIRS += src/Db
+DIRS += src/opi
 
 DIRS += sim
 sim_DEPEND_DIRS = configure src
@@ -21,5 +22,7 @@ DIRS += slacRfApp
 slacRfApp_DEPEND_DIRS = configure src
 
 DIRS += iocBoot
+
+UNINSTALL_DIRS += $(INSTALL_LOCATION)/opi
 
 include $(TOP)/configure/RULES_TOP

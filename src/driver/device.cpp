@@ -70,6 +70,8 @@ DevReg::DevReg(Device *dev, const JRegister &info, bool bootstrap)
     ,received(1u<<info.addr_width, false)
     ,nremaining(0u)
     ,next_send(mem_rx.size())
+    ,stat(UDF_ALARM)
+    ,sevr(INVALID_ALARM)
 {}
 
 DevReg::~DevReg()
@@ -191,7 +193,7 @@ const char *Device::current_name[5] = {
 
 static void feed_shutdown(void *raw)
 {
-    Device *dev = (Device*)raw;
+    Device *dev = static_cast<Device*>(raw);
 
     {
         Guard G(dev->lock);
@@ -217,7 +219,7 @@ Device::Device(const std::string &name, osiSockAddr &ep)
     ,rtt_ptr(0u)
     ,reg_rom(new DevReg(this, gblrom.jrom_info, true))
     ,reg_id(new DevReg(this, gblrom.jid_info, true))
-    ,inflight(feedNumInFlight)
+    ,inflight(std::max(1, std::min(feedNumInFlight, 255))) // limit to [0, 255] as we choose to encode offset in request header
     ,want_to_send(false)
     ,runner_stop(false)
     ,reset_requested(false)
@@ -346,7 +348,7 @@ void Device::reset(bool error)
         if(it->second->reg && it->second->reg->bootstrap)
             continue;
 
-        // break association with register
+        // break association with (now deleted) register
         it->second->reg = 0;
         scanIoRequest(it->second->changed);
     }
@@ -413,12 +415,15 @@ void Device::handle_send(Guard& G)
         if(msg.state!=DevMsg::Ready)
             continue;
 
+        // some devices require a minimum message length
         while(msg.buf.size()<8) {
             // pad with reads of offset zero ("Hell" register)
             msg.buf.push_back(htonl(0x10000000));
             msg.buf.push_back(0);
         }
 
+        // encode both message slot offset (to simplify our RX processing)
+        // and a sequence number (to reject duplicate/late messages)
         msg.seq = (i<<24) | ((send_seq++)&0x00ffffff);
 
         msg.buf[0] = htonl(0xfeedc0de);
@@ -444,7 +449,8 @@ void Device::handle_send(Guard& G)
 
 void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
 {
-    if(buf.size()<32) {
+    // check for minimum message size
+    if(buf.size()<8u*4u) {
         cnt_ignore++;
         IFDBG(0, "Ignore short %zu byte message from %s", buf.size(), addr.c_str());
         return;
@@ -509,7 +515,7 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
         }
 
         if(!reg->received.at(offset)) {
-            reg->received.at(offset) = true;
+            reg->received[offset] = true;
             reg->nremaining--;
         }
 
@@ -619,7 +625,7 @@ void Device::do_timeout(unsigned i)
     msg.clear();
 }
 
-void Device::handle_inspect()
+void Device::handle_inspect(Guard &G)
 {
     // Process ROM to extract JSON
 
@@ -746,9 +752,22 @@ void Device::handle_inspect()
 
     dev_infos.clear();
     zdeflate(dev_infos, jstring.c_str(), jstring.size(), 9);
+
+    {
+        UnGuard U(G);
+
+        for(reg_interested_t::iterator it(reg_interested.begin()), end(reg_interested.end());
+            it != end; ++it)
+        {
+            RegInterest * const interest = it->second;
+
+            if(interest->reg)
+                interest->connected(); // allowed to lock record and force post meta-data fields
+        }
+    }
 }
 
-void Device::handle_state()
+void Device::handle_state(Guard &G)
 {
     state_t prev = current;
     if(reset_requested || error_requested) {
@@ -781,7 +800,7 @@ void Device::handle_state()
 
     case Inspecting:
         if(reg_rom->state==DevReg::InSync) {
-            handle_inspect();
+            handle_inspect(G);
             IFDBG(3, "Request on_connect scan");
             scanIoRequest(on_connect);
             current = Running;
@@ -889,7 +908,7 @@ void Device::run()
                         fds[1].revents &= ~POLLIN;
 
                         char temp[16];
-                        wakeupRx.recvall(temp, 16);
+                        wakeupRx.recvsome(temp, 16);
                     }
 
                     if(fds[0].revents&POLLIN) {
@@ -955,7 +974,7 @@ void Device::run()
 
             handle_timeout();
 
-            handle_state();
+            handle_state(G);
 
         } catch(std::exception& e) {
             cnt_err++;

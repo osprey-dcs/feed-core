@@ -295,16 +295,16 @@ long convert_iq2ap(aSubRecord* prec)
     size_t i;
     epicsUInt32 len = prec->nea; /* actual output length */
     unsigned pow_out = prec->ftvc==menuFtypeDOUBLE;
-    double pow_scale = 1.0, zero_angle = 0.0,
-	   disp_angle = 0.0;
+    unsigned rot_out = prec->ftvd==menuFtypeDOUBLE && prec->ftve==menuFtypeDOUBLE;
+    double pow_scale = 1.0, zero_angle = 0.0, disp_angle = 0.0;
 
     double *I = (double*)prec->a,
            *Q = (double*)prec->b,
            *A = (double*)prec->vala,
            *P = (double*)prec->valb,
            *PW= pow_out ? (double*)prec->valc : NULL,
-		   *IROT = (double*)prec->vald,
-		   *QROT = (double*)prec->vale;
+           *IROT = rot_out ? (double*)prec->vald : NULL,
+           *QROT = rot_out ? (double*)prec->vale : NULL;
 
     if(prec->fta!=menuFtypeDOUBLE
             || prec->ftb!=menuFtypeDOUBLE
@@ -340,9 +340,9 @@ long convert_iq2ap(aSubRecord* prec)
         len = prec->novb;
     if(pow_out && len > prec->novc)
         len = prec->novc;
-    if(len > prec->novd)
+    if(rot_out && len > prec->novd)
         len = prec->novd;
-    if(len > prec->nove)
+    if(rot_out && len > prec->nove)
         len = prec->nove;
 
     for(i=0; i<len; i++) {
@@ -351,13 +351,18 @@ long convert_iq2ap(aSubRecord* prec)
         P[i] = phase_wrap(P[i] + zero_angle);
         if(PW)
             PW[i] = pow_scale * A[i] * A[i];
-		IROT[i] = I[i]*cos(disp_angle) + Q[i]*sin(disp_angle);
-		QROT[i] = - I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
+        if(rot_out) {
+            IROT[i] = I[i]*cos(disp_angle) + Q[i]*sin(disp_angle);
+            QROT[i] = - I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
+        }
     }
 
     prec->neva = prec->nevb = prec->nevd = prec->neve = len;
     if(pow_out)
         prec->nevc = len;
+    if(rot_out) {
+        prec->nevd = prec->neve = len;
+    }
 
     return 0;
 }
@@ -594,7 +599,7 @@ long unwrap(aSubRecord* prec)
     size_t i;
     double *in = (double*)prec->a,
             *out= (double*)prec->vala,
-            delta, thres;
+            thres;
     epicsUInt32 len=MIN(prec->nea, prec->nova);
 
     if(prec->dpvt==BADMAGIC) {
@@ -632,7 +637,7 @@ long unwrap(aSubRecord* prec)
     out[0]=in[0]; // start at same point
 
     for(i=1; i<len; i++) {
-        delta = in[i] - in[i-1];
+        double delta = in[i] - in[i-1];
 
         // the following will only work for wrapping
         // at shallow angles

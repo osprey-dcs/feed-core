@@ -25,7 +25,11 @@ struct SimReg {
     storage_t storage;
 
     SimReg() :base(0), mask(0), readable(false), writable(false) {}
-    SimReg(const JRegister& reg);
+    explicit SimReg(const JRegister& reg);
+
+    inline size_t size() const { return storage.size(); }
+    inline epicsUInt32& operator[](size_t idx) { return storage.at(idx); }
+    inline const epicsUInt32& operator[](size_t idx) const { return storage.at(idx); }
 };
 
 class epicsShareClass Simulator
@@ -107,8 +111,43 @@ private:
     double phase;
     epicsUInt16 circle_count;
 
-    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval);
+    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval) override final;
     void acquire(unsigned instance);
+};
+
+class epicsShareClass Simulator_HIRES : public Simulator
+{
+public:
+    Simulator_HIRES(const osiSockAddr& ep,
+                  const JBlob& blob,
+                  const values_t& initial);
+    virtual ~Simulator_HIRES();
+
+private:
+    struct WF {
+        SimReg *buffer;
+        SimReg *reset;
+        SimReg *status;
+        SimReg *mask;
+        SimReg *decim;
+        epicsUInt32 valid;
+        unsigned reset_bit;
+        unsigned status_bit;
+        double phase;
+        WF()
+            :buffer(0), reset(0), status(0), mask(0)
+            ,reset_bit(0u), status_bit(0u)
+            ,phase(0.0)
+        {}
+        void process();
+    };
+    WF banyan,
+       trace_odata,
+       decay_data,
+       abuf_data,
+       adcbuf_dataB;
+
+    virtual void reg_write(SimReg& reg, epicsUInt32 offset, epicsUInt32 newval) override final;
 };
 
 #endif // SIMULATOR_H

@@ -55,6 +55,15 @@ long asub_feed_timebase(aSubRecord *prec)
         return EINVAL;
     }
 
+    if(step==0.0)
+        step = 1.0;
+
+    if(prec->ftd==menuFtypeDOUBLE && prec->ned>=0) {
+        double div = *(double*)prec->d;
+        if(div!=0.0)
+            step *= div;
+    }
+
     for(i=0; i<limit; i++, val += step) {
         out[i] = val;
     }
@@ -99,7 +108,7 @@ long sub_count_bits(subRecord *prec)
  *
  *
 record(asub, "$(N)") {
-    field(SNAM, "asub_feed_timebase")
+    field(SNAM, "asub_split_bits")
     field(FTA , "LONG")  # mask
     field(FTVA, "LONG")  # number of bits set
     field(FTVB, "LONG")  # -1 or number of bits set at or below
@@ -142,6 +151,47 @@ long asub_split_bits(aSubRecord *prec)
     return 0;
 }
 
+/* parse <=32 bit mask (alternative to asub_split_bits)
+ *
+record(sub, "$(N)") {
+    field(SNAM, "sub_feed_nset_bits")
+    field(INPA, "mybit") # bit index
+    field(INPB, "bitmask") # search in this bitmask
+}
+ * For bit index A:
+ *  if A is not set in B, result is -1.
+ *  if A is set, then result is number of set bits in B with an index less than B.
+ *
+ * eg.
+ *  A=2 and B=5 (0b0111) yields 2
+ *  A=2 and B=5 (0b0101) yields 1
+ *  A=2 and B=4 (0b0100) yields 0
+ *  A=2 and B=1 (0b0001) yields -1
+ *  A=2 and B=8 (0b1000) yields -1
+ */
+static
+long sub_feed_nset_bits(subRecord *prec)
+{
+    epicsUInt32 mybit = (unsigned long)prec->a;
+    epicsUInt32 mymask = 1u<<mybit;
+    epicsUInt32 bitmask = (unsigned long)prec->b;
+    epicsInt32 nbits = -1;
+
+    /* only count if mybit is set */
+    if(bitmask & mymask) {
+        /* count mybit, and lower */
+        epicsUInt32 countmask = bitmask & (mymask | (mymask-1));
+
+        for(;countmask; countmask>>=1) {
+            if(countmask&1u)
+                nbits++;
+        }
+    }
+
+    prec->val = nbits;
+    return 0;
+}
+
 /* calculate shift and Y scaling factor
  * record(asub, "$(N)") {
  *   field(SNAM, "asub_yscale")
@@ -161,7 +211,7 @@ long asub_yscale(aSubRecord *prec)
     double *yscale = (double*)prec->valb;
 
     const double lo_cheat = (74762*1.646760258)/pow(2, 17);
-    const long   cic_n    = wave_samp_per * cic_period;
+    const epicsUInt32   cic_n    = wave_samp_per * cic_period;
     const double shift_min= log2(cic_n*cic_n * lo_cheat)-12;
 
     epicsInt32 wave_shift_temp = ceil(shift_min/2);
@@ -757,6 +807,7 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_split_bits", (REGISTRYFUNCTION)&asub_split_bits);
     registryFunctionAdd("sub_count_bits", (REGISTRYFUNCTION)&sub_count_bits);
     registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
+    registryFunctionAdd("sub_feed_nset_bits", (REGISTRYFUNCTION)&sub_feed_nset_bits);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
     registryFunctionAdd("asub_round", (REGISTRYFUNCTION)&asub_round);

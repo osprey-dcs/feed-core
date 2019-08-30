@@ -28,8 +28,13 @@ struct RecInfo : public RegInterest
 
     double scale;
 
-    bool autocommit;
     bool wait;
+    // effects input records
+    // false - use data from previous read op
+    // true  - use data from previous write op
+    bool rbv;
+    // push meta-data to record
+    bool meta;
 
     // registry of logical signal names
     typedef std::map<std::string, RecInfo*> signals_t;
@@ -46,16 +51,20 @@ struct RecInfo : public RegInterest
     virtual void configure(const pairs_t& pairs);
 
     // reset after error/exception in dset function
+    // with record locked
     virtual void cleanup();
 
     // RegInterest::complete()
-    virtual void complete();
+    // record not locked
+    virtual void complete() override;
 
     // RegInterest::show()
-    virtual void show(std::ostream& strm, int lvl);
+    // record not locked
+    virtual void show(std::ostream& strm, int lvl) override;
 
     // RegInterest::getInfo()
-    virtual void getInfo(infos_t&) const;
+    // record not locked
+    virtual void getInfo(infos_t& infos) const override;
 };
 
 // Find INP/OUT

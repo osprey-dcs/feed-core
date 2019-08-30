@@ -30,9 +30,8 @@ DB += rfs_logic.db
 DB += rfs_registers.substitutions
 DB += rfs_registers.db
 
-DB += prc_logic.substitutions
 DB += prc_logic.db
-
+DB += res_logic.db
 DB += res_logic2.substitutions
 DB += res_logic2.db
 
@@ -59,6 +58,24 @@ DB += cav_pzt_100.db
 DB += rfs_intlk.template
 DB += rfs_intlk_cav.db
 
+DB += hires_logic.db
+DB += hires_registers.substitutions
+DB += hires_registers.db
+
+hires_registers_FLAGS = -M long
+
 include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
+
+%_logic.substitutions: ../%_logic.json
+	PYTHONPATH="$(TOP)/src/python:${PYTHONPATH}" $(PYTHON) -m leep.logic $< $@
+
+%_registers.substitutions: ../%_registers.json
+	echo $(*)_registers_FLAGS
+	PYTHONPATH="$(TOP)/src/python:${PYTHONPATH}" $(PYTHON) -m leep.cli file://$< template $($(notdir $(*))_registers_FLAGS) $@
+
+%_registers.substitutions$(DEP): ../%_registers.json ../Makefile
+	echo "$(COMMONDEP_TARGET) : ../Makefile" > $@
+
+.PRECIOUS: %_logic.substitutions %_registers.substitutions
