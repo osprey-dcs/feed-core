@@ -309,9 +309,7 @@ long convert_iq2ap(aSubRecord* prec)
     if(prec->fta!=menuFtypeDOUBLE
             || prec->ftb!=menuFtypeDOUBLE
             || prec->ftva!=menuFtypeDOUBLE
-            || prec->ftvb!=menuFtypeDOUBLE
-            || prec->ftvd!=menuFtypeDOUBLE
-            || prec->ftve!=menuFtypeDOUBLE)
+            || prec->ftvb!=menuFtypeDOUBLE)
     {
         (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
         return 1;
@@ -357,7 +355,7 @@ long convert_iq2ap(aSubRecord* prec)
         }
     }
 
-    prec->neva = prec->nevb = prec->nevd = prec->neve = len;
+    prec->neva = prec->nevb = len;
     if(pow_out)
         prec->nevc = len;
     if(rot_out) {
