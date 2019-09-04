@@ -1,4 +1,4 @@
-TOP=../..
+TOP=../../..
 include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
@@ -7,7 +7,8 @@ include $(TOP)/configure/CONFIG
 
 INSTALL_DB = $(INSTALL_LOCATION)/opi
 
-DB += feed_base.bob
+DB += feed_wf_acquire_base.bob
+DB += feed_wf_acquire_pair.bob
 
 include $(TOP)/configure/RULES
 #----------------------------------------

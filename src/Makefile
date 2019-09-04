@@ -31,6 +31,8 @@ LIB_SRCS += devsignal.cpp
 LIB_SRCS += devwatch.cpp
 LIB_SRCS += devhack.cpp
 LIB_SRCS += iocsh.cpp
+
+SRC_DIRS += $(TOP)/src/rf
 LIB_SRCS += asub.c
 LIB_SRCS += calc.c
 LIB_SRCS += chirp.c
