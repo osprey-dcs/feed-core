@@ -19,7 +19,9 @@ Optional for HIRES
 
 * pyDevSup (also needs python headers) https://mdavidsaver.github.io/pyDevSup
 
-Optional for python API to access through running IOC
+Optional for python API to access through running IOC.
+Defaults to using 'python' (from `$PATH`).
+Can be changed in pyDevSup/configure/CONFIG_SITE
 
 * cothread https://github.com/dls-controls/cothread
 
