@@ -1,5 +1,5 @@
-Usage
-=====
+Python API Usage
+================
 
 .. currentmodule:: leep
 

@@ -76,20 +76,29 @@ void Socket::sendall(const char* buf, size_t buflen) const
             throw SocketError(SOCKERRNO);
 
         buf += ret;
-        buflen -= buflen;
+        buflen -= ret;
     }
 }
 
-void Socket::recvall(char* buf, size_t buflen) const
+size_t Socket::recvsome(char* buf, size_t buflen) const
 {
-    while(buflen) {
-        ssize_t ret = ::recv(sock, buf, buflen, 0);
-        if(ret<=0)
-            throw SocketError(SOCKERRNO);
+    size_t nrx = 0u;
 
-        buf += ret;
-        buflen -= buflen;
+    ssize_t ret = ::recv(sock, buf, buflen, 0);
+    if(ret<0) {
+        int code = SOCKERRNO;
+        if(code==SOCK_EWOULDBLOCK) {
+            ret = 0;
+        } else {
+            throw SocketError(code);
+        }
     }
+
+    buf += ret;
+    buflen -= ret;
+    nrx += ret;
+
+    return nrx;
 }
 
 void Socket::sendto(const osiSockAddr& dest, const char* buf, size_t buflen) const

@@ -202,9 +202,6 @@ size_t ROM::prepare(char* buf, size_t buflen)
 
     if(buflen<4) {
         throw std::runtime_error("Not enough space to add End Descriptor");
-        *reinterpret_cast<epicsUInt32*>(buf) = 0;
-        buf+=4;
-        buflen-=4;
     }
 
     return buf-orig;

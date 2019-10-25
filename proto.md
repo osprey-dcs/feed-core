@@ -5,6 +5,7 @@ A Request/Reply style protocol using UDP on port 50006.
 A Device (Server) receives Requests on port 50006 and responds to each valid Request with a single Reply.
 
 Requests and Replies act on 32-bit registers in a 64MB address space.
+The 24-bit Address field acts as the upper bits of a 26-bit address.
 
 UDP Message Format
 ------------------
@@ -33,7 +34,7 @@ UDP Message Format
 
 Request and Reply messages have the same format.
 Each UDP message, request or reply, is composed of a 8 byte header followed by between 3 and 127 address/data pairs.
-Total message size _must_ be at least 32.
+Total message size _must_ be at least 32 bytes.
 The real maximum limit is the ethernet MTU less transport protocol headers.
 For the default 1500 bytes and UDP/IPv4 (42 header bytes) this is 1456 bytes of UDP payload.
 Messages size _should_ be a multiple of 8 bytes.
@@ -99,7 +100,7 @@ A corresponding Reply might be:
 <pre>
  00 | 6c656570 89abcdef 
  08 | 01000000 48656c6c
- 16 | 00010000 12345678
+ 10 | 00010000 12345678
  18 | 01010000 00345678
 </pre>
 
@@ -131,8 +132,15 @@ The register range 0x800 - 0xfff holds static data describing the device.
 In each 4 byte register, only the 2 lower bytes are used.
 
 The ROM holds a series of variable length records concatenated together.
-Each record begins with a 2 byte Descriptor consisting of a type code in the upper 2 bit, and a 14 bit length.
-The length has units of _registers_.
+Each record begins with a 2 byte Descriptor consisting of a type code in the upper 2 bits (T), and a 14 bit length (L).
+The length has units of 4 byte _registers_.
+
+<pre>
+           0       1         2         3
+      +--------+--------+--------+--------+--------
+   00 |    0   |    0   |TTLLLLLL|LLLLLLLL| Data...
+      +--------+--------+--------+--------+--------
+</pre>
 
 ### Type 0
 
@@ -146,6 +154,8 @@ When multiple Type 1 headers are encountered, they _must_ be interpreted as:
 
 1. Label of firmware
 
+Additional instances may be ignored.
+
 ### Type 2
 
 The bytes following the Descriptor are a variable length integer (in MSB).
@@ -156,6 +166,8 @@ When multiple Type 2 headers are encountered, they _must_ be interpreted as:
 
 1. A Hash of the JSON text.
 2. Git revision of firmware
+
+Additional instances may be ignored.
 
 ### Type 3
 
@@ -190,16 +202,18 @@ Note whether the register may be read and/or written.
 
 ### "base_addr": Number
 
-The Address of this register
+The (first) Address of this register.
 
 ### "addr_width": Number
 
 Determines number of Addresses which constitute this register.
-Number of Address is 2 to the power of addr_width.
+Number of Addresses is 2 to the power of addr_width.
 
 <pre>
   naddrs = 1u<<addr_width;
 </pre>
+
+eg. an addr_width of 0 defines a register with exactly one Address.
 
 ### "data_width": Number
 

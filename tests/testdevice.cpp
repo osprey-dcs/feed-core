@@ -14,6 +14,11 @@
 #include <rom.h>
 #include <simulator.h>
 
+#ifndef TOP
+// really defined in makefile.  stub here to help static analysis
+#  define TOP ""
+#endif
+
 namespace {
 struct simrunner : public epicsThreadRunable {
     osiSockAddr endpoint;

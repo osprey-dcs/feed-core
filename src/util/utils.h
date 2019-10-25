@@ -13,6 +13,11 @@
 #include <epicsGuard.h>
 #include <shareLib.h>
 
+#if __cplusplus<201103L
+#  define final
+#  define override
+#endif
+
 typedef epicsGuard<epicsMutex> Guard;
 typedef epicsGuardRelease<epicsMutex> UnGuard;
 
@@ -48,7 +53,7 @@ struct epicsShareClass SocketError : public std::exception
     const int code;
 
     SocketError() :code(0) {}
-    SocketError(int code) throw() :code(code) {}
+    explicit SocketError(int code) throw() :code(code) {}
     virtual ~SocketError() throw() {}
 
     const char *what() const throw();
@@ -102,7 +107,7 @@ struct Socket
     size_t trysend(const char* buf, size_t buflen) const;
 
     void sendall(const char* buf, size_t buflen) const;
-    void recvall(char* buf, size_t buflen) const;
+    size_t recvsome(char* buf, size_t buflen) const;
 
     void sendto(const osiSockAddr& dest, const char* buf, size_t buflen) const;
     void sendto(const osiSockAddr& dest, const std::vector<char>& buf) const
@@ -127,7 +132,7 @@ struct PrintAddr
     char buf[4*3 + 3 + 1 + 5 + 1];
 
     PrintAddr() {clear();}
-    PrintAddr(const osiSockAddr& addr)
+    explicit PrintAddr(const osiSockAddr& addr)
         :init(false), addr(addr)
     {}
     PrintAddr& operator=(const osiSockAddr& addr) {

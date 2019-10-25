@@ -50,6 +50,7 @@ void testAST()
 
     const char bigblob[] = "{"
                            "\"J18_debug\": {""\"access\": \"r\", \"addr_width\": 0, \"sign\": \"unsigned\", \"base_addr\": 63, \"data_width\": \"0x4\"},"
+                           "\"somenum\": {""\"access\": \"r\", \"addr_width\": 0, \"sign\": \"signed\", \"base_addr\": 65, \"data_width\": \"32\"},"
                            "\"__metadata__\": {\"slow_abi_ver\": 1}"
                            "}";
 
@@ -65,11 +66,29 @@ void testAST()
         testOk(reg.addr_width==0, "addr_width %u", (unsigned)reg.addr_width);
         testOk(reg.data_width==4, "data_width %u", (unsigned)reg.data_width);
         testOk(reg.sign==JRegister::Unsigned, "sign %u", (unsigned)reg.sign);
+        testOk(reg.max()==15, "max %lld", reg.max());
+        testOk(reg.min()==0, "min %lld", reg.min());
         testOk1(reg.readable);
         testOk1(!reg.writable);
 
     } else {
-        testSkip(6, "failed to find");
+        testSkip(8, "failed to find");
+    }it=blob.find("somenum");
+
+    testOk1(it!=blob.end());
+    if(it!=blob.end()) {
+        const JRegister& reg = it->second;
+        testOk(reg.base_addr==65, "base_addr %u", (unsigned)reg.base_addr);
+        testOk(reg.addr_width==0, "addr_width %u", (unsigned)reg.addr_width);
+        testOk(reg.data_width==32, "data_width %u", (unsigned)reg.data_width);
+        testOk(reg.sign==JRegister::Signed, "sign %u", (unsigned)reg.sign);
+        testOk(reg.max()==2147483647, "max %lld", reg.max());
+        testOk(reg.min()==-2147483648, "min %lld", reg.min());
+        testOk1(reg.readable);
+        testOk1(!reg.writable);
+
+    } else {
+        testSkip(8, "failed to find");
     }
 
     testOk(blob.info32["slow_abi_ver"]==1, "slow_abi_ver = %d", (int)blob.info32["slow_abi_ver"]);
@@ -79,7 +98,7 @@ void testAST()
 
 MAIN(testjson)
 {
-    testPlan(14);
+    testPlan(25);
     try {
         testEmpty();
         testSyntaxError();

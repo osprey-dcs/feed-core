@@ -43,7 +43,7 @@ struct context {
     context() :depth(0), in_metadata(false), ignore_scratch(false) {}
 };
 
-#define TRY context *self = (context*)ctx; try
+#define TRY context *self = static_cast<context*>(ctx); try
 
 #define CATCH() catch(std::exception& e) { if(self->err.empty()) self->err = e.what(); return 0; }
 
@@ -230,7 +230,7 @@ yajl_callbacks jblob_cbs = {
 
 struct handler {
     yajl_handle handle;
-    handler(yajl_handle handle) :handle(handle)
+    explicit handler(yajl_handle handle) :handle(handle)
     {
         if(!handle)
             throw std::runtime_error("Failed to allocate yajl handle");
@@ -340,4 +340,22 @@ std::ostream& operator<<(std::ostream& strm, const JRegister& reg)
           "\"sign\":\""<<(reg.sign==JRegister::Unsigned?"un":"")<<"signed\""
           "}";
     return strm;
+}
+
+
+epicsInt64 JRegister::min() const {
+    if(sign==Unsigned) {
+        return 0;
+    } else {
+        epicsUInt64 signmask = 0;
+        signmask = 0xffffffffffffffff << (data_width-1);
+        return (epicsInt64)signmask;
+    }
+}
+epicsInt64 JRegister::max() const
+{
+    unsigned nbits = data_width;
+    if(sign==Signed)
+        nbits--;
+    return (epicsInt64(1)<<nbits)-1;
 }

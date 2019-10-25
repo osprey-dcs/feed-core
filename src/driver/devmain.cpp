@@ -44,7 +44,7 @@
 
 long get_on_connect_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
-    RecInfo *info = (RecInfo*)prec->dpvt;
+    RecInfo *info = static_cast<RecInfo*>(prec->dpvt);
     if(info)
         *scan = info->device->on_connect;
     return scan ? 0 : ENODEV;
@@ -52,7 +52,7 @@ long get_on_connect_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 
 long get_dev_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
-    RecInfo *info = (RecInfo*)prec->dpvt;
+    RecInfo *info = static_cast<RecInfo*>(prec->dpvt);
     if(info)
         *scan = info->device->current_changed;
     return scan ? 0 : ENODEV;
@@ -60,7 +60,7 @@ long get_dev_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 
 long get_reg_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
-    RecInfo *info = (RecInfo*)prec->dpvt;
+    RecInfo *info = static_cast<RecInfo*>(prec->dpvt);
     if(info)
         *scan = info->changed;
     return 0;
@@ -68,7 +68,7 @@ long get_reg_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 
 namespace {
 
-#define TRY RecInfo *info = (RecInfo*)prec->dpvt; if(!info) { \
+#define TRY RecInfo *info = static_cast<RecInfo*>(prec->dpvt); if(!info) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
     Device *device=info->device; (void)device; try
 
@@ -292,7 +292,7 @@ long read_jblob(aaiRecord *prec)
 }
 
 #undef TRY
-#define TRY SyncInfo *info = (SyncInfo*)prec->dpvt; if(!info) { \
+#define TRY SyncInfo *info = static_cast<SyncInfo*>(prec->dpvt); if(!info) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
     Device *device=info->device; (void)device; try
 
@@ -306,7 +306,7 @@ struct SyncInfo : public RecInfo
         ,wait_for(0u)
     {}
 
-    void complete() {
+    void complete() override final {
         bool done = true;
         try {
             Guard G(device->lock);
@@ -330,7 +330,7 @@ struct SyncInfo : public RecInfo
             RecInfo::complete();
     }
 
-    void cleanup() {
+    void cleanup() override final {
         RecInfo::cleanup();
         wait_for = 0u;
     }
@@ -377,7 +377,7 @@ long read_sync(longinRecord *prec)
 }
 
 #undef TRY
-#define TRY MetaInfo *info = (MetaInfo*)prec->dpvt; if(!info) { \
+#define TRY MetaInfo *info = static_cast<MetaInfo*>(prec->dpvt); if(!info) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
     Device *device=info->device; (void)device; try
 
@@ -389,9 +389,10 @@ struct MetaInfo : public RecInfo
     MetaInfo(dbCommon *prec, Device *dev)
         :RecInfo(prec, dev)
         ,has_default(false)
+        ,defval(0u)
     {}
 
-    virtual void configure(const pairs_t& pairs)
+    virtual void configure(const pairs_t& pairs) override final
     {
         has_default = get_pair(pairs, "default", defval);
     }

@@ -26,7 +26,7 @@ struct SigInfo {
     RecInfo *siginfo;
     bool warned;
 
-    SigInfo(dbCommon* prec) :prec(prec), siginfo(0), warned(false) {}
+    explicit SigInfo(dbCommon* prec) :prec(prec), siginfo(0), warned(false) {}
 
     bool lookup()
     {
@@ -49,7 +49,7 @@ struct SigInfo {
     void cleanup() {}
 };
 
-#define TRY SigInfo *info = (SigInfo*)prec->dpvt; if(!info || !info->lookup()) { \
+#define TRY SigInfo *info = static_cast<SigInfo*>(prec->dpvt); if(!info || !info->lookup()) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
     Device *device=info->siginfo->device; (void)device; try
 

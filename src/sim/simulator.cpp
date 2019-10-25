@@ -111,6 +111,11 @@ void Simulator::add(const SimReg& reg)
 
     for(epicsUInt32 addr = reg.base, endaddr = reg.base+reg.storage.size(); addr<endaddr; addr++)
     {
+        reg_by_addr_t::const_iterator it(reg_by_addr.find(addr));
+        if(it!=reg_by_addr.end()) {
+            errlogPrintf("Overlapping registers at address %u: %s and %s\n",
+                         (unsigned)addr, it->second->name.c_str(), reg.name.c_str());
+        }
         reg_by_addr[addr] = &P.first->second;
     }
 }
@@ -167,7 +172,7 @@ void Simulator::exec()
                     fds[1].revents &= ~POLLIN;
 
                     char temp;
-                    wakeupRx.recvall(&temp, 1);
+                    wakeupRx.recvsome(&temp, 1);
                     stop = true;
                 }
 

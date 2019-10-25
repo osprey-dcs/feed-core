@@ -20,6 +20,7 @@ LIB_SRCS += utils.cpp
 SRC_DIRS += $(TOP)/src/sim
 LIB_SRCS += simulator.cpp
 LIB_SRCS += simulator_rfs.cpp
+LIB_SRCS += simulator_hires.cpp
 
 SRC_DIRS += $(TOP)/src/driver
 LIB_SRCS += device.cpp
@@ -30,6 +31,8 @@ LIB_SRCS += devsignal.cpp
 LIB_SRCS += devwatch.cpp
 LIB_SRCS += devhack.cpp
 LIB_SRCS += iocsh.cpp
+
+SRC_DIRS += $(TOP)/src/rf
 LIB_SRCS += asub.c
 LIB_SRCS += calc.c
 LIB_SRCS += chirp.c
@@ -41,3 +44,19 @@ include $(TOP)/configure/RULES
 #----------------------------------------
 #  ADD RULES AFTER THIS LINE
 
+ifeq ($(OS_CLASS),Linux)
+cppcheck:
+	cppcheck \
+ --std=posix --std=c99 --std=c++03 --enable=all \
+ -D__GNUC__ \
+ $(filter -D%,$(CPPFLAGS)) \
+ $(filter -U%,$(CPPFLAGS)) \
+ $(INCLUDES) \
+ ../driver ../util ../sim ../../tests
+
+else
+cppcheck:
+	echo "no configuration to use cppcheck for $(OS_CLASS) targets.  (not run in O.<arch> sub-dir?)"
+endif
+
+.PHONY: cppcheck

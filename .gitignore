@@ -3,6 +3,7 @@
 /db/
 /dbd/
 /include/
+/opi/
 /configure/*.local
 O.*/
 /FEED.*

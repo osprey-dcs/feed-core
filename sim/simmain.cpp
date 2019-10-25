@@ -127,6 +127,8 @@ int main(int argc, char *argv[])
             sim.reset(new Simulator(endpoint, blob, initial));
         } else if(logic=="rfs") {
             sim.reset(new Simulator_RFS(endpoint, blob, initial));
+        } else if(logic=="hires") {
+            sim.reset(new Simulator_HIRES(endpoint, blob, initial));
         } else {
             throw std::runtime_error(SB()<<"Unknown logic name: -L "<<logic);
         }

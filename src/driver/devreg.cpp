@@ -18,6 +18,7 @@
 #include <osiSock.h>
 
 #include <dbAccess.h>
+#include <dbEvent.h>
 #include <recSup.h>
 #include <dbStaticLib.h>
 #include <callback.h>
@@ -45,7 +46,18 @@
 
 namespace {
 
-#define TRY RecInfo *info = (RecInfo*)prec->dpvt; if(!info) { \
+template<typename Rec>
+struct RecRegInfo : public RecInfo
+{
+    RecRegInfo(dbCommon *prec, Device *device)
+        :RecInfo(prec, device)
+    {}
+    virtual ~RecRegInfo() {}
+
+    virtual void connected() override;
+};
+
+#define TRY RecInfo *info = static_cast<RecInfo*>(prec->dpvt); if(!info) { \
     (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
     Device *device=info->device; (void)device; try
 
@@ -172,76 +184,83 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
 
         if(!info->reg) {
             IFDBG(6, "No association");
-        } else if(!info->reg->info.readable) {
-            IFDBG(6, "Not readable");
-        } else if(info->offset >= info->reg->mem_rx.size()) {
-            IFDBG(6, "Array bounds violation offset=%u not within size=%zu",
-                  (unsigned)info->offset, info->reg->mem_rx.size());
+
         } else {
-            if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact || !info->device->active()) {
-                // I/O Intr scan, use cached, async completion, or no comm.
+            DevReg::mem_t& mem = info->rbv ? info->reg->mem_tx : info->reg->mem_rx;
 
-                // mask for sign extension
-                epicsUInt32 signmask = 0;
-
-                if(info->reg->info.sign==JRegister::Signed) {
-                    // mask of sign bit and higher.
-                    signmask = 0xffffffff << (info->reg->info.data_width-1);
-                }
-
-                char *out = raw, *end = raw+nreq*valsize;
-                for(size_t i=info->offset, N = info->reg->mem_rx.size();
-                    i<N && out+valsize<=end; i+=info->step, out+=valsize)
-                {
-                    epicsUInt32 val = ntohl(info->reg->mem_rx[i]);
-                    if(val & signmask)
-                        val |= signmask;
-
-                    switch(ftvl) {
-                    case menuFtypeCHAR:
-                    case menuFtypeUCHAR: *(epicsUInt8*)out = val; break;
-                    case menuFtypeSHORT:
-                    case menuFtypeUSHORT: *(epicsUInt16*)out = val; break;
-                    case menuFtypeLONG:
-                    case menuFtypeULONG: *(epicsUInt32*)out = val; break;
-                    case menuFtypeDOUBLE:
-                        if(signmask)
-                            *(double*)out = epicsInt32(val) * info->scale;
-                        else
-                            *(double*)out = val * info->scale;
-                        break;
-                    default:
-                        break;
-                    }
-                }
-
-                assert((ssize_t)nreq >= (out-raw)/valsize);
-                nreq = (out-raw)/valsize;
-
-                prec->pact = 0;
-                if(count)
-                    *count = nreq;
-
-                if(prec->tse==epicsTimeEventDeviceTime) {
-                    prec->time = info->reg->rx;
-                }
-
-                (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u\n",
-                      nreq, info->reg->mem_rx.size(),
-                      info->reg->sevr, (unsigned)info->offset, (unsigned)info->step, valsize);
-
+            if(!info->rbv && !info->reg->info.readable) {
+                IFDBG(6, "Not readable");
+            } else if(info->rbv && !info->reg->info.writable) {
+                    IFDBG(6, "Not writable");
+            } else if(info->offset >= mem.size()) {
+                IFDBG(6, "Array bounds violation offset=%u not within size=%zu",
+                      (unsigned)info->offset, mem.size());
             } else {
-                info->reg->queue(false, info->wait ? info : 0);
+                if(prec->scan==menuScanI_O_Intr || !info->wait || prec->pact || !info->device->active()) {
+                    // I/O Intr scan, use cached, async completion, or no comm.
 
-                prec->pact = 1;
-                if(count)
-                    *count = 0;
+                    // mask for sign extension
+                    epicsUInt32 signmask = 0;
 
-                IFDBG(6, "begin async\n");
+                    if(info->reg->info.sign==JRegister::Signed) {
+                        // mask of sign bit and higher.
+                        signmask = 0xffffffff << (info->reg->info.data_width-1);
+                    }
+
+                    char *out = raw, *end = raw+nreq*valsize;
+                    for(size_t i=info->offset, N = mem.size();
+                        i<N && out+valsize<=end; i+=info->step, out+=valsize)
+                    {
+                        epicsUInt32 val = ntohl(mem[i]);
+                        if(val & signmask)
+                            val |= signmask;
+
+                        switch(ftvl) {
+                        case menuFtypeCHAR:
+                        case menuFtypeUCHAR: *(epicsUInt8*)out = val; break;
+                        case menuFtypeSHORT:
+                        case menuFtypeUSHORT: *(epicsUInt16*)out = val; break;
+                        case menuFtypeLONG:
+                        case menuFtypeULONG: *(epicsUInt32*)out = val; break;
+                        case menuFtypeDOUBLE:
+                            if(signmask)
+                                *(double*)out = epicsInt32(val) * info->scale;
+                            else
+                                *(double*)out = val * info->scale;
+                            break;
+                        default:
+                            break;
+                        }
+                    }
+
+                    assert((ssize_t)nreq >= (out-raw)/valsize);
+                    nreq = (out-raw)/valsize;
+
+                    prec->pact = 0;
+                    if(count)
+                        *count = nreq;
+
+                    if(prec->tse==epicsTimeEventDeviceTime) {
+                        prec->time = info->reg->rx;
+                    }
+
+                    (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
+                    IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u\n",
+                          nreq, mem.size(),
+                          info->reg->sevr, (unsigned)info->offset, (unsigned)info->step, valsize);
+
+                } else {
+                    info->reg->queue(false, info->wait ? info : 0);
+
+                    prec->pact = 1;
+                    if(count)
+                        *count = 0;
+
+                    IFDBG(6, "begin async\n");
+                }
+                return 0;
+
             }
-            return 0;
-
         }
 
         info->cleanup();
@@ -274,16 +293,55 @@ long read_register_aai(aaiRecord *prec)
     return ret;
 }
 
+template<typename fld_t>
+void maybePost(dbCommon *prec, fld_t *fld, epicsInt64 value)
+{
+    fld_t fval = value;
+    if(fval!=*fld) {
+        *fld = value;
+        db_post_events(prec, fld, DBE_VALUE);
+        db_post_events(prec, NULL, DBE_PROPERTY);
+    }
+}
+
+template<> void RecRegInfo<longoutRecord>::connected() {
+    if(meta) {
+        longoutRecord *prec = (longoutRecord*)this->prec;
+        assert(reg);
+        maybePost(this->prec, &prec->drvl, reg->info.min());
+        maybePost(this->prec, &prec->lopr, reg->info.min());
+        maybePost(this->prec, &prec->drvh, reg->info.max());
+        maybePost(this->prec, &prec->hopr, reg->info.max());
+    }
+}
+
+template<> void RecRegInfo<aoRecord>::connected() {}
+template<> void RecRegInfo<mbboRecord>::connected() {}
+template<> void RecRegInfo<aaoRecord>::connected() {}
+
+template<> void RecRegInfo<longinRecord>::connected() {
+    if(meta) {
+        longinRecord *prec = (longinRecord*)this->prec;
+        assert(reg);
+        maybePost(this->prec, &prec->lopr, reg->info.min());
+        maybePost(this->prec, &prec->hopr, reg->info.max());
+    }
+}
+
+template<> void RecRegInfo<aiRecord>::connected() {}
+template<> void RecRegInfo<mbbiRecord>::connected() {}
+template<> void RecRegInfo<aaiRecord>::connected() {}
+
 } // namespace
 
 // register writes
-DSET(devLoFEEDWriteReg, longout, init_common<RecInfo>::fn, NULL, write_register_lo)
-DSET(devAoFEEDWriteReg, ao, init_common<RecInfo>::fn, NULL, write_register_ao)
-DSET(devMbboFEEDWriteReg, mbbo, init_common<RecInfo>::fn, NULL, write_register_mbbo)
-DSET(devAaoFEEDWriteReg, aao, init_common<RecInfo>::fn, NULL, write_register_aao)
+DSET(devLoFEEDWriteReg, longout, init_common<RecRegInfo<longoutRecord> >::fn, NULL, write_register_lo)
+DSET(devAoFEEDWriteReg, ao, init_common<RecRegInfo<aoRecord> >::fn, NULL, write_register_ao)
+DSET(devMbboFEEDWriteReg, mbbo, init_common<RecRegInfo<mbboRecord> >::fn, NULL, write_register_mbbo)
+DSET(devAaoFEEDWriteReg, aao, init_common<RecRegInfo<aaoRecord> >::fn, NULL, write_register_aao)
 
 // register reads
-DSET(devLiFEEDWriteReg, longin, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_li)
-DSET(devAiFEEDWriteReg, ai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_ai)
-DSET(devMbbiFEEDWriteReg, mbbi, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_mbbi)
-DSET(devAaiFEEDWriteReg, aai, init_common<RecInfo>::fn, get_reg_changed_intr, read_register_aai)
+DSET(devLiFEEDWriteReg, longin, init_common<RecRegInfo<longinRecord> >::fn, get_reg_changed_intr, read_register_li)
+DSET(devAiFEEDWriteReg, ai, init_common<RecRegInfo<aiRecord> >::fn, get_reg_changed_intr, read_register_ai)
+DSET(devMbbiFEEDWriteReg, mbbi, init_common<RecRegInfo<mbbiRecord> >::fn, get_reg_changed_intr, read_register_mbbi)
+DSET(devAaiFEEDWriteReg, aai, init_common<RecRegInfo<aaiRecord> >::fn, get_reg_changed_intr, read_register_aai)
