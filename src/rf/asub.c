@@ -332,7 +332,6 @@ long asub_setamp(aSubRecord *prec)
 
     short debug = (prec->tpro > 1) ? 1 : 0;
 
-    double freqhz = freq*1e6;
     double adesv  = ades*1e6;
 
     unsigned short MASK_LIMS  = 0x1F;
@@ -351,7 +350,7 @@ long asub_setamp(aSubRecord *prec)
  */
 
     if (debug) {
-	printf("%s: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f MHz qloaded %f "
+	printf("%s: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f Hz qloaded %f "
 		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
 		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
 		prec->name, rfctrl, rfmodectrl, rfmodeprev, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
@@ -439,10 +438,10 @@ long asub_setamp(aSubRecord *prec)
     /* Cavity sqrt(energy) 
      * V/(sqrt( (shunt impedance) * 2pi * (cav freq)))
      */
-    *sqrtu = adesv / (sqrt(imped * 2 * PI * freqhz));
+    *sqrtu = adesv / (sqrt(imped * 2 * PI * freq));
 
     /* Target SSA ADC normalized amplitude */
-    *ssa = *sqrtu * sqrt((PI * freqhz) / (2 * qloaded));
+    *ssa = *sqrtu * sqrt((PI * freq) / (2 * qloaded));
     *ssan = *ssa / fwd_fs;
 
     if (debug)
@@ -722,7 +721,7 @@ asub_quench(aSubRecord *prec)
 	       fwd_scale   = *(double *)prec->b,
 	       rev_scale   = *(double *)prec->c,
 	       fullscale_w = *(double *)prec->d,
-	       freq_mhz    = *(double *)prec->e, /* cavity frequency */
+	       freq        = *(double *)prec->e, /* cavity frequency */
 	       imped       = *(double *)prec->f, /* shunt impedance R/Q */
 	       thresh_w    = *(double *)prec->g; /* quench trip threshold */
 
@@ -732,7 +731,7 @@ asub_quench(aSubRecord *prec)
 	unsigned nelm = 4, i;
 	double max;
 
-	double freq_rad = 2 * PI * freq_mhz * 1e6,
+	double freq_rad = 2 * PI * freq,
 	       filter_gain = 80, /* FIR filter */
 	       dt = 32 * 33 * 14 / 1320e6,
 	       dudt_scale  = 16;
@@ -751,7 +750,7 @@ asub_quench(aSubRecord *prec)
 	if (debug) {
 		printf("asub_quench: %s\n     inputs: cav_scale %.1f fwd_scale %.1f rev_scale %.1f\n"
 			"     fullscale_w %.1f freq %.1f R/Q %.1f thresh_w %.1f\n",
-			prec->name, cav_scale, fwd_scale, rev_scale, fullscale_w, freq_mhz, imped, thresh_w);
+			prec->name, cav_scale, fwd_scale, rev_scale, fullscale_w, freq, imped, thresh_w);
 	}
 
 	consts[0] = pow(rev_scale,2);
