@@ -319,7 +319,7 @@ long asub_setamp(aSubRecord *prec)
 	*lim_y_lo    = (epicsInt32 *)prec->valo,
 	*lim_y_hi    = (epicsInt32 *)prec->valp;
     short *too_high  = (short *)prec->valq,
-	  	*error     = (short *)prec->valt,
+	  	*error_msg   = (short *)prec->valt,
 		*rfmodecurr= (short *)prec->valu,
 		*chirp     = (short *)prec->vali; /* chirp enable/disable */
     char  *msg     = (char *)prec->vals;
@@ -342,9 +342,10 @@ long asub_setamp(aSubRecord *prec)
     unsigned short MASK_ERR = 0;
 
     *mask = MASK_ERR; /* Initialize to do not write registers */
+	*error_msg = *too_high = 0; /* Initialize to no errors */
 
 /* If RF control is set off, do not push values.
- * Set error to 0, though, because this is not 
+ * Leave error_msg at 0, though, because this is not 
  * considered an error state and no accompanying
  * message should be necessary
  */
@@ -363,8 +364,6 @@ long asub_setamp(aSubRecord *prec)
 	 * If request is on/chirp, enable chirp
 	 */
 	if (rfmodectrl==MODE_CHIRP) {
-		*error = 0;
-		*too_high = 0;
 		if (rfmodeprev != rfmodectrl) {
 			*mask |= MASK_CHIRP_DECIM_SAVE;
 			*mask |= MASK_CHIRP_SETUP;
@@ -393,8 +392,6 @@ long asub_setamp(aSubRecord *prec)
 	 * If entering mode, set lim/mag registers to 0 and disable chirp 
 	 */
 	if (rfmodectrl == MODE_PULSE) {
-		*error = 0;
-		*too_high = 0;
 		if (rfmodeprev != rfmodectrl) {
 			*lim_x_lo = *lim_x_hi = *lim_y_lo = *lim_y_hi = *setm = 0;
 			*mask |= MASK_LIMS | MASK_CHIRP_ENABLE;
@@ -418,8 +415,6 @@ long asub_setamp(aSubRecord *prec)
 		 		sel_lim_max, sel_lim, *lim_x_lo, *lim_x_hi, *lim_y_lo, *lim_y_hi);
 		}
 	  
-		*error = 0;
-		*too_high = 0;
 		if (rfctrl == 0) {
 			return 0;
 		}
@@ -484,7 +479,6 @@ long asub_setamp(aSubRecord *prec)
     *lim_y_lo = (epicsInt32)(79500 * (y_lo));
     *lim_y_hi = (epicsInt32)(79500 * (y_hi));
 
-    *error = 0;
     if (rfctrl == 0) {
 		return 0;
 	}
@@ -502,12 +496,12 @@ long asub_setamp(aSubRecord *prec)
 		else {
 	    	sprintf(msg, "Overrange");
 		}
-		*error = 1;
+		*error_msg = 1;
 		return 0;
     }
     else if (isnan(*lowslope) || isinf(*lowslope)) {
 		sprintf(msg, "Bad lowslope. Check SSA parms");
-		*error = 1;
+		*error_msg = 1;
 		return 0;
     }
 
