@@ -267,6 +267,66 @@ long asub_feed_bcat(aSubRecord *prec)
 #define MODE_PULSE   4
 #define MODE_CHIRP   5
 
+static
+void setamp_calc_ssa(double max_magn, double max_imag, double adesv, double imped, double freq, 
+double *pol_x, double *pol_y, double *sqrtu, double qloaded, double fwd_fs, double *ssa, double *ssan)
+{
+    /* Policy maximum X/Y */
+    *pol_y = max_magn * max_imag;
+    *pol_x = max_magn * sqrt(1 - pow(max_imag, 2));
+
+    /* Cavity sqrt(energy) 
+     * V/(sqrt( (shunt impedance) * 2pi * (cav freq)))
+     */
+    *sqrtu = adesv / (sqrt(imped * 2 * PI * freq));
+
+    /* Target SSA ADC normalized amplitude */
+    *ssa = *sqrtu * sqrt((PI * freq) / (2 * qloaded));
+    *ssan = *ssa / fwd_fs;
+}
+
+static 
+void setamp_calc_x_fb(double ssa_slope, double ssa_minx, double ssa_ped, double *ssan, 
+double *lowslope, double *x_lo, double *x_hi)
+{
+	*x_lo = ssa_slope * *ssan * 0.75;
+	*x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
+	*x_hi = MIN(*x_hi, *lowslope * *ssan * 1.15);
+}
+
+static
+void setamp_calc_x(double ssa_slope, double *ssan, double *lowslope, double *x_lo)
+{
+		*x_lo = ssa_slope * *ssan;
+		*x_lo = MIN(*x_lo, *lowslope * *ssan);
+}
+
+static 
+void setamp_calc(short debug, short amp_close, double max_magn, double max_imag, double adesv, double imped, double freq, 
+double *pol_x, double *pol_y, double *sqrtu, double qloaded, double fwd_fs, double ssa_slope, double ssa_minx, 
+double ssa_ped, double *ssa, double *ssan, double *lowslope, double *x_lo, double *x_hi)
+{
+
+	setamp_calc_ssa(max_magn, max_imag, adesv, imped, freq, pol_x, pol_y, sqrtu, qloaded, fwd_fs, ssa, ssan);
+
+    /* Calculate values for X limit registers */
+
+    *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
+
+    if (debug) {
+		printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", max_magn, max_imag, *pol_x, *pol_y);
+		printf("setAmpl: to affine sqrtu %f sqrt(J) ssa %f ssan %f\n", *sqrtu, *ssa, *ssan);
+	}
+
+    if (amp_close) { 
+		setamp_calc_x_fb(ssa_slope, ssa_minx, ssa_ped, ssan, lowslope, x_lo, x_hi);
+    }
+    else {
+		setamp_calc_x(ssa_slope, ssan, lowslope, x_lo);
+		*x_hi = *x_lo;
+    }
+}
+
 static 
 long asub_setamp(aSubRecord *prec)
 {
@@ -301,14 +361,14 @@ long asub_setamp(aSubRecord *prec)
 	*adcn     = (double *)prec->vald, /* Normalized cavity ADC */
 	*pol_x    = (double *)prec->valf,
 	*pol_y    = (double *)prec->valg,
-	*lowslope = (double *)prec->valh;
+	*lowslope = (double *)prec->valh,
+	*x_lo     = (double *)prec->valm,
+	*x_hi     = (double *)prec->valn;
 /*
 	*y_hi     = (double *)prec->valj;
-	*y_hi     = (double *)prec->valm;
-	*y_hi     = (double *)prec->valn;
 */
 
-    double x_lo, x_hi, y_lo, y_hi, x_lo_final, x_hi_final;
+    double y_lo, y_hi, x_lo_final, x_hi_final;
 
     epicsInt32 sel_lim, sel_lim_max;
 
@@ -422,43 +482,14 @@ long asub_setamp(aSubRecord *prec)
 		return 0;
     }
 
-    /* Policy maximum X/Y */
-    *pol_y = max_magn * max_imag;
-    *pol_x = max_magn * sqrt(1 - pow(max_imag, 2));
+	setamp_calc(debug, amp_close, max_magn, max_imag, adesv, imped, freq, 
+		pol_x, pol_y, sqrtu, qloaded, fwd_fs, ssa_slope, ssa_minx, 
+		ssa_ped, ssa, ssan, lowslope, x_lo, x_hi);
 
-    if (debug) {
-		printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", 
-	    	max_magn, max_imag, *pol_x, *pol_y);
-    }
+    *too_high = (*x_hi > *pol_x) ? 1 : 0;
+    x_lo_final = MIN(*x_lo, *pol_x); 
+    x_hi_final = MIN(*x_hi, *pol_x); 
 
-    /* Cavity sqrt(energy) 
-     * V/(sqrt( (shunt impedance) * 2pi * (cav freq)))
-     */
-    *sqrtu = adesv / (sqrt(imped * 2 * PI * freq));
-
-    /* Target SSA ADC normalized amplitude */
-    *ssa = *sqrtu * sqrt((PI * freq) / (2 * qloaded));
-    *ssan = *ssa / fwd_fs;
-
-    if (debug) {
-		printf("setAmpl: to affine sqrtu %f sqrt(J) ssa %f ssan %f\n", *sqrtu, *ssa, *ssan);
-	}
-
-    /* Calculate values for X limit registers */
-    *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
-    if (amp_close) { 
-		x_lo = ssa_slope * *ssan * 0.75;
-		x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
-		x_hi = MIN(x_hi, *lowslope * *ssan * 1.15);
-    }
-    else {
-		x_lo = ssa_slope * *ssan;
-		x_lo = MIN(x_lo, *lowslope * *ssan);
-		x_hi = x_lo;
-    }
-    *too_high = (x_hi > *pol_x) ? 1 : 0;
-    x_lo_final = MIN(x_lo, *pol_x); 
-    x_hi_final = MIN(x_hi, *pol_x); 
     *lim_x_lo = (epicsInt32)(79500 * (x_lo_final));
     *lim_x_hi = (epicsInt32)(79500 * (x_hi_final));
 
@@ -506,6 +537,70 @@ long asub_setamp(aSubRecord *prec)
     }
 
     *mask |= MASK_LIMS;
+    return 0;
+}
+
+static long
+asub_setamp_diag(aSubRecord *prec)
+{
+    /* Inputs  */
+    double 	ades   = *(double *)prec->a,
+			imped     = *(double *)prec->b,
+			freq      = *(double *)prec->c,
+			qloaded   = *(double *)prec->d,
+			fwd_fs    = *(double *)prec->e,
+			ssa_slope = *(double *)prec->i,
+			ssa_minx  = *(double *)prec->j,
+			ssa_ped   = *(double *)prec->k,
+			max_magn  = *(double *)prec->l,
+			max_imag  = *(double *)prec->m;
+ 
+	double ssa, ssan, lowslope, pol_x, pol_y, sqrtu;
+	double x_lo, x_hi;
+
+	/* Outputs */
+			/* 2 element arrays */
+    double 	*pol_x_lo = (double *)prec->vala,      /* Policy x low limit */
+		   	*pol_x_hi = (double *)prec->valb,      /* Policy x high limit */
+		   	*pol_y_lo = (double *)prec->valc,      /* Policy y low limit */
+			*pol_y_hi = (double *)prec->vald,      /* Policy y high limit */
+			*pol_x_range = (double *)prec->vale,   /* Policy x low and high limits */
+			*pol_y_range = (double *)prec->valf,   /* Policy y low and high limits */
+			*sela_x_lo = (double *)prec->valg,     /* SELA(P) x low limit */
+			*sela_x_hi = (double *)prec->valh,     /* SELA(P) x high limit */
+			*sela_x_range  = (double *)prec->vali, /* SELA(P) x low and limits */
+			*zeros = (double *)prec->valj,         /* Zero, two elements */
+			*axis_x = (double *)prec->valk,        /* Graph x axis */
+			*axis_y = (double *)prec->vall,        /* Graph y axis */                          
+
+			/* Scalars */
+			*sel_x = (double *)prec->valo; /* SEL x */
+
+	setamp_calc_ssa(max_magn, max_imag, ades*1e6, imped, freq, &pol_x, &pol_y, &sqrtu, qloaded, fwd_fs, &ssa, &ssan);
+    lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
+
+	setamp_calc_x_fb(ssa_slope, ssa_minx, ssa_ped, &ssan, &lowslope, &x_lo, &x_hi);
+	sela_x_range[0] = sela_x_lo[0] = sela_x_lo[1] = x_lo;
+	sela_x_range[1] = sela_x_hi[0] = sela_x_hi[1] = x_hi;
+
+	setamp_calc_x(ssa_slope, &ssan, &lowslope, &x_lo);
+	*sel_x = x_lo;
+
+	/* Add lowslope based options? */
+
+	/* X and Y policy ranges */
+	pol_x_lo[0] = pol_x_lo[1] = pol_x_range[0] = 0;
+	pol_x_hi[0] = pol_x_hi[1] = pol_x_range[1] = pol_x;
+	pol_y_lo[0] = pol_y_lo[1] = pol_y_range[0] = -pol_y;
+	pol_y_hi[0] = pol_y_hi[1] = pol_y_range[1] = pol_y;
+
+	zeros[0] = zeros[1] = 0;
+
+	axis_x[0] = -2; 
+	axis_x[1] = 2;
+	axis_y[0] = -2; 
+	axis_y[1] = 2;
+
     return 0;
 }
 
@@ -810,6 +905,7 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("sub_feed_nset_bits", (REGISTRYFUNCTION)&sub_feed_nset_bits);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
+    registryFunctionAdd("asub_setamp_diag", (REGISTRYFUNCTION)&asub_setamp_diag);
     registryFunctionAdd("asub_round", (REGISTRYFUNCTION)&asub_round);
     registryFunctionAdd("asub_pzt_src_set", (REGISTRYFUNCTION)&asub_pzt_src_set);
     registryFunctionAdd("asub_pzt_src_get", (REGISTRYFUNCTION)&asub_pzt_src_get);
