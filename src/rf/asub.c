@@ -350,11 +350,11 @@ long asub_setamp(aSubRecord *prec)
  */
 
     if (debug) {
-	printf("%s: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f Hz qloaded %f "
-		"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
-		"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
-		prec->name, rfctrl, rfmodectrl, rfmodeprev, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
-		ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
+		printf("%s: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f Hz qloaded %f "
+			"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
+			"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
+			prec->name, rfctrl, rfmodectrl, rfmodeprev, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
+			ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
     }
 
 	/* Chirp control. 
@@ -373,7 +373,6 @@ long asub_setamp(aSubRecord *prec)
 			*chirp = 1;
 			*mask |= MASK_CHIRP_ENABLE;
 		}
-//		return 0;
     }
 	else if (rfmodeprev == MODE_CHIRP) {
 		*mask |= MASK_CHIRP_ENABLE;
@@ -407,10 +406,12 @@ long asub_setamp(aSubRecord *prec)
     if (rfmodectrl==MODE_SEL_RAW) {
 		sel_lim_max = (epicsInt32)(79500 * max_magn); /* 79500 max value of lims registers */ 
 		sel_lim = (epicsInt32)(floor((sel_aset/100)*79500));
-		if ( sel_lim >= sel_lim_max )
+		if ( sel_lim >= sel_lim_max ) {
 	    	*lim_x_lo = *lim_x_hi = sel_lim_max;
-		else
+		}
+		else {
 	    	*lim_x_lo = *lim_x_hi = sel_lim;
+		}
 		*lim_y_lo = *lim_y_hi = *setm = 0;
 		if ( debug ) {
 	  		printf("setAmpl: SEL raw mode: max lim %i sel_lim %i limxlo %i limxyhi %i limylo %i limyhi %i\n",
@@ -431,8 +432,8 @@ long asub_setamp(aSubRecord *prec)
     *pol_x = max_magn * sqrt(1 - pow(max_imag, 2));
 
     if (debug) {
-	printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", 
-	    max_magn, max_imag, *pol_x, *pol_y);
+		printf("setAmpl: max_magn %f max_imag %f calc policy x %f y %f\n", 
+	    	max_magn, max_imag, *pol_x, *pol_y);
     }
 
     /* Cavity sqrt(energy) 
@@ -444,20 +445,21 @@ long asub_setamp(aSubRecord *prec)
     *ssa = *sqrtu * sqrt((PI * freq) / (2 * qloaded));
     *ssan = *ssa / fwd_fs;
 
-    if (debug)
-	printf("setAmpl: to affine sqrtu %f sqrt(J) ssa %f ssan %f\n", *sqrtu, *ssa, *ssan);
+    if (debug) {
+		printf("setAmpl: to affine sqrtu %f sqrt(J) ssa %f ssan %f\n", *sqrtu, *ssa, *ssan);
+	}
 
     /* Calculate values for X limit registers */
     *lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
     if (amp_close) { 
-	x_lo = ssa_slope * *ssan * 0.75;
-	x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
-	x_hi = MIN(x_hi, *lowslope * *ssan * 1.15);
+		x_lo = ssa_slope * *ssan * 0.75;
+		x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
+		x_hi = MIN(x_hi, *lowslope * *ssan * 1.15);
     }
     else {
-	x_lo = ssa_slope * *ssan;
-	x_lo = MIN(x_lo, *lowslope * *ssan);
-	x_hi = x_lo;
+		x_lo = ssa_slope * *ssan;
+		x_lo = MIN(x_lo, *lowslope * *ssan);
+		x_hi = x_lo;
     }
     *too_high = (x_hi > *pol_x) ? 1 : 0;
     x_lo_final = MIN(x_lo, *pol_x); 
@@ -469,39 +471,44 @@ long asub_setamp(aSubRecord *prec)
     *adcn = ades / cav_fs;
     *setm = (epicsInt32)(round(*adcn * CORDIC_SCALE));
 
-    if (debug)
-	printf("setAmpl: to setmp adcn %f setm %i\n", *adcn, *setm);
+    if (debug) {
+		printf("setAmpl: to setmp adcn %f setm %i\n", *adcn, *setm);
+	}
 
     /* Calculate values for Y limit registers */
     y_lo = y_hi = 0;
     if ( pha_close && (ades>0.0) ) {
-	y_lo = - *pol_y;
-	y_hi = *pol_y;
+		y_lo = - *pol_y;
+		y_hi = *pol_y;
     }
     *lim_y_lo = (epicsInt32)(79500 * (y_lo));
     *lim_y_hi = (epicsInt32)(79500 * (y_hi));
 
     *error = 0;
-    if (rfctrl == 0)
-	return 0;
+    if (rfctrl == 0) {
+		return 0;
+	}
 
     /* Determine if settings should actually be written to registers.
      * TODO: Revisit numbers used in cav/fwd scale checks
      */
     if (*too_high) {
-	if (cav_fs < 25)
-	    sprintf(msg, "Overrange. Check cav scale");
-	else if (fwd_fs < 50)
-	    sprintf(msg, "Overrange. Check fwd scale");
-	else 
-	    sprintf(msg, "Overrange");
-	*error = 1;
-	return 0;
+		if (cav_fs < 25) {
+	    	sprintf(msg, "Overrange. Check cav scale");
+		}
+		else if (fwd_fs < 50) {
+	    	sprintf(msg, "Overrange. Check fwd scale");
+		}
+		else {
+	    	sprintf(msg, "Overrange");
+		}
+		*error = 1;
+		return 0;
     }
     else if (isnan(*lowslope) || isinf(*lowslope)) {
-	sprintf(msg, "Bad lowslope. Check SSA parms");
-	*error = 1;
-	return 0;
+		sprintf(msg, "Bad lowslope. Check SSA parms");
+		*error = 1;
+		return 0;
     }
 
     *mask |= MASK_LIMS;
