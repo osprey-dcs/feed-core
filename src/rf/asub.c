@@ -272,8 +272,8 @@ void setamp_calc_ssa(double max_magn, double max_imag, double adesv, double impe
 double *pol_x, double *pol_y, double *sqrtu, double qloaded, double fwd_fs, double *ssa, double *ssan)
 {
     /* Policy maximum X/Y */
-    *pol_y = max_magn * max_imag;
-    *pol_x = max_magn * sqrt(1 - pow(max_imag, 2));
+    *pol_x = max_magn * sqrt(1 - max_imag);
+    *pol_y = max_magn * sqrt(max_imag);
 
     /* Cavity sqrt(energy) 
      * V/(sqrt( (shunt impedance) * 2pi * (cav freq)))
@@ -557,6 +557,7 @@ asub_setamp_diag(aSubRecord *prec)
  
 	double ssa, ssan, lowslope, pol_x, pol_y, sqrtu;
 	double x_lo, x_hi;
+	int i;
 
 	/* Outputs */
 			/* 2 element arrays */
@@ -571,7 +572,9 @@ asub_setamp_diag(aSubRecord *prec)
 			*sela_x_range  = (double *)prec->vali, /* SELA(P) x low and limits */
 			*zeros = (double *)prec->valj,         /* Zero, two elements */
 			*axis_x = (double *)prec->valk,        /* Graph x axis */
-			*axis_y = (double *)prec->vall,        /* Graph y axis */                          
+			*axis_y = (double *)prec->vall,        /* Graph y axis */
+			*unit_x = (double *)prec->valm,        /* Unit semi-circle, x */                 
+			*unit_y = (double *)prec->valn,        /* Unit semi-circle, y */              
 
 			/* Scalars */
 			*sel_x = (double *)prec->valo; /* SEL x */
@@ -600,6 +603,12 @@ asub_setamp_diag(aSubRecord *prec)
 	axis_x[1] = 2;
 	axis_y[0] = -2; 
 	axis_y[1] = 2;
+
+	for (i = 0; i < 50; i++) {
+		unit_x[i] = unit_x[100 - i - 1] = i * .02;
+		unit_y[i] = sqrt(1 - pow(unit_x[i],2));
+		unit_y[100 - i - 1] = -unit_y[i];
+	}
 
     return 0;
 }
