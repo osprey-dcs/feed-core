@@ -467,6 +467,7 @@ long convert_ap2iq(aSubRecord* prec)
  *  field(OUTC, "MIN PP")
  *  field(OUTD, "MAX PP")
  *  field(OUTE, "RSTD PP")
+ *  field(OUTF, "RANGE PP")
  */
 
 static
@@ -571,6 +572,8 @@ long wf_stats(aSubRecord* prec)
     prec->nevd=1;
     *(double*)prec->vale = *(double*)prec->valb / fabs(*(double*)prec->vala);
     prec->neve=1;
+    *(double*)prec->valf = max - min;
+    prec->nevf=1;
 
     return 0;
 }

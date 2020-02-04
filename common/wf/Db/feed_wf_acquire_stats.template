@@ -30,6 +30,7 @@ record(aSub, "$(PREF)STAT_CALC_") {
   field(OUTC, "$(PREF)MIN PP MSI")
   field(OUTD, "$(PREF)MAX PP MSI")
   field(OUTE, "$(PREF)RSTD PP MSI")
+  field(OUTF, "$(PREF)RANGE PP MSI")
   field(FLNK, "$(FLNK=)")
   field(TSEL, "$(SIG).TIME")
 }
@@ -59,6 +60,12 @@ record(ai, "$(PREF)MAX") {
 }
 
 record(ai, "$(PREF)RSTD") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(SIG).TIME")
+}
+
+record(ai, "$(PREF)RANGE") {
   field(PREC, "$(PREC=3)")
   field(EGU , "$(EGU=)")
   field(TSEL, "$(SIG).TIME")
