@@ -1,0 +1,70 @@
+# FFT calculations
+#
+# Macros:
+#  PREF - Prefix of our records
+#  SIZE - Max signal length (eg. 16384)
+#
+
+# FLNK'd from _acquire_stats.template
+record(aSub, "$(PREF)FFT_CALC_") {
+  field(SNAM, "FFTCALC")
+  field(FTA , "DOUBLE")
+  field(FTB , "DOUBLE")
+  field(FTC , "DOUBLE")
+  field(FTVA ,"DOUBLE")
+  field(FTVB ,"DOUBLE")
+  field(FTVC ,"SHORT")
+  field(FTVD ,"DOUBLE")
+  field(FTVE ,"DOUBLE")
+  field(NOA , "$(SIZE)")
+  field(NOB , "$(SIZE)")
+  field(NOC , "1")
+  field(NOVA, "$(SIZE)")
+  field(NOVB, "$(SIZE)")
+  field(NOVC, "1")
+  field(NOVD, "1")
+  field(NOVE, "1")
+  field(INPA, "$(PREF)IWF MSI NPP")
+  field(INPB, "$(PREF)QWF MSI NPP")
+  field(INPC, "$(BASE)SAMP_PERIOD MSI NPP")
+  field(OUTA, "$(PREF)AFFT MSI PP")  # amplitude FFT waveform 
+  field(OUTB, "$(PREF)FWF MSI PP")   # frequency steps waveform
+  field(OUTC, "")                       # 1 if max amplitude found
+  field(OUTD, "$(PREF)AFFTMAX MSI PP")  # max value of amplitude FFT
+  field(OUTE, "$(PREF)AFFTMAXF MSI PP") # frequency of max value of amplitude FFT
+  field(FLNK, "$(FLNK=)") # to external logic, eg. waveform stats
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(aai, "$(PREF)AFFT") {
+  field(DESC, "Amplitude FFT")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(aai, "$(PREF)FWF") {
+  field(DESC, "FFT frequencies")
+  field(FTVL, "DOUBLE")
+  field(NELM, "$(SIZE)")
+  field(EGU,  "Hz")
+  field(TSEL, "$(PREF)IWF.TIME")
+}
+
+record(ai, "$(PREF)AFFTMAX") {
+  field(DESC, "Amplitude FFT max")
+  field(TSEL, "$(PREF)IWF.TIME")
+  field(DISV, "0")
+  field(SDIS, "$(PREF)FFT_CALC_.VALC")
+  field(DISS, "INVALID")
+}
+
+record(ai, "$(PREF)AFFTMAXF") {
+  field(DESC, "Freq of FFT max")
+  field(EGU,  "Hz")
+  field(TSEL, "$(PREF)IWF.TIME")
+  field(DISV, "0")
+  field(SDIS, "$(PREF)FFT_CALC_.VALC")
+  field(DISS, "INVALID")
+}
+
