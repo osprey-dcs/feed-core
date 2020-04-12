@@ -17,15 +17,15 @@
 
 #include <fftmain.h>
 
-epicsMutexId  fftPlanMutex;    /* Global mutex for use of FFTW plan creation,
-							   * which is not thread safe
-							   */
 epicsMutexId  fftInitTaskMutex; /* Global mutex for use when initializing FFT tasks */
+epicsMutexId  fftPlanMutex;  /* Global mutex for use of FFTW plan creation,
+ 							  * which is not thread safe
+							  */
 
 typedef struct FFTPlanRec_ {
-	fftwf_plan plan;    /* plan used for FFT transform */
-	fftwf_complex *in;  /* input array  (time domain) */
-	fftwf_complex *out; /* output array (frequency domain) */	
+	fftwf_plan plan;    /* Plan used for FFT transform */
+	fftwf_complex *in;  /* Input array  (time domain) */
+	fftwf_complex *out; /* Output array (frequency domain) */	
 } FFTPlanRec, *FFTPlan;
 
 /* just any unique address */
@@ -92,18 +92,18 @@ rf_fft_destroy_plan(FFTPlan fftplan)
 static int
 rf_fft_update_plan(FFTPlan fftplan, size_t len, int new)
 {
-	/* only destroy if updating pre-existing plan */
+	/* Only destroy if updating pre-existing plan */
 	if ( !new ) {
 		rf_fft_destroy_plan( fftplan );
 	}
 
 	if ( ! (fftplan->in = (fftwf_complex*) fftwf_malloc(sizeof(fftwf_complex) * len) ) ) {
-		errlogPrintf("rf_fft_create_plan: No memory for FFT input data\n");
+		errlogPrintf("rf_fft_update_plan: No memory for FFT input data\n");
 		return -1;
 	}
 
 	if ( ! (fftplan->out = (fftwf_complex*) fftwf_malloc(sizeof(fftwf_complex) * len) ) ) {
-		errlogPrintf("rf_fft_create_plan: No memory for FFT output data\n");
+		errlogPrintf("rf_fft_update_plan: No memory for FFT output data\n");
 		return -1;
 	}
 
@@ -125,7 +125,7 @@ rf_fft_create_plan(size_t len)
 FFTPlan fftplan = 0;
 
 	if ( ! (fftplan = malloc( sizeof(FFTPlanRec))) ) {
-		errlogPrintf("rf_fft_create_plan: failed to allocate memory for FFT plan struct");
+		errlogPrintf("rf_fft_create_plan: No memory for FFT plan struct");
 		return 0;
 	}
 
@@ -142,17 +142,14 @@ rf_fft_create_msg(size_t len)
 FFTMsg msg = 0;
 
 	if ( ! (msg = malloc( sizeof(FFTMsgRec))) ) {
-		errlogPrintf("rf_fft_create_msg: failed to memory for message struct");
 		return 0;
 	}
 
 	if ( ! (msg->in_re = malloc( len * sizeof(double))) ) {
-		errlogPrintf("rf_fft_create_msg: failed to allocate memory for message struct");
 		return 0;
 	}
 
 	if ( ! (msg->in_im = malloc( len * sizeof(double))) ) {
-		errlogPrintf("rf_fft_create_msg: failed to allocate memory for message struct");
 		return 0;
 	}
 
@@ -167,10 +164,9 @@ fft_task(FFTData fftData)
 
 	int n, offset, index;
 
-	double *in_re, *in_im, *out_re, *out_im; /* local pointers */
+	double *in_re, *in_im, *out_re, *out_im; /* Local pointers */
 
 	size_t len_current, len_max;
- 	len_current = len_max = fftData->fft_max_len;
 
 	epicsMessageQueueId queue_id = fftData->queue_id;
 
@@ -178,23 +174,25 @@ fft_task(FFTData fftData)
 	time_t  start_sec, now_sec;
 	long int start_nsec, now_nsec;
 
+ 	len_current = len_max = fftData->fft_max_len;
+
 	if ( ! (msg = rf_fft_create_msg(len_max) ) ) {
+		errlogPrintf("fft_task: %s Failed to create message. Exit.\n", fftData->thread_name);
 		return 0;
 	}
 
-	errlogPrintf("fftTask: %s create first plan length %i\n", fftData->thread_name, (int)len_max);
+	errlogPrintf("fft_task: %s Create first plan length %i\n", fftData->thread_name, (int)len_max);
 
 	gettimeofday( &time_start, NULL );
 
-	/* creating/updating a plan is slow; this should happen rarely */
+	/* Creating/updating a plan is slow; this should happen rarely */
 	if ( ! (fftplan = rf_fft_create_plan( len_max )) ) {
-		errlogPrintf("fftTask: %s failed to create FFT plan", fftData->thread_name);
+		errlogPrintf("fft_task: %s Failed to create FFT plan", fftData->thread_name);
 		return 0;
 	}
 
 	gettimeofday( &time_now, NULL );
-
-	errlogPrintf("fftTask: %s create plan elapsed %i s %i usec\n", fftData->thread_name,
+	errlogPrintf("fft_task: %s Create plan elapsed %i s %i usec\n", fftData->thread_name,
 		(time_now.tv_sec - time_start.tv_sec), (long int)(time_now.tv_usec - time_start.tv_usec));
 
 	while ( 1 ) {
@@ -202,38 +200,39 @@ fft_task(FFTData fftData)
 		epicsMessageQueueReceive( queue_id, msg, sizeof(FFTMsgRec) );
 
 		if ( msg->debug ) {
-			errlogPrintf("fftTask: %s msg received tstep %f len %i index %i\n", 
+			errlogPrintf("fft_task: %s Msg received tstep %f len %i index %i\n", 
 				fftData->thread_name, msg->tstep, (int)msg->len, msg->index);
 		}
 
 		index = msg->index;
 		
 		if ( (index < 0) || (index >= FFT_MAX_SIG) ) { 
-			errlogPrintf("fftTask: %s Illegal data index %i\n", fftData->thread_name, index);
+			errlogPrintf("fft_task: %s Illegal data index %i\n", fftData->thread_name, index);
 			continue;
 		}
 
 		if ( msg->len != len_current ) {
 //			if ( msg->debug ) {
-				errlogPrintf("fftTask: %s msg->len %i != len_current %i, destroy/recreate plan\n", 
+				errlogPrintf("fft_task: %s msg->len %i != len_current %i, destroy/recreate plan\n", 
 					fftData->thread_name, (int)msg->len, (int)len_current);
 //			}
 
 			gettimeofday( &time_start, NULL );
 
 			if ( rf_fft_update_plan( fftplan, msg->len, 0 ) ) {
-				errlogPrintf("fftTask: %s failed to update FFT plan\n", fftData->thread_name);
+				errlogPrintf("fft_task: %s Failed to update FFT plan\n", fftData->thread_name);
 				return 0;
 			}
 			else if ( msg->debug ) {
-				errlogPrintf("rfFFTTask: %s created new plan of %i elements\n", fftData->thread_name, (int)msg->len);
+				errlogPrintf("rfFFTTask: %s Created new plan of %i elements\n", fftData->thread_name, (int)msg->len);
 			}
 
 			gettimeofday( &time_now, NULL );
 
-			errlogPrintf("fftTask: %s update plan elapsed %i s %i usec\n",  fftData->thread_name,
+			errlogPrintf("fft_task: %s Update plan elapsed %i s %i usec\n",  fftData->thread_name,
 				(time_now.tv_sec - time_start.tv_sec), (long int)(time_now.tv_usec - time_start.tv_usec));
 		}
+
 		len_current = msg->len;
 
 		in_re = msg->in_re;
@@ -247,12 +246,13 @@ fft_task(FFTData fftData)
 
 		epicsMutexLock ( fftData->mutex );
 
-		fftData->len[index] = len_current;
+		fftData->len[index]   = len_current;
 		fftData->tstep[index] = msg->tstep;
 
-		/* initialize input after creating plan (creating plan overwrites the arrays when using FFTW_MEASURE) */
+		/* Initialize input after creating plan (creating plan overwrites the arrays when using FFTW_MEASURE) */
 		for ( n = 0; n < len_current; n++ ) {
 			fftplan->in[n] = in_re[n] + I*in_im[n];
+			/* temporary */
 			if ( msg->debug ) {
 				if ( n < 30 ) {
 					printf("plan input element %i %f + i*%f\n", n, creal(fftplan->in[n]), cimag(fftplan->in[n]));
@@ -273,6 +273,7 @@ fft_task(FFTData fftData)
 			out_re[n + offset] = creal(fftplan->out[n])/len_current;
 			out_im[n + offset] = cimag(fftplan->out[n])/len_current;
 
+			/* temporary */
 			if ( msg->debug ) {
 				printf("unnormalized: plan index %i %.10f + i*%.10f adjusted index %i %.10f + i*%.10f\n", 
 					n, creal(fftplan->out[n]), cimag(fftplan->out[n]), n + offset, out_re[n + offset], out_im[n + offset]);
@@ -304,15 +305,15 @@ int
 rfFFTTaskInit(char *name, size_t fft_max_len)
 {
 FFTData fftData = 0;
-char thread_name[MAX_NAME_LENGTH];
+char    thread_name[MAX_NAME_LENGTH];
 
 	if ( ! (fftData = fft_data_register(name)) ) {
-		errlogPrintf("rfFFTTaskInit: %s failed to create and register FFT data structure\n", name);
+		errlogPrintf("rfFFTTaskInit: %s Failed to create and register FFT data structure\n", name);
 		return -1;
 	}
 
 	if ( ! (fftData->data = malloc( sizeof(double) * fft_max_len * FFT_MAX_SIG * 2 )) )  {
-		errlogPrintf("rfFFTTaskInit: %s failed to allocate memory for FFT data\n", name);
+		errlogPrintf("rfFFTTaskInit: %s Failed to allocate memory for FFT data\n", name);
 		return -1;
 	}
 
@@ -342,7 +343,7 @@ char thread_name[MAX_NAME_LENGTH];
 static void
 fftMainInit(void)
 {
-	fftPlanMutex   = epicsMutexCreate();
+	fftPlanMutex     = epicsMutexCreate();
 	fftInitTaskMutex = epicsMutexCreate();
 }
 
