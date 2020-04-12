@@ -37,7 +37,7 @@ FFTData fftDataFind(const char *name);
 
 int rfFFTTaskInit(char *name, size_t fft_max_len);
 
-int fftMsgPost(epicsMessageQueueId queue_id, size_t len, double *in_re, double *in_im, double tstep, int index, EVENTPVT event, short debug);
+int fftMsgPost(epicsMessageQueueId queue_id, size_t len, double *in_re, double *in_im, double tstep, int index, EVENTPVT event, int debug);
 
 
 #endif /* FFT_H */

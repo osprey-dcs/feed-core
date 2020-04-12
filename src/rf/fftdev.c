@@ -31,6 +31,8 @@ typedef struct FFTDev_ {
 	FFTData fftData;
 	int     index; /* this record's index into FFT data array */
 	EVENTPVT event; /* database event, executed in fft_main */
+	size_t   len_max;   /* maximum data length */
+	epicsMessageQueueId queue_id; /* used only by sender */
 } FFTDevRec, *FFTDev;
 
 static long
@@ -62,6 +64,7 @@ fft_sub_init(aSubRecord* prec)
 	}
 
 	pvt->index = *(epicsInt32 *)prec->m;
+	pvt->len_max = prec->noa;
 
 	/* If data structure not registered, assume this is the first
 	 * try and start FFT task. Then look up registered data structure.
@@ -69,11 +72,11 @@ fft_sub_init(aSubRecord* prec)
 	 */
 	if ( fft_data_find( pvt, (char *)prec->desc ) ) {
 		errlogPrintf("%s Initialize %s FFT task with max length %i\n",
-			prec->name, prec->desc, prec->noa);
+			prec->name, prec->desc, (int)(pvt->len_max));
 
 		epicsMutexLock( fftInitTaskMutex );
-		s = rfFFTTaskInit( (char *)prec->desc, prec->noa );
-		epicsMutexLock( fftInitTaskMutex );
+		s = rfFFTTaskInit( (char *)prec->desc, pvt->len_max );
+		epicsMutexUnlock( fftInitTaskMutex );
 
 		if ( s ) {
 			errlogPrintf("%s failed to initialize FFT task for %s\n",
@@ -117,6 +120,10 @@ fft_init_send(aSubRecord* prec)
 		return -1;
 	}
 
+	epicsMutexLock( pvt->fftData->mutex );
+	pvt->queue_id = pvt->fftData->queue_id;
+	epicsMutexUnlock( pvt->fftData->mutex );
+
 	return 0;
 }
 
@@ -137,7 +144,6 @@ fft_calc_send(aSubRecord* prec)
 {
 	short   debug   = (prec->tpro > 1) ? 1 : 0;
 	FFTDev  pvt     = prec->dpvt;
-	FFTData fftData = pvt->fftData;
 
 	int i;
 	epicsUInt32 len = prec->nea; /* actual output length */
@@ -157,6 +163,21 @@ fft_calc_send(aSubRecord* prec)
     if(len > prec->neb)
         len = prec->neb;
 
+	if ( (len == 0) || (TSTEP <= 0) ) {
+		if ( debug ) {
+			errlogPrintf("%s data length %i 0 or time step %f <= 0\n", 
+				prec->name, len, TSTEP);
+		}
+		return 1;
+	}
+
+	if ( len > pvt->len_max ) {
+		errlogPrintf("%s fft_calc_send: data length %i exceeds max %i\n",
+			prec->name, len, (int)pvt->len_max);
+		(void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
+		return 1;
+	}
+
 	if ( debug ) {
 		printf("output length %i tstep %f s index %i\n", len, TSTEP, pvt->index);
 		for ( i = 0; i < 30; i++ ) {
@@ -169,7 +190,7 @@ fft_calc_send(aSubRecord* prec)
 		printf("%s fft_calc_send: before post msg index %i len %i\n", prec->name, pvt->index, len);
 	}
 
-	if ( fftMsgPost( fftData->queue_id, len, IWF, QWF, TSTEP, pvt->index, pvt->event, debug ) ) {
+	if ( fftMsgPost( pvt->queue_id, len, IWF, QWF, TSTEP, pvt->index, pvt->event, debug ) ) {
 		if ( debug ) {
 			printf("%s error sending to FFT message queue\n", prec->name);
 		}

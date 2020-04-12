@@ -109,11 +109,12 @@ rf_fft_update_plan(FFTPlan fftplan, size_t len, int new)
 
 	epicsMutexLock( fftPlanMutex );
 
-	if ( ! (fftplan->plan = fftwf_plan_dft_1d(len, fftplan->in, fftplan->out, FFTW_FORWARD, FFTW_MEASURE)) ) {
-		errlogPrintf("rf_fft_create_plan: Failed to create plan");
+	fftplan->plan = fftwf_plan_dft_1d(len, fftplan->in, fftplan->out, FFTW_FORWARD, FFTW_MEASURE);
+	epicsMutexUnlock( fftPlanMutex );
+
+	if ( ! fftplan->plan ) {
 		return -1;
 	}
-	epicsMutexUnlock( fftPlanMutex );
 
 	return 0;
 }
@@ -124,7 +125,7 @@ rf_fft_create_plan(size_t len)
 FFTPlan fftplan = 0;
 
 	if ( ! (fftplan = malloc( sizeof(FFTPlanRec))) ) {
-		errlogPrintf("rf_fft_create_plan: failed to memory for FFT plan struct");
+		errlogPrintf("rf_fft_create_plan: failed to allocate memory for FFT plan struct");
 		return 0;
 	}
 
@@ -177,7 +178,7 @@ fft_task(FFTData fftData)
 	time_t  start_sec, now_sec;
 	long int start_nsec, now_nsec;
 
-	if ( ! (msg = rf_fft_create_msg(len_max)) ) {
+	if ( ! (msg = rf_fft_create_msg(len_max) ) ) {
 		return 0;
 	}
 
@@ -185,7 +186,7 @@ fft_task(FFTData fftData)
 
 	gettimeofday( &time_start, NULL );
 
-	/* creating a new plan is slow; this should happen rarely */
+	/* creating/updating a plan is slow; this should happen rarely */
 	if ( ! (fftplan = rf_fft_create_plan( len_max )) ) {
 		errlogPrintf("fftTask: %s failed to create FFT plan", fftData->thread_name);
 		return 0;
@@ -198,7 +199,7 @@ fft_task(FFTData fftData)
 
 	while ( 1 ) {
 
-		epicsMessageQueueReceive( queue_id, &msg, sizeof(msg) );
+		epicsMessageQueueReceive( queue_id, msg, sizeof(FFTMsgRec) );
 
 		if ( msg->debug ) {
 			errlogPrintf("fftTask: %s msg received tstep %f len %i index %i\n", 
@@ -221,11 +222,11 @@ fft_task(FFTData fftData)
 			gettimeofday( &time_start, NULL );
 
 			if ( rf_fft_update_plan( fftplan, msg->len, 0 ) ) {
-				errlogPrintf("fftTask: %s failed to create FFT plan", fftData->thread_name);
+				errlogPrintf("fftTask: %s failed to update FFT plan\n", fftData->thread_name);
 				return 0;
 			}
 			else if ( msg->debug ) {
-				errlogPrintf("rfFFTTask: %s created new plan of %i elements", fftData->thread_name, (int)msg->len);
+				errlogPrintf("rfFFTTask: %s created new plan of %i elements\n", fftData->thread_name, (int)msg->len);
 			}
 
 			gettimeofday( &time_now, NULL );
@@ -240,7 +241,7 @@ fft_task(FFTData fftData)
 		out_re = fftData->data + (index * 2 * len_max);
 		out_im = fftData->data + ((index * 2 + 1) * len_max);
 		if ( msg->debug ) {
-			errlogPrintf("rfFFTTask: %s out_re offset %i out_im offset %i",
+			errlogPrintf("rfFFTTask: %s out_re offset %i out_im offset %i\n",
 				fftData->thread_name, (int)(index * 2 * len_max), (int)((index * 2 + 1) * len_max));
 		}
 
@@ -284,23 +285,19 @@ fft_task(FFTData fftData)
 }
 
 int
-fftMsgPost(epicsMessageQueueId queue_id, size_t len, double *in_re, double *in_im, double tstep, int index, EVENTPVT event, short debug)
+fftMsgPost(epicsMessageQueueId queue_id, size_t len, double *in_re, double *in_im, double tstep, int index, EVENTPVT event, int debug)
 {
-FFTMsg msg = 0;
+	FFTMsgRec msg;
 
-	if ( ! (msg = rf_fft_create_msg(len)) ) {
-		return 0;
-	}
+	msg.len = len;
+	msg.in_re = in_re;
+	msg.in_im = in_im;
+	msg.tstep = tstep;
+	msg.index = index;
+	msg.event = event;
+	msg.debug = debug;
 
-	msg->len = len;
-	msg->in_re = in_re;
-	msg->in_im = in_im;
-	msg->tstep = tstep;
-	msg->index = index;
-	msg->event = event;
-	msg->debug = debug;
-
-	return epicsMessageQueueSend( queue_id, &msg, sizeof(msg) );
+	return epicsMessageQueueSend( queue_id, (void *)&msg, sizeof(FFTMsgRec) );
 }
 
 int
