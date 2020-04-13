@@ -263,6 +263,14 @@ fft_task(FFTData fftData)
 		/* execute is thread-safe so does not need to be guarded by global mutex fftPlanMutex */
 		fftwf_execute( fftplan->plan ); 
 
+		/* FFT output is [ 0 frequency component, positive frequency components, negative frequency components ]
+		 * 		out[0] = DC component
+		 * 		out[1:(len/2 - 1)] = positive frequency components
+		 * 		out[len/2] = Nyquist frequency
+		 * 		out[len/2:len-1] = negative frequency components
+		 * When extracting results to array, shift negative frequency components to beginning of array
+		 */
+
 		for ( n = 0; n < len_current; n++ ) {
 			if ( n < len_current/2 ) {
 				offset = len_current/2;

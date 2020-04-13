@@ -163,6 +163,20 @@ fft_calc_send(aSubRecord* prec)
     if(len > prec->neb)
         len = prec->neb;
 
+	/* Hack: to keep data lengths consistent across all waveforms for a cavity
+	 * (in order to use same FFTW plan), if len is odd, set to next lower even value.
+	 * This is because the waveform lengths may be off by 1, depending on
+	 * active number of waveforms. 
+	 */
+
+	if ( len % 2 != 0 ) {
+		if ( debug ) {
+			errlogPrintf("%s Original data length %i, reduce by one\n", 
+				prec->name, len);
+		}
+		len -= 1;
+	}
+
 	if ( (len == 0) || (TSTEP <= 0) ) {
 		if ( debug ) {
 			errlogPrintf("%s Data length %i 0 or time step %f <= 0\n", 
@@ -203,8 +217,9 @@ fft_calc_recv(aSubRecord* prec)
 	short debug = (prec->tpro > 1) ? 1 : 0;
 	FFTDev  pvt     = prec->dpvt;
 	FFTData fftData = pvt->fftData;
-	int index = pvt->index, 
-	    N = 0;
+	int index = pvt->index, /* This waveform's index into FFT data array */
+	    N = 0,
+		afftmax_index = 0;  /* Index of maximum amplitude */
 
 	double *FFTI, *FFTQ; /* Local pointers */
 
@@ -215,7 +230,8 @@ fft_calc_recv(aSubRecord* prec)
            *AFFTMAX  = (double*)prec->vale, /* Max of amplitude FFT */
            *AFFTMAXF = (double*)prec->valf, /* Frequency value at FFT max amplitude */
            *AFFTMEAN = (double*)prec->valg, /* Mean of amplitude FFT */
-           *FNYQ     = (double*)prec->vali; /* Max measurable freq (Nyquist), samplingrate/2 */
+           *FNYQ     = (double*)prec->vali, /* Max measurable freq (Nyquist), samplingrate/2 */
+           *FSTEP    = (double*)prec->valj; /* FFT frequency resolution */
 
     size_t i;
 
@@ -246,6 +262,8 @@ fft_calc_recv(aSubRecord* prec)
     epicsUInt32 len     = fftData->len[index]; /* Actual output length */
 	size_t      max_len = fftData->fft_max_len;
 
+	*FSTEP = 1 / fftData->tstep[index] / len; /* delta f = delta t / n samples */ 
+
     if(len > prec->nova)
         len = prec->nova;
     if(len > prec->novb)
@@ -259,19 +277,21 @@ fft_calc_recv(aSubRecord* prec)
 	FFTQ = fftData->data + ((index * 2 + 1) * max_len);
 
 	if ( debug ) {
-		errlogPrintf("%s fft_re offset %i fft_im offset %i index %i len %i tstep %f\n", 
-			prec->name, (int)(index * 2 * max_len), (int)((index * 2 + 1) * max_len), index, (int)len, fftData->tstep[index]);
+		errlogPrintf("%s fft_re offset %i  fft_im offset %i  index %i  len %i  tstep %.4e s  fstep %f Hz\n", 
+			prec->name, (int)(index * 2 * max_len), (int)((index * 2 + 1) * max_len), index, (int)len, 
+			fftData->tstep[index], *FSTEP);
 	}
  
     for(i=0; i<len; i++) {
 		IFFT[i] = FFTI[i];
 		QFFT[i] = FFTQ[i];
 		AFFT[i] = sqrt(FFTI[i]*FFTI[i] + FFTQ[i]*FFTQ[i]);
-		FWF[i]  = (double)(i - len/2.0) / fftData->tstep[index] / len; /* delta f = delta t / n samples */ 
+		FWF[i]  = (double)(i - len/2.0) * *FSTEP;
 
 		if ( AFFT[i] > *AFFTMAX ) {
 			*AFFTMAX = AFFT[i];
 			*AFFTMAXF = FWF[i];
+			afftmax_index = i;
 		}
 
         *AFFTMEAN += AFFT[i];
@@ -295,8 +315,8 @@ fft_calc_recv(aSubRecord* prec)
 	if ( *AFFTMAX > threshscale * *AFFTMEAN ) {
 		*AFFTMAXFOUND = 1;
 		if ( debug ) {
-			errlogPrintf("%s Found max amp %f at freq %f mean %f\n", 
-				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN );
+			errlogPrintf("%s Found max amp %f at freq %f mean %f index %i\n", 
+				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN, afftmax_index );
 		}
 	}
 	else {
@@ -318,10 +338,10 @@ static registryFunctionRef asub_seq[] = {
 };
 
 static
-void rfFFTRegister(void) {
+void asubFFTRegister(void) {
     registryFunctionRefAdd(asub_seq, NELEMENTS(asub_seq));
 }
 
 #include <epicsExport.h>
 
-epicsExportRegistrar(rfFFTRegister);
+epicsExportRegistrar(asubFFTRegister);

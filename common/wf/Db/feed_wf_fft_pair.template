@@ -51,6 +51,7 @@ record(aSub, "$(PREF)FFT_CALC2_") {
   field(FTVG ,"DOUBLE")
   field(FTVH ,"SHORT")
   field(FTVI ,"DOUBLE")
+  field(FTVJ ,"DOUBLE")
   field(NOVA, "$(SIZE)")
   field(NOVB, "$(SIZE)")
   field(NOVC, "$(SIZE)")
@@ -60,6 +61,7 @@ record(aSub, "$(PREF)FFT_CALC2_") {
   field(NOVG, "1")
   field(NOVH, "1")
   field(NOVI, "1")
+  field(NOVJ, "1")
   field(OUTA, "$(PREF)AFFT MSI PP")  # amplitude FFT waveform 
   field(OUTB, "$(PREF)FWF MSI PP")   # frequency steps waveform
   field(OUTC, "$(PREF)IFFT MSI PP")  # I FFT waveform 
@@ -69,6 +71,7 @@ record(aSub, "$(PREF)FFT_CALC2_") {
   field(OUTG, "")                       # mean of amplitude FFT
   field(OUTH, "")                       # 1 if max amplitude found
   field(OUTI, "")                       # max measurable frequency (Nyquist) = samplingrate/2
+  field(OUTJ, "")                       # FFT frequency resolution = 1/samplingrate/npoints (actual, not maximum)
   field(TSEL, "$(PREF)IWF.TIME")
 }
 
