@@ -38,6 +38,13 @@ LIB_SRCS += calc.c
 LIB_SRCS += chirp.c
 LIB_SRCS += rf_asub.c
 
+ifneq ($(FFTW),)
+LIB_DBD += fft.dbd
+LIB_LIBS += fftw3f 
+LIB_SRCS += fftmain.c
+LIB_SRCS += fftdev.c
+endif
+
 #===========================
 
 include $(TOP)/configure/RULES

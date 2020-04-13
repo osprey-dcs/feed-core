@@ -54,7 +54,6 @@ variable(feedUDPHeaderSize, int)
 # utilities
 registrar(asubFEEDRegistrar)
 registrar(rfcalcRegister)
-registrar(rfFFTRegister)
 
 # RF-specific
 registrar(rfasubRegister)

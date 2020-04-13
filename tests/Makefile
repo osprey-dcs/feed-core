@@ -17,6 +17,11 @@ testfeed_DBD += base.dbd
 testfeed_DBD += feed.dbd
 
 PROD_LIBS += feed
+
+ifneq ($(FFTW),)
+PROD_LIBS += fftw3f 
+endif
+
 PROD_LIBS += $(EPICS_BASE_IOC_LIBS)
 PROD_SYS_LIBS += z
 

@@ -39,8 +39,19 @@ feedioc_DBD += pyDevSup.dbd
 feedioc_LIBS += pyDevSup$(PY_LD_VER)
 endif
 
+ifneq ($(ASYN),)
+feedioc_DBD += asyn.dbd
+feedioc_LIBS += asyn
+endif
+
 feedioc_LIBS += feed
+
+ifneq ($(FFTW),)
+feedioc_LIBS += fftw3f 
+endif
+
 feedioc_LIBS += $(EPICS_BASE_IOC_LIBS)
+feedioc_SYS_LIBS += z
 
 #===========================
 
