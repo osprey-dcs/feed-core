@@ -46,7 +46,7 @@ endif
 
 feedioc_LIBS += feed
 
-ifneq ($(FFTW),)
+ifeq ($(USE_FFTW),YES)
 feedioc_LIBS += fftw3f 
 endif
 

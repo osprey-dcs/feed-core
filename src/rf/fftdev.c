@@ -330,7 +330,7 @@ fft_calc_recv(aSubRecord* prec)
     return 0;
 }
 
-static registryFunctionRef asub_seq[] = {
+static registryFunctionRef fft_asub_seq[] = {
     {"FFTSENDINIT", (REGISTRYFUNCTION) &fft_init_send},
     {"FFTCALCINIT", (REGISTRYFUNCTION) &fft_init_recv},
     {"FFTSEND",     (REGISTRYFUNCTION) &fft_calc_send},
@@ -339,7 +339,7 @@ static registryFunctionRef asub_seq[] = {
 
 static
 void asubFFTRegister(void) {
-    registryFunctionRefAdd(asub_seq, NELEMENTS(asub_seq));
+    registryFunctionRefAdd(fft_asub_seq, NELEMENTS(fft_asub_seq));
 }
 
 #include <epicsExport.h>

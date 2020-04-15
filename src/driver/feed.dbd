@@ -57,3 +57,7 @@ registrar(rfcalcRegister)
 
 # RF-specific
 registrar(rfasubRegister)
+
+# Waveform FFT
+registrar(asubFFTRegister)
+registrar(fftRegistrar)

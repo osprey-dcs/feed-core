@@ -18,7 +18,7 @@ testfeed_DBD += feed.dbd
 
 PROD_LIBS += feed
 
-ifneq ($(FFTW),)
+ifeq ($(USE_FFTW),YES)
 PROD_LIBS += fftw3f 
 endif
 
