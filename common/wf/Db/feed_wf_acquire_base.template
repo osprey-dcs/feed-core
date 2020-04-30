@@ -63,7 +63,7 @@ record(longout, "$(BASE)DECIM") {
 record(calc, "$(BASE)SAMP_PERIOD") {
     field(INPA, "$(BASE)DECIM")
     field(INPB, "33") # cic_base_period
-    field(INPC, "94.29e6") # samp/sec
+    field(INPC, "94.2857142857e6") # samp/sec
     field(CALC, "B*2*A/C")
     field(FLNK, "$(BASE)AMPCALC")
     field(TSEL, "$(BASE)DECIM.TIME")
