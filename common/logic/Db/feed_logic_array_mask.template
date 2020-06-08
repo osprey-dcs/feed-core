@@ -12,3 +12,11 @@ record(longout, "$(BASE)MASK") {
     field(OUT , "@name=$(NAME) reg=$(REG) wait=false")
     info(autosaveFields_pass0, "VAL")
 }
+
+# optional higher-level mask setting
+record(mbboDirect, "$(BASE)MASKSET") {
+    field(DESC, "Channel selection bitmask")
+    field(OUT , "$(BASE)MASK PP")
+    field(TPRO, "$(TPRO=0)")
+    info(autosaveFields_pass0, "VAL B0 B1 B2 B3 B4 B5 B6 B7 B8 B9 BA BB")
+}

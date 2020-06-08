@@ -227,6 +227,45 @@ long asub_yscale(aSubRecord *prec)
     return 0;
 }
 
+/* calculate shift and Y scaling factor for resonance system
+ * record(asub, "$(N)") {
+ *   field(SNAM, "asub_yscale")
+ *   field(FTA , "ULONG") # wave_samp_per register
+ *   field(FTB , "ULONG") # cic_period
+ *   field(FTVA, "ULONG") # wave_shift
+ *   field(FTVB, "DOUBLE") # yscale
+ * }
+ */
+static
+long asub_yscale_res(aSubRecord *prec)
+{
+	const epicsUInt32 wave_samp_per = *(const epicsUInt32*)prec->a,
+						cic_period    = *(const epicsUInt32*)prec->b;
+	epicsUInt32 *wave_shift = (epicsUInt32*)prec->vala;
+	double *yscale = (double*)prec->valb;
+
+	const epicsUInt32   cic_n    = wave_samp_per * cic_period;
+
+	const int cic_order = 2;
+
+	double bit_g = pow(cic_n, cic_order); // Bit-growth
+
+	int wave_shift_temp = ceil(log2(bit_g)/cic_order); // FW accounts for cic_order when shifting
+
+	if(wave_shift_temp<0)
+		*wave_shift = 0;
+	else
+		*wave_shift = wave_shift_temp;
+
+	double cic_gain = bit_g * pow(0.5, 2*(*wave_shift));
+
+	*yscale = pow(2.0, 17) * cic_gain;
+
+	prec->udf = isnan(*yscale);
+
+	return 0;
+}
+
 /* concatinate byte array together (bytes MSBF)
  *
  * record(asub, "$(N)") {
@@ -914,6 +953,7 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_split_bits", (REGISTRYFUNCTION)&asub_split_bits);
     registryFunctionAdd("sub_count_bits", (REGISTRYFUNCTION)&sub_count_bits);
     registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
+    registryFunctionAdd("asub_yscale_res", (REGISTRYFUNCTION)&asub_yscale_res);
     registryFunctionAdd("sub_feed_nset_bits", (REGISTRYFUNCTION)&sub_feed_nset_bits);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
