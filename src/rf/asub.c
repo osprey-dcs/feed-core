@@ -110,6 +110,7 @@ long sub_count_bits(subRecord *prec)
 record(asub, "$(N)") {
     field(SNAM, "asub_split_bits")
     field(FTA , "LONG")  # mask
+    field(FTB , "ULONG") # Optional: reduce size of bitmask
     field(FTVA, "LONG")  # number of bits set
     field(FTVB, "LONG")  # -1 or number of bits set at or below
     ...
@@ -119,7 +120,18 @@ record(asub, "$(N)") {
 static
 long asub_split_bits(aSubRecord *prec)
 {
-    const size_t nout = aSubRecordVALN - aSubRecordVALB;
+	/* By default support 12 channels */
+	size_t ntmp = aSubRecordVALN - aSubRecordVALB;
+
+	/* Optionally reduce bitmask size, if fewer channels supported */
+    if ( prec->ftb==menuFtypeULONG ) {
+		epicsUInt32 noutput = *(epicsUInt32*)prec->b;
+		if ( (noutput > 0) && (noutput < ntmp) ) {
+			printf("%s: reduce bits from %i to %i\n", prec->name, (int)ntmp, (int)noutput);
+			ntmp = noutput;
+		} 
+	}
+    const size_t nout = ntmp;
 
     epicsInt32 mask    = *(epicsInt32*)prec->a,
              *bitcnt   = prec->vala,

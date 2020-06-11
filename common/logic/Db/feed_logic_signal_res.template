@@ -11,50 +11,42 @@
 #   NAME - FEED device instance name
 #   REG  - register name
 #   SIZE - max. register size (in elements)
+#   MASKSET - Record name of mbboDirect signal selection mask.
+#   MASKBIT - Bit in selection mask.
 #
 # Optional Macros:
 #   IDX - index of this signal in mask register, or index of first sample if no mask register.
 #   MASK - Link (including 'CP MS') to signal selection mask readback.
-#   MASKSET - Record name of mbboDirect signal selection mask.
 #   FLNK - Next record in chain after waveform update
 
 # calculate de-mux offset and step
 
-record(bo, "$(BASE)ENABLE") {
-  field(ZNAM, "Disable")
-  field(ONAM, "Enable")
-#  field(OUT , "$(PREF)ENABLE_FOUT_ PP")
-  field(OUT, "$(MASKSET).B$(IDX) PP")
-  field(VAL , "1") # initially Enable
-  field(PINI, "YES")
-}
+# Future, if per-cavity per-signal enable control supported
+# If so, remove/modify per-signal enable in res_wf_support.template
+#record(bo, "$(BASE)ENABLE") {
+#  field(ZNAM, "Disable")
+#  field(ONAM, "Enable")
+#  field(OUT, "$(MASKSET).B$(MASKBIT) PP")
+#  field(VAL , "1") # initially Enable
+#  field(PINI, "YES")
+#}
 
-record(longin, "$(BASE)MASK_") {
-    field(INP , "$(MASK=1)")
-    field(PINI, "YES")
-    field(FLNK, "$(BASE)CALCOFF_")
-}
-
-# calculate offset of first sample
-record(sub, "$(BASE)CALCOFF_") {
-    field(SNAM, "sub_feed_nset_bits")
-    field(INPA, "$(IDX=0)")
-    field(INPB, "$(BASE)MASK_ NPP MSI")
-    field(FLNK, "$(BASE)CALCSTP_")
-}
-
-# calculate total number of selected signals
-record(sub, "$(BASE)CALCSTP_") {
-    field(SNAM, "sub_count_bits")
-    field(INPA, "$(BASE)MASK_ NPP MSI")
+record(longin, "$(BASE)CONFIG_") {
+    # monitor offset computed in feed_wf_acquire_base.template
+    field(INP , "$(SELPREF)MASK_.VAL$(LETTER) CP")
+    field(TPRO, "$(TPRO=0)")
     field(FLNK, "$(BASE)OFFSET")
 }
 
 record(longout, "$(BASE)OFFSET") {
+    # scan disable when this signal is not selected
+    field(SDIS, "$(BASE)CONFIG_")
+    field(DISV, "-1")
+
     field(DTYP, "FEED Signal Offset")
     field(OUT , "@signal=$(BASE)")
     field(OMSL, "closed_loop")
-    field(DOL , "$(BASE)CALCOFF_ NPP MSI")
+    field(DOL , "$(SELPREF)MASK_.VAL$(LETTER)")
     field(FLNK, "$(BASE)STEP")
 }
 
@@ -62,7 +54,8 @@ record(longout, "$(BASE)STEP") {
     field(DTYP, "FEED Signal Step")
     field(OUT , "@signal=$(BASE)")
     field(OMSL, "closed_loop")
-    field(DOL , "$(BASE)CALCSTP_ NPP MSI")
+    field(DOL , "$(SELPREF)MASK_.VALA MSI")
+    field(FLNK, "")
 }
 
 # scaling factor
@@ -97,20 +90,11 @@ record(ao, "$(BASE)SCALE_RBV") {
     field(PREC, "9")
 }
 
-#record(ao, "$(BASE)SCALE") {
-#    field(DTYP, "FEED Signal Scale")
-#    field(OUT , "@signal=$(BASE)")
-#    field(PINI, "YES")
-#    field(VAL , "$(SCALE=1.0)")
-#    field(PREC, "9")
-#    info(autosaveFields_pass0, "VAL")
-#}
-
 # Signal readout
 
 record(aai, "$(BASE)WF") {
     # scan disable when this signal is not selected
-    field(SDIS, "$(BASE)OFFSET")
+    field(SDIS, "$(BASE)CONFIG_")
     field(DISV, "-1")
 
     field(DTYP, "FEED Register Read")
