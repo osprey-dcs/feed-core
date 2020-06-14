@@ -127,7 +127,6 @@ long asub_split_bits(aSubRecord *prec)
     if ( prec->ftb==menuFtypeULONG ) {
 		epicsUInt32 noutput = *(epicsUInt32*)prec->b;
 		if ( (noutput > 0) && (noutput < ntmp) ) {
-			printf("%s: reduce bits from %i to %i\n", prec->name, (int)ntmp, (int)noutput);
 			ntmp = noutput;
 		} 
 	}
