@@ -44,7 +44,7 @@ LIB_LIBS += fftw3f
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
 else ifeq ($(USE_SYS_FFTW),YES)
-LIB_LIBS += fftw3f 
+LIB_SYS_LIBS += fftw3f 
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
 else
