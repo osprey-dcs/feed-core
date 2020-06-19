@@ -43,6 +43,10 @@ ifeq ($(USE_FFTW),YES)
 LIB_LIBS += fftw3f 
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
+else ifeq ($(USE_SYS_FFTW),YES)
+LIB_LIBS += fftw3f 
+LIB_SRCS += fftmain.c
+LIB_SRCS += fftdev.c
 else
 LIB_SRCS += fftnoop.c
 endif

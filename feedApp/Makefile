@@ -48,6 +48,8 @@ feedioc_LIBS += feed
 
 ifeq ($(USE_FFTW),YES)
 feedioc_LIBS += fftw3f 
+else ifeq ($(USE_SYS_FFTW),YES)
+feedioc_SYS_LIBS += fftw3f 
 endif
 
 feedioc_LIBS += $(EPICS_BASE_IOC_LIBS)

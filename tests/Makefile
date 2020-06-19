@@ -20,6 +20,8 @@ PROD_LIBS += feed
 
 ifeq ($(USE_FFTW),YES)
 PROD_LIBS += fftw3f 
+else ifeq ($(USE_SYS_FFTW),YES)
+PROD_SYS_LIBS += fftw3f 
 endif
 
 PROD_LIBS += $(EPICS_BASE_IOC_LIBS)
