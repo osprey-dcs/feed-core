@@ -568,10 +568,11 @@ long asub_setamp(aSubRecord *prec)
      * TODO: Revisit numbers used in cav/fwd scale checks
      */
     if (*too_high) {
-		if ((freq == 3.9e9) && (cav_fs < 5)) {
+		/* current cavity frequency options are 1.3 and 3.9 GHz */
+		if ((freq < 2.0e9) && (cav_fs < 25)) {
 	    	sprintf(msg, "Overrange. Check cav scale");
 		}
-		else if (cav_fs < 25) {
+		else if (cav_fs < 5) {
 	    	sprintf(msg, "Overrange. Check cav scale");
 		}
 		else if (fwd_fs < 50) {
