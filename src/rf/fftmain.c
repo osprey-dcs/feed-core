@@ -171,8 +171,6 @@ fft_task(FFTData fftData)
 	epicsMessageQueueId queue_id = fftData->queue_id;
 
 	struct timeval time_start, time_now;
-	time_t  start_sec, now_sec;
-	long int start_nsec, now_nsec;
 
  	len_current = len_max = fftData->fft_max_len;
 
@@ -181,9 +179,8 @@ fft_task(FFTData fftData)
 		return 0;
 	}
 
-	errlogPrintf("fft_task: %s Create first plan length %i\n", fftData->thread_name, (int)len_max);
-
-	gettimeofday( &time_start, NULL );
+	/* errlogPrintf("fft_task: %s Create first plan length %i\n", fftData->thread_name, (int)len_max);
+	gettimeofday( &time_start, NULL ); */
 
 	/* Creating/updating a plan is slow; this should happen rarely */
 	if ( ! (fftplan = rf_fft_create_plan( len_max )) ) {
@@ -191,9 +188,9 @@ fft_task(FFTData fftData)
 		return 0;
 	}
 
-	gettimeofday( &time_now, NULL );
+	/*gettimeofday( &time_now, NULL );
 	errlogPrintf("fft_task: %s Create plan elapsed %i s %i usec\n", fftData->thread_name,
-		(time_now.tv_sec - time_start.tv_sec), (long int)(time_now.tv_usec - time_start.tv_usec));
+		(time_now.tv_sec - time_start.tv_sec), (long int)(time_now.tv_usec - time_start.tv_usec)); */
 
 	while ( 1 ) {
 
@@ -212,12 +209,11 @@ fft_task(FFTData fftData)
 		}
 
 		if ( msg->len != len_current ) {
-//			if ( msg->debug ) {
+			if ( msg->debug ) {
 				errlogPrintf("fft_task: %s msg->len %i != len_current %i, destroy/recreate plan\n", 
 					fftData->thread_name, (int)msg->len, (int)len_current);
-//			}
-
-			gettimeofday( &time_start, NULL );
+				gettimeofday( &time_start, NULL );
+			}
 
 			if ( rf_fft_update_plan( fftplan, msg->len, 0 ) ) {
 				errlogPrintf("fft_task: %s Failed to update FFT plan\n", fftData->thread_name);
@@ -227,10 +223,11 @@ fft_task(FFTData fftData)
 				errlogPrintf("rfFFTTask: %s Created new plan of %i elements\n", fftData->thread_name, (int)msg->len);
 			}
 
-			gettimeofday( &time_now, NULL );
-
-			errlogPrintf("fft_task: %s Update plan elapsed %i s %i usec\n",  fftData->thread_name,
-				(time_now.tv_sec - time_start.tv_sec), (long int)(time_now.tv_usec - time_start.tv_usec));
+			if ( msg->debug ) {
+				gettimeofday( &time_now, NULL );
+				errlogPrintf("fft_task: %s Update plan elapsed %i s %i usec\n",  fftData->thread_name,
+					(int)(time_now.tv_sec - time_start.tv_sec), (int)(time_now.tv_usec - time_start.tv_usec));
+			}
 		}
 
 		len_current = msg->len;
@@ -252,12 +249,6 @@ fft_task(FFTData fftData)
 		/* Initialize input after creating plan (creating plan overwrites the arrays when using FFTW_MEASURE) */
 		for ( n = 0; n < len_current; n++ ) {
 			fftplan->in[n] = in_re[n] + I*in_im[n];
-			/* temporary */
-			if ( msg->debug ) {
-				if ( n < 30 ) {
-					printf("plan input element %i %f + i*%f\n", n, creal(fftplan->in[n]), cimag(fftplan->in[n]));
-				}
-			}
 		}
 
 		/* execute is thread-safe so does not need to be guarded by global mutex fftPlanMutex */

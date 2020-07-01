@@ -110,6 +110,7 @@ long sub_count_bits(subRecord *prec)
 record(asub, "$(N)") {
     field(SNAM, "asub_split_bits")
     field(FTA , "LONG")  # mask
+    field(FTB , "ULONG") # Optional: reduce size of bitmask
     field(FTVA, "LONG")  # number of bits set
     field(FTVB, "LONG")  # -1 or number of bits set at or below
     ...
@@ -119,7 +120,17 @@ record(asub, "$(N)") {
 static
 long asub_split_bits(aSubRecord *prec)
 {
-    const size_t nout = aSubRecordVALN - aSubRecordVALB;
+	/* By default support 12 channels */
+	size_t ntmp = aSubRecordVALN - aSubRecordVALB;
+
+	/* Optionally reduce bitmask size, if fewer channels supported */
+    if ( prec->ftb==menuFtypeULONG ) {
+		epicsUInt32 noutput = *(epicsUInt32*)prec->b;
+		if ( (noutput > 0) && (noutput < ntmp) ) {
+			ntmp = noutput;
+		} 
+	}
+    const size_t nout = ntmp;
 
     epicsInt32 mask    = *(epicsInt32*)prec->a,
              *bitcnt   = prec->vala,
@@ -225,6 +236,45 @@ long asub_yscale(aSubRecord *prec)
     prec->udf = isnan(*yscale);
 
     return 0;
+}
+
+/* calculate shift and Y scaling factor for resonance system
+ * record(asub, "$(N)") {
+ *   field(SNAM, "asub_yscale")
+ *   field(FTA , "ULONG") # wave_samp_per register
+ *   field(FTB , "ULONG") # cic_period
+ *   field(FTVA, "ULONG") # wave_shift
+ *   field(FTVB, "DOUBLE") # yscale
+ * }
+ */
+static
+long asub_yscale_res(aSubRecord *prec)
+{
+	const epicsUInt32 wave_samp_per = *(const epicsUInt32*)prec->a,
+						cic_period    = *(const epicsUInt32*)prec->b;
+	epicsUInt32 *wave_shift = (epicsUInt32*)prec->vala;
+	double *yscale = (double*)prec->valb;
+
+	const epicsUInt32   cic_n    = wave_samp_per * cic_period;
+
+	const int cic_order = 2;
+
+	double bit_g = pow(cic_n, cic_order); // Bit-growth
+
+	int wave_shift_temp = ceil(log2(bit_g)/cic_order); // FW accounts for cic_order when shifting
+
+	if(wave_shift_temp<0)
+		*wave_shift = 0;
+	else
+		*wave_shift = wave_shift_temp;
+
+	double cic_gain = bit_g * pow(0.5, 2*(*wave_shift));
+
+	*yscale = pow(2.0, 17) * cic_gain;
+
+	prec->udf = isnan(*yscale);
+
+	return 0;
 }
 
 /* concatinate byte array together (bytes MSBF)
@@ -518,10 +568,11 @@ long asub_setamp(aSubRecord *prec)
      * TODO: Revisit numbers used in cav/fwd scale checks
      */
     if (*too_high) {
-		if ((freq == 3.9e9) && (cav_fs < 5)) {
+		/* current cavity frequency options are 1.3 and 3.9 GHz */
+		if ((freq < 2.0e9) && (cav_fs < 25)) {
 	    	sprintf(msg, "Overrange. Check cav scale");
 		}
-		else if (cav_fs < 25) {
+		else if (cav_fs < 5) {
 	    	sprintf(msg, "Overrange. Check cav scale");
 		}
 		else if (fwd_fs < 50) {
@@ -914,6 +965,7 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_split_bits", (REGISTRYFUNCTION)&asub_split_bits);
     registryFunctionAdd("sub_count_bits", (REGISTRYFUNCTION)&sub_count_bits);
     registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
+    registryFunctionAdd("asub_yscale_res", (REGISTRYFUNCTION)&asub_yscale_res);
     registryFunctionAdd("sub_feed_nset_bits", (REGISTRYFUNCTION)&sub_feed_nset_bits);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);

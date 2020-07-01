@@ -71,8 +71,8 @@ fft_sub_init(aSubRecord* prec)
 	 * If successfully found data structure, store in dpvt.
 	 */
 	if ( fft_data_find( pvt, (char *)prec->desc ) ) {
-		errlogPrintf("%s Initialize %s FFT task with max length %i\n",
-			prec->name, prec->desc, (int)(pvt->len_max));
+		/*errlogPrintf("%s Initialize %s FFT task with max length %i\n",
+			prec->name, prec->desc, (int)(pvt->len_max));*/
 
 		epicsMutexLock( fftInitTaskMutex );
 		s = rfFFTTaskInit( (char *)prec->desc, pvt->len_max );

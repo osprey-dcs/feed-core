@@ -25,6 +25,8 @@ record(aSub, "$(BASE)STAT_CALC_") {
   field(OUTC, "$(BASE)MIN PP MSI")
   field(OUTD, "$(BASE)MAX PP MSI")
   field(OUTE, "$(BASE)RSTD PP MSI")
+  field(OUTF, "$(BASE)RANGE PP MSI")
+  field(OUTG, "$(BASE)RMS PP MSI")
   field(FLNK, "$(FLNK=)")
   field(TSEL, "$(SIGNAL).TIME")
   alias("$(BASE)SE_")
@@ -55,6 +57,18 @@ record(ai, "$(BASE)MAX") {
 }
 
 record(ai, "$(BASE)RSTD") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(BASE)STAT_CALC_.TIME")
+}
+
+record(ai, "$(BASE)RANGE") {
+  field(PREC, "$(PREC=3)")
+  field(EGU , "$(EGU=)")
+  field(TSEL, "$(BASE)STAT_CALC_.TIME")
+}
+
+record(ai, "$(BASE)RMS") {
   field(PREC, "$(PREC=3)")
   field(EGU , "$(EGU=)")
   field(TSEL, "$(BASE)STAT_CALC_.TIME")
