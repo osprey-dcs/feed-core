@@ -52,6 +52,11 @@ else ifeq ($(USE_SYS_FFTW),YES)
 feedioc_SYS_LIBS += fftw3f 
 endif
 
+ifneq ($(SNCSEQ),)
+feedioc_DBD += rfseq.dbd
+feedioc_LIBS += seq pv
+endif
+
 feedioc_LIBS += $(EPICS_BASE_IOC_LIBS)
 feedioc_SYS_LIBS += z
 
