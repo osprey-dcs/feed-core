@@ -277,6 +277,53 @@ long asub_yscale_res(aSubRecord *prec)
 	return 0;
 }
 
+/* calculate shift and Y scaling factor for injector system
+ * record(asub, "$(N)") {
+ *   field(SNAM, "asub_yscale")
+ *   field(FTA , "ULONG") # wave_samp_per register
+ *   field(FTB , "ULONG") # cic_period
+ *   field(FTVA, "ULONG") # wave_shift
+ *   field(FTVB, "DOUBLE") # yscale
+ * }
+ */
+static
+long asub_yscale_inj(aSubRecord *prec)
+{
+	const epicsUInt32 wave_samp_per = *(const epicsUInt32*)prec->a,
+						cic_period    = *(const epicsUInt32*)prec->b;
+	epicsUInt32 *wave_shift = (epicsUInt32*)prec->vala;
+	double *yscale = (double*)prec->valb;
+
+	const int cic_order = 2;
+
+	// FW default shift assuming wsp = 1
+	const epicsUInt32 shift_base = ceil(log2(pow(cic_period, cic_order)));
+
+	// FW LO pre-scaling to cancel out non-unity CIC gain
+        double pre_gain = 0.5  * pow(2.0, shift_base) / pow(cic_period, cic_order);
+
+	const epicsUInt32 cic_n = wave_samp_per * cic_period;
+
+	double bit_g = pow(cic_n, cic_order); // Bit-growth
+
+	int bit_g_shift = ceil(log2(bit_g));
+
+	int wave_shift_temp = (bit_g_shift - shift_base) / cic_order; // FW accounts for cic_order when shifting
+
+	if(wave_shift_temp < 0)
+		*wave_shift = 0;
+	else
+		*wave_shift = wave_shift_temp;
+
+	double cic_gain = bit_g / pow(2.0, (cic_order*(*wave_shift) + shift_base));
+
+	*yscale = pow(2.0, 19) * cic_gain * pre_gain;
+
+	prec->udf = isnan(*yscale);
+
+	return 0;
+}
+
 /* concatinate byte array together (bytes MSBF)
  *
  * record(asub, "$(N)") {
@@ -966,6 +1013,7 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("sub_count_bits", (REGISTRYFUNCTION)&sub_count_bits);
     registryFunctionAdd("asub_yscale", (REGISTRYFUNCTION)&asub_yscale);
     registryFunctionAdd("asub_yscale_res", (REGISTRYFUNCTION)&asub_yscale_res);
+    registryFunctionAdd("asub_yscale_inj", (REGISTRYFUNCTION)&asub_yscale_inj);
     registryFunctionAdd("sub_feed_nset_bits", (REGISTRYFUNCTION)&sub_feed_nset_bits);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
