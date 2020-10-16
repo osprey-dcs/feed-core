@@ -203,6 +203,51 @@ long sub_feed_nset_bits(subRecord *prec)
     return 0;
 }
 
+/* Variant of sub_feed_nset_bits with reversed bitmask
+record(sub, "$(N)") {
+    field(SNAM, "sub_feed_nset_bits_rev")
+    field(INPA, "mybit") # bit index
+    field(INPB, "bitmask") # search in this bitmask
+    field(INPC, "nbitmask") # Size of bitmask, must be < 32
+}
+*/
+static
+long sub_feed_nset_bits_rev(subRecord *prec)
+{
+    epicsUInt32 mybit = (unsigned long)prec->a;
+    epicsUInt32 mymask = 1u<<mybit;
+    epicsUInt32 bitmask = (unsigned long)prec->b;
+    epicsUInt32 nbitmask = (unsigned long)prec->c;
+    epicsInt32 nbits = -1;
+
+    /* reverse mask */
+    epicsUInt32 bitmask_rev = bitmask;
+    int s = nbitmask - 1; // extra shift needed at end
+
+    for (bitmask >>= 1; bitmask; bitmask >>= 1)
+    {
+        bitmask_rev <<= 1;
+        bitmask_rev |= bitmask & 1;
+        s--;
+    }
+    bitmask_rev <<= s; // shift when highest bits are zero
+    bitmask_rev &= (1<<nbitmask)-1;
+
+    /* only count if mybit is set */
+    if(bitmask_rev & mymask) {
+        /* count mybit, and lower */
+        epicsUInt32 countmask = bitmask_rev & (mymask | (mymask-1));
+
+        for(;countmask; countmask>>=1) {
+            if(countmask&1u)
+                nbits++;
+        }
+    }
+
+    prec->val = nbits;
+    return 0;
+}
+
 /* calculate shift and Y scaling factor
  * record(asub, "$(N)") {
  *   field(SNAM, "asub_yscale")
@@ -1015,6 +1060,7 @@ void asubFEEDRegistrar(void)
     registryFunctionAdd("asub_yscale_res", (REGISTRYFUNCTION)&asub_yscale_res);
     registryFunctionAdd("asub_yscale_inj", (REGISTRYFUNCTION)&asub_yscale_inj);
     registryFunctionAdd("sub_feed_nset_bits", (REGISTRYFUNCTION)&sub_feed_nset_bits);
+    registryFunctionAdd("sub_feed_nset_bits_rev", (REGISTRYFUNCTION)&sub_feed_nset_bits_rev);
     registryFunctionAdd("asub_feed_bcat", (REGISTRYFUNCTION)&asub_feed_bcat);
     registryFunctionAdd("asub_setamp", (REGISTRYFUNCTION)&asub_setamp);
     registryFunctionAdd("asub_setamp_diag", (REGISTRYFUNCTION)&asub_setamp_diag);
