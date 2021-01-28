@@ -19,12 +19,12 @@ testfeed_DBD += feed.dbd
 PROD_LIBS += feed
 
 ifeq ($(USE_FFTW),YES)
-PROD_LIBS += fftw3f 
+PROD_LIBS += fftw3 
 else ifeq ($(USE_SYS_FFTW),YES)
-PROD_SYS_LIBS += fftw3f 
+PROD_SYS_LIBS += fftw3 
 else ifeq ($(USE_PKG_FFTW),YES)
-fftw3f_DIR = $(FFTW_LIB)
-PROD_LIBS += fftw3f 
+fftw3_DIR = $(FFTW_LIB)
+PROD_LIBS += fftw3 
 endif
 
 PROD_LIBS += $(EPICS_BASE_IOC_LIBS)

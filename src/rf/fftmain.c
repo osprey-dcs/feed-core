@@ -23,9 +23,9 @@ epicsMutexId  fftPlanMutex;  /* Global mutex for use of FFTW plan creation,
 							  */
 
 typedef struct FFTPlanRec_ {
-	fftwf_plan plan;    /* Plan used for FFT transform */
-	fftwf_complex *in;  /* Input array  (time domain) */
-	fftwf_complex *out; /* Output array (frequency domain) */	
+	fftw_plan plan;    /* Plan used for FFT transform */
+	fftw_complex *in;  /* Input array  (time domain) */
+	fftw_complex *out; /* Output array (frequency domain) */	
 } FFTPlanRec, *FFTPlan;
 
 /* just any unique address */
@@ -82,9 +82,9 @@ rf_fft_destroy_plan(FFTPlan fftplan)
 {
 	epicsMutexLock( fftPlanMutex );
 
-	fftwf_destroy_plan( fftplan->plan );
-	fftwf_free( fftplan->in );
-	fftwf_free( fftplan->out );
+	fftw_destroy_plan( fftplan->plan );
+	fftw_free( fftplan->in );
+	fftw_free( fftplan->out );
 
 	epicsMutexUnlock( fftPlanMutex );
 }
@@ -97,19 +97,19 @@ rf_fft_update_plan(FFTPlan fftplan, size_t len, int new)
 		rf_fft_destroy_plan( fftplan );
 	}
 
-	if ( ! (fftplan->in = (fftwf_complex*) fftwf_malloc(sizeof(fftwf_complex) * len) ) ) {
+	if ( ! (fftplan->in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * len) ) ) {
 		errlogPrintf("rf_fft_update_plan: No memory for FFT input data\n");
 		return -1;
 	}
 
-	if ( ! (fftplan->out = (fftwf_complex*) fftwf_malloc(sizeof(fftwf_complex) * len) ) ) {
+	if ( ! (fftplan->out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * len) ) ) {
 		errlogPrintf("rf_fft_update_plan: No memory for FFT output data\n");
 		return -1;
 	}
 
 	epicsMutexLock( fftPlanMutex );
 
-	fftplan->plan = fftwf_plan_dft_1d(len, fftplan->in, fftplan->out, FFTW_FORWARD, FFTW_MEASURE);
+	fftplan->plan = fftw_plan_dft_1d(len, fftplan->in, fftplan->out, FFTW_FORWARD, FFTW_MEASURE);
 	epicsMutexUnlock( fftPlanMutex );
 
 	if ( ! fftplan->plan ) {
@@ -252,7 +252,7 @@ fft_task(FFTData fftData)
 		}
 
 		/* execute is thread-safe so does not need to be guarded by global mutex fftPlanMutex */
-		fftwf_execute( fftplan->plan ); 
+		fftw_execute( fftplan->plan ); 
 
 		/* FFT output is [ 0 frequency component, positive frequency components, negative frequency components ]
 		 * 		out[0] = DC component

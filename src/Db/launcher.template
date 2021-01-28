@@ -43,6 +43,7 @@ record(mbbi, "$(P)STS") {
     field(ZRST, "Crash")
     field(ONST, "Complete")
     field(TWST, "Running")
+    field(TWSV, "MINOR")
     field(ZRVL, "0")
     field(ONVL, "1")
     field(TWVL, "2")

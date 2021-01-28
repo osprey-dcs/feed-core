@@ -42,18 +42,18 @@ LIB_SRCS += parmselsub.c
 LIB_SRCS += INTres2tmp.c
 
 ifeq ($(USE_FFTW),YES)
-LIB_LIBS += fftw3f 
+LIB_LIBS += fftw3 
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
 else ifeq ($(USE_SYS_FFTW),YES)
-LIB_SYS_LIBS += fftw3f 
+LIB_SYS_LIBS += fftw3 
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
 else ifeq ($(USE_PKG_FFTW),YES)
 # define FFTW_LIB in CONFIG_SITE
 USR_INCLUDES += $(addprefix -I,$(FFTW_INCLUDE))
-fftw3f_DIR = $(FFTW_LIB)
-LIB_LIBS += fftw3f 
+fftw3_DIR = $(FFTW_LIB)
+LIB_LIBS += fftw3 
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
 else
