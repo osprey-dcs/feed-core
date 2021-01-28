@@ -50,6 +50,9 @@ ifeq ($(USE_FFTW),YES)
 feedioc_LIBS += fftw3f 
 else ifeq ($(USE_SYS_FFTW),YES)
 feedioc_SYS_LIBS += fftw3f 
+else ifeq ($(USE_PKG_FFTW),YES)
+fftw3f_DIR = $(FFTW_LIB)
+feedioc_LIBS += fftw3f 
 endif
 
 ifneq ($(SNCSEQ),)

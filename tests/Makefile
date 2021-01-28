@@ -22,6 +22,9 @@ ifeq ($(USE_FFTW),YES)
 PROD_LIBS += fftw3f 
 else ifeq ($(USE_SYS_FFTW),YES)
 PROD_SYS_LIBS += fftw3f 
+else ifeq ($(USE_PKG_FFTW),YES)
+fftw3f_DIR = $(FFTW_LIB)
+PROD_LIBS += fftw3f 
 endif
 
 PROD_LIBS += $(EPICS_BASE_IOC_LIBS)
