@@ -432,7 +432,7 @@ fft_task(FFTData fftData)
 		in_im = msg->in_im;
 		out_re = fftData->data + (index * 2 * len_max);
 		out_im = fftData->data + ((index * 2 + 1) * len_max);
-		out_freq = fftData->freq + (index * 2 * len_max);
+		out_freq = fftData->freq + (index * len_max);
 		if ( msg->debug ) {
 			errlogPrintf("rfFFTTask: %s out_re offset %i out_im offset %i\n",
 				fftData->thread_name, (int)(index * 2 * len_max), (int)((index * 2 + 1) * len_max));
