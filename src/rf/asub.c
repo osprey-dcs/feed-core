@@ -339,7 +339,7 @@ static
 void setamp_calc_x_fb(double ssa_slope, double ssa_minx, double ssa_ped, double *ssan, 
 double *lowslope, double *x_lo, double *x_hi)
 {
-	*x_lo = ssa_slope * *ssan * 0.75;
+	*x_lo = ssa_slope * *ssan * 0.83;
 	*x_hi = (ssa_slope * *ssan + ssa_ped) * 1.15;
 	*x_hi = MIN(*x_hi, *lowslope * *ssan * 1.15);
 }
