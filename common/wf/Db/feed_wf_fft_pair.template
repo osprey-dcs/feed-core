@@ -90,6 +90,12 @@ record(aai, "$(PREF)AFFT") {
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
   field(TSEL, "$(INPA).TIME")
+  field(FLNK, "$(PREF)FFTNORD")
+}
+
+# workaround for bug in aaiRecord.  doesn't post monitors on NORD
+record(longin, "$(PREF)FFTNORD") {
+    field(INP , "$(PREF)AFFT.NORD")
 }
 
 record(aai, "$(PREF)FWF") {
