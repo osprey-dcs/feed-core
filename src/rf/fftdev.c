@@ -289,7 +289,7 @@ fft_calc_recv(aSubRecord* prec)
 
 	FFTI = fftData->data + (index * 2 * max_len);
 	FFTQ = fftData->data + ((index * 2 + 1) * max_len);
-	FFTF = fftData->freq + (index *2 * max_len);
+	FFTF = fftData->freq + (index * max_len);
 
 	if ( debug ) {
 		errlogPrintf("%s fft_re offset %i  fft_im offset %i  index %i  output len %i  tstep %.4e s  fstep %f Hz  type %i\n", 
