@@ -923,9 +923,13 @@ long calc_df(aSubRecord* prec)
 	}
 
 	for (i=0; i<len; i++) {
-		if ( i < len - 1 ) {
-			DVDTI[i] = (CAVI[i+1] - CAVI[i])/sampt/cavscl;
-			DVDTQ[i] = (CAVQ[i+1] - CAVQ[i])/sampt/cavscl;
+		if ( i == 0 ) {
+			DVDTI[i] = 0.5*(CAVI[i+2] - CAVI[i])/sampt/cavscl;
+			DVDTQ[i] = 0.5*(CAVQ[i+2] - CAVQ[i])/sampt/cavscl;
+		}
+		else if ( i < len - 1 ) {
+			DVDTI[i] = 0.5*(CAVI[i+1] - CAVI[i-1])/sampt/cavscl;
+			DVDTQ[i] = 0.5*(CAVQ[i+1] - CAVQ[i-1])/sampt/cavscl;
 		}
 		else {
 			DVDTI[i] = DVDTI[i-1];
