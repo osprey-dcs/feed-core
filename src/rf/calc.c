@@ -842,7 +842,7 @@ long calc_df(aSubRecord* prec)
 	double bcoefm = 0.0, bcoefp = 0.0,
 		cavscl = 1.0, fwdscl = 1.0, sampt = 1.0;
 
-	double complex dvdt_cmplx, bcoef_cmplx, fwd_cmplx, cav_cmplx, a_cmplx;
+	double complex dvdt_cmplx, bcoef_cmplx, fwd_cmplx, cav_cmplx, denom_cmplx, a_cmplx, fc_cmplx;
 
 	double *CAVI = (double*)prec->a,
 		*CAVQ  = (double*)prec->b,
@@ -851,7 +851,8 @@ long calc_df(aSubRecord* prec)
 		*DF = (double*)prec->vala,
 		*BW = (double*)prec->valb,
 		*DVDTI = (double*)prec->valc,
-		*DVDTQ = (double*)prec->vald;
+		*DVDTQ = (double*)prec->vald,
+		*FC    = (double*)prec->vale;
 
 	if(prec->fta!=menuFtypeDOUBLE
 		|| prec->ftb!=menuFtypeDOUBLE
@@ -860,7 +861,8 @@ long calc_df(aSubRecord* prec)
 		|| prec->ftva!=menuFtypeDOUBLE
 		|| prec->ftvb!=menuFtypeDOUBLE
 		|| prec->ftvc!=menuFtypeDOUBLE
-		|| prec->ftvd!=menuFtypeDOUBLE)
+		|| prec->ftvd!=menuFtypeDOUBLE
+		|| prec->ftve!=menuFtypeDOUBLE)
 	{
 		(void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM);
 		return 1;
@@ -914,6 +916,8 @@ long calc_df(aSubRecord* prec)
 		len = prec->novc;
 	if(len > prec->novd)
 		len = prec->novd;
+	if(len > prec->nove)
+		len = prec->nove;
 
 	/* investigate writing this as bcoefm * exp(bcoefp*PI/180*_Complex_I) */
 	bcoef_cmplx = bcoefm * cos(bcoefp*PI/180.0)  + (bcoefm * sin(bcoefp*PI/180.0))*_Complex_I;
@@ -938,21 +942,26 @@ long calc_df(aSubRecord* prec)
 		dvdt_cmplx = DVDTI[i] + DVDTQ[i]*_Complex_I;
 		fwd_cmplx = FWDI[i]/fwdscl + (FWDQ[i]/fwdscl)*_Complex_I;
 		cav_cmplx = CAVI[i]/cavscl + (CAVQ[i]/cavscl)*_Complex_I;
-		a_cmplx= (dvdt_cmplx - (bcoef_cmplx * fwd_cmplx)) / (2 * PI *cav_cmplx);  /* give output in Hz, not radians/sec */
+
+		/* From Larry Doolittle, 2021-05-06
+		 * fc_cmplx = dvdt_cmplx / (2 * PI * cav_cmplx) is independent of bcoef! 
+		 * It's just the instantaneous operating frequency.  When running in SELA, 
+		 * with no reactive power (requires a correctly set SEL phase offset),
+		 * its imaginary part should give a pretty accurate detuning waveform by itself.
+		 * Of course it's useless (zero plus noise) in SELAP.  But if the BCOEF value is
+		 * suspect, or too opaque for people commissioning the cavity in SELA mode,
+		 * being able to see this easily-documented waveform could build confidence.
+		 */
+		denom_cmplx = 2 * PI * cav_cmplx;
+		fc_cmplx = dvdt_cmplx / denom_cmplx;
+		a_cmplx= fc_cmplx - ((bcoef_cmplx * fwd_cmplx) / denom_cmplx);  /* give output in Hz, not radians/sec */
 
 		DF[i] = cimag( a_cmplx);
 		BW[i] = -creal( a_cmplx);
-		/* Todo: remove this debug print: */
-		if ( debug ) {
-			printf("DVDTI %f DVDTQ %f FWDI %f FWDQ %f CAVI %f CAVQ %f fwd %f +i "
-					"%f cav %f +i %f a %f +i %f DF %f BW %f cavscl %f fwdscl %f\n",
-					DVDTI[i], DVDTQ[i], FWDI[i], FWDQ[i], CAVI[i], CAVQ[i], creal(fwd_cmplx), 
-					cimag(fwd_cmplx), creal(cav_cmplx), cimag(cav_cmplx), 
-					creal(a_cmplx), cimag(a_cmplx), DF[i], BW[i], cavscl, fwdscl);
-		}
+		FC[i] = cimag( fc_cmplx);
 	}
 
-	prec->neva = prec->nevb = prec->nevc = prec->nevd = len;
+	prec->neva = prec->nevb = prec->nevc = prec->nevd = prec->neve = len;
 
 	return 0;
 }
