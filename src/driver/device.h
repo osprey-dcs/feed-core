@@ -224,7 +224,7 @@ struct epicsShareClass Device : public epicsThreadRunable
     DevReg::records_t records;
 
     // special registers which low level code knows about
-    feed::auto_ptr<DevReg> reg_rom, reg_id;
+    feed::auto_ptr<DevReg> reg_rom2, reg_rom16, reg_id;
 
     std::vector<DevMsg> inflight;
 
