@@ -51,7 +51,7 @@ record(aSub, "$(PREF)WF_CALC_") {
 record(aai, "$(PREF)WF") {
     field(NELM, "$(SIZE)")
     field(FTVL, "DOUBLE")
-    field(TSEL, "$(PREF)WF.TIME")
+    field(TSEL, "$(SRC)WF.TIME")
     field(FLNK, "$(PREF)NORD")
 }
 
