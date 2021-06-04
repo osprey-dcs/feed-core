@@ -961,6 +961,17 @@ long calc_df(aSubRecord* prec)
 		FC[i] = cimag( fc_cmplx);
 	}
 
+	/* Hack to improve end data points
+	 * Set first and last elements to 
+	 * first+1 and last-1 respectively
+	 */
+	DF[0] = DF[1];
+	BW[0] = BW[1];
+	FC[0] = FC[1];
+	DF[len-1] = DF[len-2];
+	BW[len-1] = BW[len-2];
+	FC[len-1] = FC[len-2];
+
 	prec->neva = prec->nevb = prec->nevc = prec->nevd = prec->neve = len;
 
 	return 0;
