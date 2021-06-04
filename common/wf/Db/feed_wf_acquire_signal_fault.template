@@ -64,11 +64,13 @@ record(longin, "$(PREF)NORD") {
 
 # re-create time waveform if time base has changed 
 record(calcout, "$(PREF)TWF_CALC_") {
-    field(CALC, "(A#B)|(C#D)?1:0")
+    field(CALC, "(A#B)|(C#D)|(E#F)?1:0")
     field(INPA, "$(BASE)SAMP_PERIOD MSI")
     field(INPB, "$(PREF)TWF_.B")
     field(INPC, "$(PREF)NORD")
     field(INPD, "$(PREF)TWF_.C")
+    field(INPE, "$(TSHFT=0.0)")
+    field(INPF, "$(PREF)TWF_.A")
     field(OOPT, "When Non-zero") 
     field(OUT, "$(PREF)TWF_.PROC")
 # store current scale factor
@@ -79,7 +81,7 @@ record(aSub, "$(PREF)TWF_") {
     field(SNAM, "asub_feed_timebase")
     # first value
     field(FTA , "DOUBLE")
-    field(INPA, "0.0")
+    field(INPA, "$(TSHFT=0.0)")
     # step size
     field(FTB , "DOUBLE")
     field(INPB, "$(BASE)SAMP_PERIOD MSI")
