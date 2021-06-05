@@ -100,7 +100,7 @@ record(aSub, "$(PREF)TWF_") {
 record(aai, "$(PREF)TWF") {
     field(FTVL, "DOUBLE")
     field(NELM, "$(SIZE)")
-    field(TSEL, "$(PREF)TWF_.TIME")
+    field(TSEL, "$(PREF)WF.TIME")
 }
 
 # Scale setting when fault waveform populated
