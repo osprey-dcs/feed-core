@@ -71,6 +71,7 @@ record(calcout, "$(BASE)PERIOD") {
   field(OOPT, "Every Time")
   field(OCAL, "A*B*1000")
 # OVAL = VAL in ms
+  field(FLNK, "$(BASE)FLT_DELAY_")
 }
 
 
@@ -92,10 +93,11 @@ record(ao, "$(BASE)FLT_DELAY") {
     info(autosaveFields_pass0, "VAL")
 }
 
+# FLNK-ed to from all inputs
 record(calcout, "$(BASE)FLT_DELAY_") {
-    field(INPA, "$(BASE)NORD CP") # waveform number of elements
+    field(INPA, "$(BASE)NORD") # waveform number of elements
     field(INPB, "$(BASE)FLT_DELAY")
-    field(INPC, "$(BASE)PERIOD")
+    field(INPC, "$(BASE)PERIOD") # waveform period [s]
 # Fault wf trigger delay register setting
     field(CALC, "FLOOR(2 * A * B / 100)")
     field(PREC, "0")
