@@ -12,6 +12,7 @@ DB += feed_wf_acquire_base_util.template
 
 # if using FFT support
 DB += feed_wf_fft_pair.template
+DB += feed_wf_fft_peaks.db
 
 include $(TOP)/configure/RULES
 #----------------------------------------
