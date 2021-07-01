@@ -47,9 +47,17 @@ endif
 feedioc_LIBS += feed
 
 ifeq ($(USE_FFTW),YES)
-feedioc_LIBS += fftw3f 
+feedioc_LIBS += fftw3 
 else ifeq ($(USE_SYS_FFTW),YES)
-feedioc_SYS_LIBS += fftw3f 
+feedioc_SYS_LIBS += fftw3 
+else ifeq ($(USE_PKG_FFTW),YES)
+fftw3_DIR = $(FFTW_LIB)
+feedioc_LIBS += fftw3 
+endif
+
+ifneq ($(SNCSEQ),)
+feedioc_DBD += rfseq.dbd
+feedioc_LIBS += seq pv
 endif
 
 feedioc_LIBS += $(EPICS_BASE_IOC_LIBS)

@@ -15,18 +15,24 @@ record(aSub, "$(PREF)FFT_CALC_") {
   field(FTA , "DOUBLE")
   field(FTB , "DOUBLE")
   field(FTC , "DOUBLE")
-# InputsM used for FFT data send/recv
+# Inputs M,N used for FFT data send/recv
   field(FTM , "LONG")
+  field(FTN , "LONG")
   field(NOA , "$(SIZE)")
   field(NOB , "$(SIZE)")
   field(NOC , "1")
   field(NOM , "1")
-  field(INPA, "$(PREF)IWF MSI NPP")
-  field(INPB, "$(PREF)QWF MSI NPP")
+  field(NON , "1")
+  field(INPA, "$(INPA) MSI NPP")
+# Keep both inputs for convienience, but
+# for real FFTs, only INPA (real signal)
+# is used in FFT calculation
+  field(INPB, "$(INPB) MSI NPP")
   field(INPC, "$(BASE)SAMP_PERIOD MSI NPP")
-  field(INPM, "$(INDEX)")         # index into data structure
+  field(INPM, "$(INDEX)") # index into data structure
+  field(INPN, "$(FFTTYPE)") # 0 = C2C, 1 = R2C, see fftmain.h
   field(FLNK, "$(FLNK=)") # to external logic, eg. WF stats
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(TSEL, "$(INPA).TIME")
 }
 
 # processed by FFT thread
@@ -37,10 +43,13 @@ record(aSub, "$(PREF)FFT_CALC2_") {
   field(SNAM, "FFTCALC")
   field(SCAN, "Event")
   field(EVNT, "event-fft-$(NAME)$(BIT)-$(INDEX)")
-# Inputs M used for FFT data send/recv
+# Inputs M, N used for FFT data send/recv
   field(FTM , "LONG")
+  field(FTN , "LONG")
   field(NOM , "1")
-  field(INPM, "$(INDEX)")         # index into data structure
+  field(NON , "1")
+  field(INPM, "$(INDEX)") # index into data structure
+  field(INPN, "$(FFTTYPE)") # 0 = C2C, 1 = R2C, see fftmain.h
 # Outputs
   field(FTVA ,"DOUBLE")
   field(FTVB ,"DOUBLE")
@@ -70,16 +79,23 @@ record(aSub, "$(PREF)FFT_CALC2_") {
   field(OUTF, "$(PREF)AFFTMAXF MSI PP") # frequency of max value of amplitude FFT 
   field(OUTG, "")                       # mean of amplitude FFT
   field(OUTH, "")                       # 1 if max amplitude found
-  field(OUTI, "")                       # max measurable frequency (Nyquist) = samplingrate/2
-  field(OUTJ, "")                       # FFT frequency resolution = 1/samplingrate/npoints (actual, not maximum)
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(OUTI, "$(PREF)FFT_FNYQ MSI PP") # max measurable frequency (Nyquist) = samplingrate/2
+  field(OUTJ, "$(PREF)FFT_FSTEP MSI PP")# FFT frequency resolution = 1/samplingrate/npoints (actual, not maximum)
+  field(OUTK, "$(PREF)AFFTSUM MSI PP")  # Sum of amplitude FFT bins
+  field(TSEL, "$(INPA).TIME")
 }
 
 record(aai, "$(PREF)AFFT") {
   field(DESC, "Amplitude FFT")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(TSEL, "$(INPA).TIME")
+  field(FLNK, "$(PREF)FFTNORD")
+}
+
+# workaround for bug in aaiRecord.  doesn't post monitors on NORD
+record(longin, "$(PREF)FFTNORD") {
+    field(INP , "$(PREF)AFFT.NORD")
 }
 
 record(aai, "$(PREF)FWF") {
@@ -87,12 +103,29 @@ record(aai, "$(PREF)FWF") {
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
   field(EGU,  "Hz")
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(ai, "$(PREF)AFFTSUM") {
+  field(DESC, "Amplitude FFT bins sum")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(ai, "$(PREF)FFT_FNYQ") {
+  field(DESC, "FFT Nyquist frequency")
+  field(EGU,  "Hz")
+  field(TSEL, "$(INPA).TIME")
+}
+
+record(ai, "$(PREF)FFT_FSTEP") {
+  field(DESC, "FFT frequency resolution")
+  field(EGU,  "Hz")
+  field(TSEL, "$(INPA).TIME")
 }
 
 record(ai, "$(PREF)AFFTMAX") {
   field(DESC, "Amplitude FFT max")
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(TSEL, "$(INPA).TIME")
   field(DISV, "0")
   field(SDIS, "$(PREF)FFT_CALC2_.VALH")
   field(DISS, "INVALID")
@@ -101,7 +134,7 @@ record(ai, "$(PREF)AFFTMAX") {
 record(ai, "$(PREF)AFFTMAXF") {
   field(DESC, "Freq of FFT max")
   field(EGU,  "Hz")
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(TSEL, "$(INPA).TIME")
   field(DISV, "0")
   field(SDIS, "$(PREF)FFT_CALC2_.VALH")
   field(DISS, "INVALID")
@@ -111,12 +144,12 @@ record(aai, "$(PREF)IFFT") {
   field(DESC, "I FFT")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(TSEL, "$(INPA).TIME")
 }
 
 record(aai, "$(PREF)QFFT") {
   field(DESC, "Q FFT")
   field(FTVL, "DOUBLE")
   field(NELM, "$(SIZE)")
-  field(TSEL, "$(PREF)IWF.TIME")
+  field(TSEL, "$(INPA).TIME")
 }

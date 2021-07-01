@@ -38,17 +38,34 @@ LIB_SRCS += asub.c
 LIB_SRCS += calc.c
 LIB_SRCS += chirp.c
 LIB_SRCS += rf_asub.c
+LIB_SRCS += parmselsub.c
+LIB_SRCS += INTres2tmp.c
 
 ifeq ($(USE_FFTW),YES)
-LIB_LIBS += fftw3f 
+LIB_LIBS += fftw3 
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
 else ifeq ($(USE_SYS_FFTW),YES)
-LIB_SYS_LIBS += fftw3f 
+LIB_SYS_LIBS += fftw3 
+LIB_SRCS += fftmain.c
+LIB_SRCS += fftdev.c
+else ifeq ($(USE_PKG_FFTW),YES)
+# define FFTW_LIB in CONFIG_SITE
+USR_INCLUDES += $(addprefix -I,$(FFTW_INCLUDE))
+fftw3_DIR = $(FFTW_LIB)
+LIB_LIBS += fftw3 
 LIB_SRCS += fftmain.c
 LIB_SRCS += fftdev.c
 else
 LIB_SRCS += fftnoop.c
+endif
+
+ifneq ($(SNCSEQ),)
+DBD += rfseq.dbd
+FEED_DBD += rfseq.dbd
+LIB_LIBS += seq pv
+LIB_SRCS += rfresstep.st
+LIB_SRCS += chirpscan.st
 endif
 
 #===========================

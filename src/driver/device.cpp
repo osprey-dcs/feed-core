@@ -28,7 +28,7 @@ const size_t pkt_size_limit = (DevMsg::nreg+1)*8;
 
 // description of automatic/bootstrap registers
 const struct gblrom_t {
-    JRegister jrom_info;
+    JRegister jrom2_info, jrom16_info;
     JRegister jid_info;
     gblrom_t() {
         jid_info.name = "HELLO";
@@ -38,12 +38,26 @@ const struct gblrom_t {
         jid_info.data_width = 32;
         jid_info.readable = true;
 
-        jrom_info.name = "ROM";
-        jrom_info.description = "Static configuration";
-        jrom_info.base_addr = 0x800;
-        jrom_info.addr_width = 11; // 2048 words
-        jrom_info.data_width = 16;
-        jrom_info.readable = true;
+        // N.B: Newer devices have a relocated ROM at address 0x4000. On these,
+        // 2K aperture at 0x800 is guaranteed to be 0x0 and not decode to a
+        // valid ROM. Thus, we first attempt to parse the ROM at the original
+        // 0x800 location and move on to 0x4000 if unsuccessful.
+
+        // TODO: A useful optimization would be to only avoid reading null data
+        // to minimize traffic over the wire
+        jrom2_info.name = "ROM 2K";
+        jrom2_info.description = "Static configuration";
+        jrom2_info.base_addr = 0x800;
+        jrom2_info.addr_width = 11; // 2048 words
+        jrom2_info.data_width = 16;
+        jrom2_info.readable = true;
+
+        jrom16_info.name = "ROM 16K";
+        jrom16_info.description = "Static configuration";
+        jrom16_info.base_addr = 0x4000;
+        jrom16_info.addr_width = 14; // 16384 words
+        jrom16_info.data_width = 16;
+        jrom16_info.readable = true;
     }
 } gblrom;
 }
@@ -217,7 +231,8 @@ Device::Device(const std::string &name, osiSockAddr &ep)
     ,cnt_timo(0u)
     ,cnt_err(0u)
     ,rtt_ptr(0u)
-    ,reg_rom(new DevReg(this, gblrom.jrom_info, true))
+    ,reg_rom2(new DevReg(this, gblrom.jrom2_info, true))
+    ,reg_rom16(new DevReg(this, gblrom.jrom16_info, true))
     ,reg_id(new DevReg(this, gblrom.jid_info, true))
     ,inflight(std::max(1, std::min(feedNumInFlight, 255))) // limit to [0, 255] as we choose to encode offset in request header
     ,want_to_send(false)
@@ -331,7 +346,8 @@ void Device::reset(bool error)
     // restart with only automatic/bootstrap registers
     reg_by_name.clear();
     reg_by_name[reg_id->info.name] = reg_id.get();
-    reg_by_name[reg_rom->info.name] = reg_rom.get();
+    reg_by_name[reg_rom2->info.name] = reg_rom2.get();
+    reg_by_name[reg_rom16->info.name] = reg_rom16.get();
 
     if(!error) {
         last_message.clear();
@@ -629,9 +645,17 @@ void Device::handle_inspect(Guard &G)
 {
     // Process ROM to extract JSON
 
-    ROM rom;
+    ROM rom2, rom16, rom;
 
-    rom.parse((char*)&reg_rom->mem_rx[0], reg_rom->mem_rx.size()*4);
+    // Try to decode ROM starting at 0x800 and then 0x4000
+    rom2.parse((char*)&reg_rom2->mem_rx[0], reg_rom2->mem_rx.size()*4);
+    if (rom2.begin() != rom2.end()) {
+        rom = rom2;
+    } else {
+        rom16.parse((char*)&reg_rom16->mem_rx[0], reg_rom16->mem_rx.size()*4);
+        rom = rom16;
+    }
+
     std::string json;
 
     unsigned i=0;
@@ -789,7 +813,8 @@ void Device::handle_state(Guard &G)
     case Searching:
         if(reg_id->state==DevReg::InSync) {
             // InSync means reply received
-            reg_rom->queue(false);
+            reg_rom2->queue(false);
+            reg_rom16->queue(false);
             current = Inspecting;
 
         }else if(!reg_id->inprogress()) {
@@ -799,7 +824,7 @@ void Device::handle_state(Guard &G)
         break;
 
     case Inspecting:
-        if(reg_rom->state==DevReg::InSync) {
+        if(reg_rom2->state==DevReg::InSync && reg_rom16->state==DevReg::InSync) {
             handle_inspect(G);
             IFDBG(3, "Request on_connect scan");
             scanIoRequest(on_connect);
