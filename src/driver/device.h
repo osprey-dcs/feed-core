@@ -272,5 +272,6 @@ struct epicsShareClass Device : public epicsThreadRunable
 extern int feedNumInFlight;
 extern double feedTimeout;
 extern int feedUDPHeaderSize;
+extern unsigned short feedUDPPortNum;
 
 #endif // DEVICE_H
