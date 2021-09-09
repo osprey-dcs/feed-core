@@ -15,11 +15,12 @@
 # Set CHECK_RELEASE to WARN to perform consistency checking but
 #   continue building even if conflicts are found.
 CHECK_RELEASE = YES
+CHECK_RELEASE = WARN
 
 # Set this when you only want to compile this application
 #   for a subset of the cross-compiled target architectures
 #   that Base is built for.
-CROSS_COMPILER_TARGET_ARCHS = #rhel6-x86_64
+CROSS_COMPILER_TARGET_ARCHS = linuxRT-x86_64
 
 # To install files into a location other than $(TOP) define
 #   INSTALL_LOCATION here.
@@ -38,6 +39,26 @@ CROSS_COMPILER_TARGET_ARCHS = #rhel6-x86_64
 USR_CPPFLAGS += -DUSE_TYPED_RSET
 
 PYTHON = python
+
+# =============================
+# # Build Application Statically
+# # =============================
+SHARED_LIBRARIES=NO
+STATIC_BUILD=YES
+
+# ================================
+# SLAC FFTW support
+# ================================
+
+LINUXRT_BUILDROOT_VERSION=buildroot-2016.11.1
+LINUX_VERSION=rhel6
+
+FFTW_PACKAGE_NAME=fftw
+FFTW_VERSION=fftw-3.3.9
+FFTW_TOP=$(PACKAGE_SITE_TOP)/$(FFTW_PACKAGE_NAME)/$(FFTW_VERSION)
+FFTW_LIB = $(FFTW_TOP)/$(PKG_ARCH)/lib
+FFTW_INCLUDE = $(FFTW_TOP)/$(PKG_ARCH)/include
+
 
 # These allow developers to override the CONFIG_SITE variable
 # settings without having to modify the configure/CONFIG_SITE
