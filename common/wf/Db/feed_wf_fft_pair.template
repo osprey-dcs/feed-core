@@ -35,6 +35,21 @@ record(aSub, "$(PREF)FFT_CALC_") {
   field(TSEL, "$(INPA).TIME")
 }
 
+# Threshold used in determining amplitude FFT
+# maximum value and its corresponding frequency.
+# If desired, this can be increased from 1 to only identify
+# the maximum if it exceeds the FFT amplitude mean by some factor:
+# if (value > thresh * mean(AFFT)), then max found
+record(ao, "$(PREF)AFFTMAX_THRESH") {
+  field(DESC, "Max used if > thresh*mean")
+  field(OMSL, "supervisory")
+  field(DOL,  "1.0")
+  field(VAL,  "1.0")
+  field(DRVL, "1.0")
+  field(DRVH, "1e12")
+  info(autosaveFields_pass0, "VAL")
+}
+
 # processed by FFT thread
 record(aSub, "$(PREF)FFT_CALC2_") {
 # do not change DESC; string used to look up shared data
@@ -43,6 +58,7 @@ record(aSub, "$(PREF)FFT_CALC2_") {
   field(SNAM, "FFTCALC")
   field(SCAN, "Event")
   field(EVNT, "event-fft-$(NAME)$(BIT)-$(INDEX)")
+  field(INPA, "$(PREF)AFFTMAX_THRESH")
 # Inputs M, N used for FFT data send/recv
   field(FTM , "LONG")
   field(FTN , "LONG")
