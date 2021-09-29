@@ -11,3 +11,5 @@ O.*/
 *.pyc
 beg_*/
 envPaths
+*.swp
+/archive/
