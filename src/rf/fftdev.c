@@ -228,6 +228,8 @@ fft_calc_recv(aSubRecord* prec)
 	    N = 0,
 		afftmax_index = 0;
 
+	double threshscale =  *(double*)prec->a; /* Max must be at least threshcale times mean*/
+
 	double *FFTI, *FFTQ, *FFTF; /* Local pointers */
 
 	double *AFFT     = (double*)prec->vala, /* Amplitude FFT */
@@ -243,15 +245,13 @@ fft_calc_recv(aSubRecord* prec)
  
     int i;
 
-	double  AFFTMAX_PREV  = *(double*)prec->ovld,
-			AFFTMAXF_PREV = *(double*)prec->ovle;
-
 	short *AFFTMAXFOUND = (short*)prec->valh; /* Array corresponding to peaks, element is 1 if sufficient
 											   * amplitude to declare a peak 
 											   */
 	*AFFTMAXFOUND = 0;
 									   
-    if(prec->ftva!=menuFtypeDOUBLE
+    if(prec->fta!=menuFtypeDOUBLE
+			|| prec->ftva!=menuFtypeDOUBLE
             || prec->ftvb!=menuFtypeDOUBLE
             || prec->ftvc!=menuFtypeDOUBLE
             || prec->ftvd!=menuFtypeDOUBLE
@@ -266,9 +266,11 @@ fft_calc_recv(aSubRecord* prec)
         return 1;
     }
 
-	*AFFTMEAN = *AFFTSUM = 0.0;
+	if (threshscale <= 1.0) {
+		threshscale = 1.0;
+	}
 
-	double threshscale = 10; /* Max must be at least 10 times mean (revisit this) */
+	*AFFTMAX = *AFFTMEAN = *AFFTSUM = 0.0;
 
 	epicsMutexLock( fftData->mutex );
 
@@ -331,16 +333,14 @@ fft_calc_recv(aSubRecord* prec)
 	if ( *AFFTMAX > threshscale * *AFFTMEAN ) { 		
 		*AFFTMAXFOUND = 1; 		
 		if ( debug ) { 			
-			errlogPrintf("%s Found max amp %f at freq %f mean %f index %i\n", 				
-				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN, afftmax_index ); 		
+			errlogPrintf("%s Found max amp %f at freq %f mean %f index %i threshscale %f\n",
+				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN, afftmax_index, threshscale );
 		} 	
 	} 	
 	else { 		
-		*AFFTMAX  = AFFTMAX_PREV; 		
-		*AFFTMAXF = AFFTMAXF_PREV; 		
 		if ( debug ) { 			
-			errlogPrintf("%s Failed to find max amp, use prev max amp %f at freq %f, current mean %f\n", 				
-				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN ); 		
+			errlogPrintf("%s Failed to find max amp, use prev max amp %f at freq %f, current mean %f threshscale %f\n",
+				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN, threshscale  );
 		} 	
 	}
 

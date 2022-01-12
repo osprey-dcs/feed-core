@@ -42,6 +42,15 @@
 #define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 #define ERR(FMT, ...) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
+// UDP port numbers:
+//   50006 copper interface
+//   803 fiber interface
+// Variable feedUDPPortNum can be used to change
+//   default port number for all devices.
+// User can still override for individual devices
+//   by appending :port to end of IP/node.
+unsigned short feedUDPPortNum = 50006;
+
 long get_on_connect_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
     RecInfo *info = static_cast<RecInfo*>(prec->dpvt);
@@ -89,7 +98,7 @@ long write_address(stringoutRecord *prec)
     TRY {
         osiSockAddr addr;
 
-        if(prec->val[0] && aToIPAddr(prec->val, 50006, &addr.ia)) {
+        if(prec->val[0] && aToIPAddr(prec->val, feedUDPPortNum, &addr.ia)) {
             (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
             return EINVAL;
         }

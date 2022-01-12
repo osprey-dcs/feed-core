@@ -58,4 +58,5 @@ epicsExportRegistrar(feedRegistrar);
 epicsExportAddress(int, feedNumInFlight);
 epicsExportAddress(double, feedTimeout);
 epicsExportAddress(int, feedUDPHeaderSize);
+epicsExportAddress(int, feedUDPPortNum);
 }

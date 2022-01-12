@@ -50,6 +50,7 @@ registrar(feedRegistrar)
 variable(feedTimeout, double)
 variable(feedNumInFlight, int)
 variable(feedUDPHeaderSize, int)
+variable(feedUDPPortNum, int)
 
 # utilities
 registrar(asubFEEDRegistrar)

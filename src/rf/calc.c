@@ -279,9 +279,13 @@ long gen_waveform(aSubRecord* prec)
  *  field(INPC, "POWSCALE") # scaling of AMP squared (Optional)
  *  field(INPD, "ZRANGLE") # arbitrary angle added to output phase (deg.)
  *  field(INPE, "DISPANGLE") # rotate I/Q for displays
+ *  # INPF is flag for additional conversion of power waveform, to 
+ *    be applied after linear scaling
+ *    constant, default is 0, 1 = watts->dBm
+ *  field(INPF, "PWRCONV")
  *  field(OUTA, "AMP PP")
  *  field(OUTB, "PHA PP") # in degrees
- *  field(OUTC, "POW PP") # AMP squared (Optional)
+ *  field(OUTC, "POW PP") # AMP squared and/or additional conversion (Optional)
  *  field(OUTD, "IWFDISP PP")
  *  field(OUTE, "QWFDISP PP")
  * }
@@ -297,6 +301,7 @@ long convert_iq2ap(aSubRecord* prec)
     unsigned pow_out = prec->ftvc==menuFtypeDOUBLE;
     unsigned rot_out = prec->ftvd==menuFtypeDOUBLE && prec->ftve==menuFtypeDOUBLE;
     double pow_scale = 1.0, zero_angle = 0.0, disp_angle = 0.0;
+    unsigned pow_special = 0; /* Flag for additional conversion after linear scaling */
 
     double *I = (double*)prec->a,
            *Q = (double*)prec->b,
@@ -330,6 +335,10 @@ long convert_iq2ap(aSubRecord* prec)
         disp_angle = *(double*)prec->e*PI/180.0;
     }
 
+    if(prec->ftf==menuFtypeDOUBLE) {
+        pow_special = *(double*)prec->f;
+    }
+
     if(len > prec->neb)
         len = prec->neb;
     if(len > prec->nova)
@@ -347,8 +356,12 @@ long convert_iq2ap(aSubRecord* prec)
         A[i] = sqrt(I[i]*I[i] + Q[i]*Q[i]);
         P[i] = atan2(Q[i], I[i]) * 180 / PI;
         P[i] = phase_wrap(P[i] + zero_angle);
-        if(PW)
+        if(PW) {
             PW[i] = pow_scale * A[i] * A[i];
+            /* Not great special handling to convert watts to dBm */
+            if (pow_special)
+                PW[i] = 10 * log10(PW[i]*1000);
+		}
         if(rot_out) {
             IROT[i] = I[i]*cos(disp_angle) + Q[i]*sin(disp_angle);
             QROT[i] = - I[i]*sin(disp_angle) + Q[i]*cos(disp_angle);
