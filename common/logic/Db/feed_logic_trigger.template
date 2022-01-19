@@ -35,7 +35,7 @@ record(ao, "$(BASE)HLDOFF") {
     field(OUT , "$(BASE)DLY_.ODLY NPP")
     field(PINI, "YES")
     field(DRVH, "5.0")
-    field(DRVL, "0.1")
+    field(DRVL, "0.00001")
     field(VAL , "1.0")
     field(EGU , "s")
     field(PREC, "2")
@@ -139,13 +139,25 @@ record(ao, "$(BASE)PERIOD") {
 
 record(ao, "$(BASE)STAT_START") {
     field(PREC, "6")
+    field(EGU , "s")
     field(PINI, "YES")
+    field(FLNK, "$(BASE)STAT_STOP")
     info(autosaveFields_pass0, "VAL")
 }
 
 record(ao, "$(BASE)STAT_WIDTH") {
     field(PREC, "6")
+    field(EGU , "s")
     field(VAL , "1")
     field(PINI, "YES")
+    field(FLNK, "$(BASE)STAT_STOP")
     info(autosaveFields_pass0, "VAL")
+}
+
+record(calcout, "$(BASE)STAT_STOP") {
+    field(INPA, "$(BASE)STAT_START")
+    field(INPB, "$(BASE)STAT_WIDTH")
+    field(CALC, "A+B")
+    field(PREC, "6")
+    field(EGU , "s")
 }

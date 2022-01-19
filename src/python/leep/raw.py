@@ -26,6 +26,36 @@ if sys.version_info >= (3, 0):
 be32 = numpy.dtype('>u4')
 be16 = numpy.dtype('>u2')
 
+
+def yscale_inj(wave_samp_per=1):
+    try:
+        from math import ceil, log
+
+        cic_period = 22
+        cic_order = 2
+
+        # FW default shift assuming wsp = 1
+        shift_base = ceil(log(cic_period ** cic_order, 2))
+
+        # FW LO pre-scaling to cancel out non-unit CIC gain
+        pre_gain = 2**shift_base/cic_period**cic_order
+        pre_gain *= 0.5
+
+        per = cic_period * wave_samp_per
+        bit_g = per**cic_order  # Bit growth
+        bit_g_shift = ceil(log(bit_g, 2))
+        wave_shift = bit_g_shift - shift_base
+        wave_shift *= 1 / cic_order  # FW accounts for cic_order when shifting
+
+        cic_gain = bit_g / 2**(cic_order*wave_shift + shift_base)
+
+        adc_fs = 2.0**19 * cic_gain * pre_gain
+
+        return wave_shift, adc_fs
+    except Exception as e:
+        raise RuntimeError("yscale_rfs(%s) %s" % (wave_samp_per, e))
+
+
 def yscale_resctrl(wave_samp_per=1):
     try:
         from math import ceil, log
@@ -37,7 +67,7 @@ def yscale_resctrl(wave_samp_per=1):
         bit_g = per**cic_order  # Bit growth
         wave_shift = ceil(log(bit_g, 2)/cic_order)  # FW accounts for cic_order when shifting
 
-        cic_gain = bit_g / 2**(2*wave_shift)
+        cic_gain = bit_g / 2**(cic_order*wave_shift)
 
         adc_fs = 2.0**17 * cic_gain
 
@@ -100,8 +130,11 @@ class LEEPDevice(DeviceBase):
         app_string = self.regmap["__metadata__"]["application"]
         self.rfs = False
         self.resctrl = False
+        self.injector = False
         if 'RES_CTRL' in app_string:
             self.resctrl = True
+        elif 'INJECTOR' in app_string:
+            self.injector = True
         else:
             self.rfs = True
 
@@ -186,6 +219,8 @@ class LEEPDevice(DeviceBase):
             wave_shift, _Ymax = yscale_rfs(dec)
         elif self.resctrl:
             wave_shift, _Ymax = yscale_resctrl(dec)
+        elif self.injector:
+            wave_shift, _Ymax = yscale_inj(dec)
 
         assert dec >= 1 and dec <= 255
         self.reg_write([
@@ -200,9 +235,11 @@ class LEEPDevice(DeviceBase):
     def set_channel_mask(self, chans=[], instance=[]):
         """Enabled specified channels.
         """
+        info = self.get_reg_info('chan_keep', instance=instance)
+        nch = info['data_width']
         # list of channel numbers to mask
         if isinstance(chans, list):
-            chans = reduce(lambda l, r: l | r, [2**(11-n) for n in chans], 0)
+            chans = reduce(lambda l, r: l | r, [2**(nch-1-n) for n in chans], 0)
         self.reg_write([('chan_keep', chans)], instance=instance)
 
     def get_channel_mask(self, instance=[]):
@@ -225,12 +262,18 @@ class LEEPDevice(DeviceBase):
 
         inst = self.instance + instance
         # assume that the shell_#_ number is the first
-        mask = 2**int(inst[0])
+        mask = 1
+        if inst:
+            mask = 2**int(inst[0])
+
+        if self.resctrl:
+            mask = 0xF  # Always re-arm 4 channels
 
         while True:
-            if self.resctrl:
-                mask = 0xF  # Always re-arm 4 channels
-            self.reg_write([('circle_buf_flip', mask)], instance=None)
+            if self.injector:
+               self.reg_write([('circle_buf_flip', mask)], instance=[])
+            else:
+               self.reg_write([('circle_buf_flip', mask)], instance=None)
 
             while True:
                 now = datetime.utcnow()
@@ -240,7 +283,7 @@ class LEEPDevice(DeviceBase):
                     raise RuntimeError('Timeout')
 
                 # TODO: use exchange() and optimize to fetch slow_data[33] as well
-                ready_register = 'llrf_circle_ready' if self.rfs else 'circle_data_ready'
+                ready_register = 'llrf_circle_ready' if self.rfs or self.injector else 'circle_data_ready'
                 ready, = self.reg_read([ready_register], instance=None)
 
                 if ready & mask:
@@ -273,16 +316,23 @@ class LEEPDevice(DeviceBase):
         """:returns: a list of :py:class:`numpy.ndarray` with the numbered channels.
         chans may be a bit mask or a list of channel numbers
         """
-        interested = reduce(lambda l, r: l | r, [2**(11-n) for n in chans], 0)
+        info = self.get_reg_info('chan_keep', instance=instance)
+        nch = info['data_width']
+        interested = reduce(lambda l, r: l | r, [2**(nch-1-n) for n in chans], 0)
 
         if self.rfs:
-            keep, dec = self.reg_read(['chan_keep', 'wave_samp_per', ], instance=instance)
+            keep, dec = self.reg_read(['chan_keep', 'wave_samp_per'], instance=instance)
             data, = self.reg_read(['circle_data'], instance=instance)
             wave_shift, Ymax = yscale_rfs(dec)
         else:
-            keep, dec = self.reg_read(['chan_keep', 'wave_samp_per', ], instance=None)
-            data, = self.reg_read(['circle_data_%s' % (instance[0])], instance=None)
-            wave_shift, Ymax = yscale_resctrl(dec)
+            if self.resctrl:
+                keep, dec = self.reg_read(['chan_keep', 'wave_samp_per'], instance=None)
+                data, = self.reg_read(['circle_data_%s' % (instance[0])], instance=None)
+                wave_shift, Ymax = yscale_resctrl(dec)
+            elif self.injector:
+                keep, dec = self.reg_read(['chan_keep', 'wave_samp_per'], instance=[])
+                data, = self.reg_read(['circle_data'], instance=[])
+                wave_shift, Ymax = yscale_inj(dec)
 
         # assume wave_shift has been set properly
         assert Ymax != 0, dec
@@ -303,8 +353,8 @@ class LEEPDevice(DeviceBase):
         xtra = L % nbits
         data = numpy.delete(data, range(L-xtra, L))
         cdata, M = {}, 0
-        for ch in range(12):
-            cmask = 2**(11-ch)
+        for ch in range(nch):
+            cmask = 2**(nch-1-ch)
             if not (keep & cmask):
                 continue
             if interested & cmask:
@@ -329,7 +379,10 @@ class LEEPDevice(DeviceBase):
                 'chan_keep',
                 'wave_samp_per',
             ], instance=None)
-            period = dec/8e3
+            if self.resctrl:
+                period = dec/8e3
+            elif self.injector:
+                period = 22*dec*140/(11*1300e6)
 
         totalsamp = 2**info['addr_width']
 

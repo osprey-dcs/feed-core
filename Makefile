@@ -21,6 +21,9 @@ common/wf/opi_DEPEND_DIRS = configure
 DIRS += common/rf/Db
 common/rf/Db_DEPEND_DIRS = common/wf/Db
 
+DIRS += common/injector/Db
+common/rf/Db_DEPEND_DIRS = common/wf/Db
+
 DIRS += board/rfs/Db
 board/rfs/Db_DEPEND_DIRS = src src/Db common/rf/Db
 
