@@ -39,6 +39,9 @@ board/hires/Db_DEPEND_DIRS = src src/Db
 DIRS += board/hires/opi
 board/hires/opi_DEPEND_DIRS = src
 
+DIRS += board/guncher/Db
+board/guncher/Db_DEPEND_DIRS = src src/Db
+
 DIRS += feedApp
 feedApp_DEPEND_DIRS = configure src
 
