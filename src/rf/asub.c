@@ -686,6 +686,26 @@ long asub_setamp(aSubRecord *prec)
     return 0;
 }
 
+static void
+ssa_ades_lim_calc(double pol_x, double ssa_ped, double ssa_slope,
+double fwd_fs, double freq, double qloaded, double imped, double lowslope,
+double *ssa_ades_lim)
+{
+	double ssan, ssa, sqrtu, adesv1, adesv2;
+
+	ssan = ((pol_x/1.15) - ssa_ped)/ssa_slope;
+	ssa = ssan * fwd_fs;
+	sqrtu =  ssa / sqrt((PI*freq)/(2*qloaded));
+	adesv1 = sqrtu * (sqrt(imped * 2 * PI * freq));
+
+	ssan = pol_x/lowslope/1.15;
+	ssa = ssan * fwd_fs;
+	sqrtu =  ssa / sqrt((PI*freq)/(2*qloaded));
+	adesv2 = sqrtu * (sqrt(imped * 2 * PI * freq));
+
+	*ssa_ades_lim = MAX( adesv1, adesv2 )/1e6;
+}
+
 static long
 asub_setamp_diag(aSubRecord *prec)
 {
@@ -723,7 +743,8 @@ asub_setamp_diag(aSubRecord *prec)
 			*unit_y = (double *)prec->valn,        /* Unit semi-circle, y */              
 
 			/* Scalars */
-			*sel_x = (double *)prec->valo; /* SEL x */
+			*sel_x = (double *)prec->valo, /* SEL x */
+			*ssa_ades_lim = (double *)prec->valp; /* Max ADES from SSA & drive settings */
 
 	setamp_calc_ssa(max_magn, max_imag, ades*1e6, imped, freq, &pol_x, &pol_y, &sqrtu, qloaded, fwd_fs, &ssa, &ssan);
     lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
@@ -755,6 +776,9 @@ asub_setamp_diag(aSubRecord *prec)
 		unit_y[i] = sqrt(1 - pow(unit_x[i],2));
 		unit_y[100 - i - 1] = -unit_y[i];
 	}
+
+	ssa_ades_lim_calc( pol_x, ssa_ped, ssa_slope, fwd_fs, freq, qloaded,
+						imped, lowslope, ssa_ades_lim);
 
     return 0;
 }
