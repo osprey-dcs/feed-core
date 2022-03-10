@@ -689,21 +689,30 @@ long asub_setamp(aSubRecord *prec)
 static void
 ssa_ades_lim_calc(double pol_x, double ssa_ped, double ssa_slope,
 double fwd_fs, double freq, double qloaded, double imped, double lowslope,
-double *ssa_ades_lim)
+double *ssa_ades_lim_sela, double *ssa_ades_lim_sel, int debug, char *name)
 {
-	double ssan, ssa, sqrtu, adesv1, adesv2;
+	double ssan[4], ades[4], ssa, sqrtu;
+	int i;
 
-	ssan = ((pol_x/1.15) - ssa_ped)/ssa_slope;
-	ssa = ssan * fwd_fs;
-	sqrtu =  ssa / sqrt((PI*freq)/(2*qloaded));
-	adesv1 = sqrtu * (sqrt(imped * 2 * PI * freq));
+	ssan[0] = ((pol_x/1.15) - ssa_ped)/ssa_slope;
+	ssan[1] = pol_x/lowslope/1.15;
+	ssan[2] = pol_x/ssa_slope;
+	ssan[3] = pol_x/lowslope;
 
-	ssan = pol_x/lowslope/1.15;
-	ssa = ssan * fwd_fs;
-	sqrtu =  ssa / sqrt((PI*freq)/(2*qloaded));
-	adesv2 = sqrtu * (sqrt(imped * 2 * PI * freq));
+	for (i = 0; i < 4; i++ ) {
+		ssa = ssan[i] * fwd_fs;
+		sqrtu =  ssa / sqrt((PI*freq)/(2*qloaded));
+		ades[i] = (sqrtu * (sqrt(imped * 2 * PI * freq)))/1e6;
+	}
 
-	*ssa_ades_lim = MAX( adesv1, adesv2 )/1e6;
+	*ssa_ades_lim_sela = MAX( ades[0], ades[1] );
+
+	*ssa_ades_lim_sel = MAX( ades[2], ades[3] );
+
+	if (debug) {
+		printf("%s ssa_ades_lim_calc:\n", name);
+		printf("    SELA(P) %f %f, SEL %f %f\n", ades[0], ades[1], ades[2], ades[3]);
+	}
 }
 
 static long
@@ -744,7 +753,10 @@ asub_setamp_diag(aSubRecord *prec)
 
 			/* Scalars */
 			*sel_x = (double *)prec->valo, /* SEL x */
-			*ssa_ades_lim = (double *)prec->valp; /* Max ADES from SSA & drive settings */
+			*ssa_ades_lim_sela = (double *)prec->valp, /* Max ADES in SELA/SELAP modes */
+			*ssa_ades_lim_sel = (double *)prec->valq;  /* Max ADES in SEL mode */
+
+	int debug = (prec->tpro > 1) ? 1 : 0;
 
 	setamp_calc_ssa(max_magn, max_imag, ades*1e6, imped, freq, &pol_x, &pol_y, &sqrtu, qloaded, fwd_fs, &ssa, &ssan);
     lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
@@ -778,7 +790,8 @@ asub_setamp_diag(aSubRecord *prec)
 	}
 
 	ssa_ades_lim_calc( pol_x, ssa_ped, ssa_slope, fwd_fs, freq, qloaded,
-						imped, lowslope, ssa_ades_lim);
+						imped, lowslope, ssa_ades_lim_sela, ssa_ades_lim_sel,
+						debug, prec->name );
 
     return 0;
 }
