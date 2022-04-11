@@ -493,8 +493,6 @@ long asub_setamp(aSubRecord *prec)
 	rfctrl      = *(short *)prec->n,
 	rfmodectrl  = *(short *)prec->o,
 	rfmodeprev  = *(short *)prec->r;
-	epicsInt32 decim  = *(epicsInt32 *)prec->s, /* Current decimation factor  */
-	decimprev  = *(epicsInt32 *)prec->t; /* Decimation stored when last entered chirp mode */
  
     /* Intermediate results */
     double *sqrtu = (double *)prec->vala,
@@ -537,10 +535,8 @@ long asub_setamp(aSubRecord *prec)
     double adesv  = ades*1e6;
 
     unsigned short MASK_LIMS  = 0x1F;
-    unsigned short MASK_CHIRP_DECIM_SAVE = 0x20;
     unsigned short MASK_CHIRP_SETUP = 0x40;
     unsigned short MASK_CHIRP_ENABLE = 0x80;
-    unsigned short MASK_CHIRP_DECIM_RESTORE = 0x100;
     unsigned short MASK_ERR = 0;
 
     *mask = MASK_ERR; /* Initialize to do not write registers */
@@ -561,13 +557,12 @@ long asub_setamp(aSubRecord *prec)
     }
 
 	/* Chirp control. 
-	 * If entering mode, store decimation value and set up chirp parameters
-	 * If exiting mode, disable chirp and restore decimation
+	 * If entering mode, set up chirp parameters
+	 * If exiting mode, disable chirp
 	 * If request is on/chirp, enable chirp
 	 */
 	if (rfmodectrl==MODE_CHIRP) {
 		if (rfmodeprev != rfmodectrl) {
-			*mask |= MASK_CHIRP_DECIM_SAVE;
 			*mask |= MASK_CHIRP_SETUP;
 		}
 		if (rfctrl != 0) {
@@ -577,17 +572,11 @@ long asub_setamp(aSubRecord *prec)
     }
 	else if (rfmodeprev == MODE_CHIRP) {
 		*mask |= MASK_CHIRP_ENABLE;
-		if (decimprev != -1 ) {
-			*mask |= MASK_CHIRP_DECIM_RESTORE;
-		}
-		else {
-			errlogPrintf("%s: could not restore decimation factor of %i\n", prec->name, decimprev);
-		}
 	}
 
 	if ( debug ) {
-  		printf("%s: current decim %i stored chirp decim %i mask 0x%x\n",
-	 		prec->name, decim, decimprev, *mask);
+		printf("%s: after chirp, before pulse mask 0x%x\n",
+			prec->name, *mask);
 	}
 
 	/* Pulse control. 
