@@ -8,6 +8,8 @@ alias("$(IBASE)TWF", "$(BASE)TWF")
 
 alias("$(IBASE)WF", "$(BASE)IWF")
 alias("$(QBASE)WF", "$(BASE)QWF")
+alias("$(IBASE)SCALE", "$(BASE)ISCALE")
+alias("$(QBASE)SCALE", "$(BASE)QSCALE")
 
 # start processing with FLNK from $(QBASE)
 

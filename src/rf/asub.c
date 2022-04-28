@@ -493,8 +493,6 @@ long asub_setamp(aSubRecord *prec)
 	rfctrl      = *(short *)prec->n,
 	rfmodectrl  = *(short *)prec->o,
 	rfmodeprev  = *(short *)prec->r;
-	epicsInt32 decim  = *(epicsInt32 *)prec->s, /* Current decimation factor  */
-	decimprev  = *(epicsInt32 *)prec->t; /* Decimation stored when last entered chirp mode */
  
     /* Intermediate results */
     double *sqrtu = (double *)prec->vala,
@@ -537,10 +535,8 @@ long asub_setamp(aSubRecord *prec)
     double adesv  = ades*1e6;
 
     unsigned short MASK_LIMS  = 0x1F;
-    unsigned short MASK_CHIRP_DECIM_SAVE = 0x20;
     unsigned short MASK_CHIRP_SETUP = 0x40;
     unsigned short MASK_CHIRP_ENABLE = 0x80;
-    unsigned short MASK_CHIRP_DECIM_RESTORE = 0x100;
     unsigned short MASK_ERR = 0;
 
     *mask = MASK_ERR; /* Initialize to do not write registers */
@@ -561,13 +557,12 @@ long asub_setamp(aSubRecord *prec)
     }
 
 	/* Chirp control. 
-	 * If entering mode, store decimation value and set up chirp parameters
-	 * If exiting mode, disable chirp and restore decimation
+	 * If entering mode, set up chirp parameters
+	 * If exiting mode, disable chirp
 	 * If request is on/chirp, enable chirp
 	 */
 	if (rfmodectrl==MODE_CHIRP) {
 		if (rfmodeprev != rfmodectrl) {
-			*mask |= MASK_CHIRP_DECIM_SAVE;
 			*mask |= MASK_CHIRP_SETUP;
 		}
 		if (rfctrl != 0) {
@@ -577,17 +572,11 @@ long asub_setamp(aSubRecord *prec)
     }
 	else if (rfmodeprev == MODE_CHIRP) {
 		*mask |= MASK_CHIRP_ENABLE;
-		if (decimprev != -1 ) {
-			*mask |= MASK_CHIRP_DECIM_RESTORE;
-		}
-		else {
-			errlogPrintf("%s: could not restore decimation factor of %i\n", prec->name, decimprev);
-		}
 	}
 
 	if ( debug ) {
-  		printf("%s: current decim %i stored chirp decim %i mask 0x%x\n",
-	 		prec->name, decim, decimprev, *mask);
+		printf("%s: after chirp, before pulse mask 0x%x\n",
+			prec->name, *mask);
 	}
 
 	/* Pulse control. 
@@ -686,6 +675,35 @@ long asub_setamp(aSubRecord *prec)
     return 0;
 }
 
+static void
+ssa_ades_lim_calc(double pol_x, double ssa_ped, double ssa_slope,
+double fwd_fs, double freq, double qloaded, double imped, double lowslope,
+double *ssa_ades_lim_sela, double *ssa_ades_lim_sel, int debug, char *name)
+{
+	double ssan[4], ades[4], ssa, sqrtu;
+	int i;
+
+	ssan[0] = ((pol_x/1.15) - ssa_ped)/ssa_slope;
+	ssan[1] = pol_x/lowslope/1.15;
+	ssan[2] = pol_x/ssa_slope;
+	ssan[3] = pol_x/lowslope;
+
+	for (i = 0; i < 4; i++ ) {
+		ssa = ssan[i] * fwd_fs;
+		sqrtu =  ssa / sqrt((PI*freq)/(2*qloaded));
+		ades[i] = (sqrtu * (sqrt(imped * 2 * PI * freq)))/1e6;
+	}
+
+	*ssa_ades_lim_sela = MAX( ades[0], ades[1] );
+
+	*ssa_ades_lim_sel = MAX( ades[2], ades[3] );
+
+	if (debug) {
+		printf("%s ssa_ades_lim_calc:\n", name);
+		printf("    SELA(P) %f %f, SEL %f %f\n", ades[0], ades[1], ades[2], ades[3]);
+	}
+}
+
 static long
 asub_setamp_diag(aSubRecord *prec)
 {
@@ -723,7 +741,11 @@ asub_setamp_diag(aSubRecord *prec)
 			*unit_y = (double *)prec->valn,        /* Unit semi-circle, y */              
 
 			/* Scalars */
-			*sel_x = (double *)prec->valo; /* SEL x */
+			*sel_x = (double *)prec->valo, /* SEL x */
+			*ssa_ades_lim_sela = (double *)prec->valp, /* Max ADES in SELA/SELAP modes */
+			*ssa_ades_lim_sel = (double *)prec->valq;  /* Max ADES in SEL mode */
+
+	int debug = (prec->tpro > 1) ? 1 : 0;
 
 	setamp_calc_ssa(max_magn, max_imag, ades*1e6, imped, freq, &pol_x, &pol_y, &sqrtu, qloaded, fwd_fs, &ssa, &ssan);
     lowslope = (ssa_slope * ssa_minx + ssa_ped) / ssa_minx;
@@ -755,6 +777,10 @@ asub_setamp_diag(aSubRecord *prec)
 		unit_y[i] = sqrt(1 - pow(unit_x[i],2));
 		unit_y[100 - i - 1] = -unit_y[i];
 	}
+
+	ssa_ades_lim_calc( pol_x, ssa_ped, ssa_slope, fwd_fs, freq, qloaded,
+						imped, lowslope, ssa_ades_lim_sela, ssa_ades_lim_sel,
+						debug, prec->name );
 
     return 0;
 }
