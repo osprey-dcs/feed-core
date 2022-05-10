@@ -1,8 +1,6 @@
-
 from __future__ import print_function
 
 import logging
-_log = logging.getLogger(__name__)
 
 import json
 import sys
@@ -18,6 +16,9 @@ from . import open
 from . import RomError
 
 
+_log = logging.getLogger(__name__)
+
+
 def readwrite(args, dev):
     for pair in args.reg:
         name, _eq, val = pair.partition('=')
@@ -27,9 +28,9 @@ def readwrite(args, dev):
         else:
             value, = dev.reg_read((name,))
             if isinstance(value, (list, numpy.ndarray)):
-                print("%s \t%08s" % (name, ' '.join(['%x' % v for v in value])))
-            else:
-                print("%s \t%08x" % (name, value))
+                value = ' '.join(['%x' % v for v in value])
+
+            print("%s \t%08x" % (name, value))
 
 
 def listreg(args, dev):
@@ -73,7 +74,7 @@ def dumpaddrs(args, dev):
     for name, value in zip(regs, values):
         info = dev.get_reg_info(name, instance=None)
         base = info['base_addr']
-        if isinstance(base, (bytes, str, unicode)):
+        if isinstance(base, (bytes, str)):
             base = int(base, 0)
         if info.get('addr_width', 0) == 0:
             # scalar
@@ -97,6 +98,10 @@ def dumpjson(args, dev):
     sys.stdout.write('\n')
 
 
+def dumpgitid(args, dev):
+    print(dev.codehash)
+
+
 def dumpdrv(args, dev):
     if dev.backend != 'ca':
         _log.error("Only 'ca' backend supports, not '%s'", dev.backend)
@@ -108,7 +113,7 @@ def dumpdrv(args, dev):
 class MapDirect(object):
 
     def __call__(self, name):
-        return 'reg_'+name
+        return 'reg_' + name
 
 
 class MapPlain(object):
@@ -123,7 +128,7 @@ class MapShort(object):
         self._next = 0
 
     def __call__(self, name):
-        N, self._next = self._next, self._next+1
+        N, self._next = self._next, self._next + 1
         return 'REG%x' % N
 
 
@@ -177,7 +182,10 @@ def gentemplate(args, dev):
         infos.sort(key=lambda i: i['pv'])
 
         for info in infos:
-            out.write('{PREF="$(CHAS):%(pv)s",\tREG="%(name)s",\tSIZE="%(size)s"}\n' % info)
+            s = '{PREF="$(CHAS):%(pv)s",'
+            s += '\tREG="%(name)s",'
+            s += '\tSIZE="%(size)s"}\n'
+            out.write(s % info)
 
         out.write('}\n\n')
 
@@ -192,11 +200,14 @@ def gentemplate(args, dev):
 def getargs():
     from argparse import ArgumentParser
     P = ArgumentParser()
-    P.add_argument('-d', '--debug', action='store_const', const=logging.DEBUG, default=logging.INFO)
-    P.add_argument('-q', '--quiet', action='store_const', const=logging.WARN, dest='debug')
+    P.add_argument('-d', '--debug', action='store_const',
+                   const=logging.DEBUG, default=logging.INFO)
+    P.add_argument('-q', '--quiet', action='store_const',
+                   const=logging.WARN, dest='debug')
     P.add_argument('-t', '--timeout', type=float, default=5.0)
     P.add_argument('-i', '--inst', action='append', default=[])
-    P.add_argument('dest', metavar="URI", help="Server address.  ca://Prefix or leep://host[:port]")
+    P.add_argument('dest', metavar="URI",
+                   help="Server address.  ca://Prefix or leep://host[:port]")
 
     SP = P.add_subparsers()
 
@@ -222,11 +233,15 @@ def getargs():
     S.set_defaults(func=listreg)
 
     S = SP.add_parser('dump', help='dump registers')
-    S.add_argument('-Z', '--ignore-zeros', action='store_true', help="Only print registers with non-zero values")
+    S.add_argument('-Z', '--ignore-zeros', action='store_true',
+                   help="Only print registers with non-zero values")
     S.set_defaults(func=dumpaddrs)
 
     S = SP.add_parser('json', help='print json')
     S.set_defaults(func=dumpjson)
+
+    S = SP.add_parser('gitid', help='print gitid')
+    S.set_defaults(func=dumpgitid)
 
     S = SP.add_parser('drvinfo', help='print drive info json (ca:// only)')
     S.set_defaults(func=dumpdrv)
@@ -234,8 +249,10 @@ def getargs():
     S = SP.add_parser('template', help='Generate MSI substitutions file')
     S.set_defaults(func=gentemplate)
     S.add_argument('output', help='Output file')
-    S.add_argument('-M', '--mode', default='long', help='Record naming mode: long (default), short, plain')
-    S.add_argument('--short', action='store_const', const='short', dest='mode', help='Alias for -M short')
+    S.add_argument('-M', '--mode', default='long',
+                   help='Record naming mode: long (default), short, plain')
+    S.add_argument('--short', action='store_const', const='short',
+                   dest='mode', help='Alias for -M short')
 
     return P.parse_args()
 
