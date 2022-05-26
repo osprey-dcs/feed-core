@@ -3,6 +3,7 @@ record(busy, "$(P)STRT") {
     field(ONAM, "Start")
     field(OUT , "$(P)STRT_.PROC PP")
     field(TPRO, "$(TPRO=)")
+    field(ASG,  "$(ASG=)")
 }
 
 # use counter to ensure than momentary command results in a subscription update
