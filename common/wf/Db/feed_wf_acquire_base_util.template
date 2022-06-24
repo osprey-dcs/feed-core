@@ -121,4 +121,29 @@ record(longout, "$(BASE)FLT_DELAY_TICKS") {
     field(EGU,  "ticks")
     field(OUT , "@name=$(NAME) reg=shell_$(BIT)_dsp_cbuf_post_delay wait=false")
     info(feed:info:setting, "$(BASE)FLT_DELAY_TICKS")
+    field(FLNK, "$(BASE)CONFIG_STAT_")
+}
+
+# Check if waveform period ends before statistics window begins
+# For SRF cavity systems, this will result in IOC watchdog fault
+record(calcout, "$(BASE)CONFIG_STAT_") {
+  field(DESC, "WF config error")
+  field(CALC, "A>B?1:0")
+  field(INPA, "$(BASE)PERIOD")
+  field(INPB, "$(BASE)STAT_START CP")
+  field(EGU,  "s")
+# Set DOPT to force OCAL to be executed
+  field(DOPT, "Use OCAL")
+  field(OOPT, "Every Time")
+# Diff in seconds
+  field(OCAL, "A-B")
+  field(FLNK, "$(BASE)CONFIG_STAT")
+}
+
+record(bi, "$(BASE)CONFIG_STAT") {
+  field(DESC, "WF config error")
+  field(INP,  "$(BASE)CONFIG_STAT_ MSI")
+  field(ZNAM, "Error")
+  field(ZSV,  "MAJOR")
+  field(ONAM, "Ok")
 }

@@ -416,6 +416,7 @@ record(calcout, "$(BASE)DLY_") {
 record(ao, "$(BASE)STAT_START") {
     field(PREC, "6")
     field(PINI, "YES")
+    field(EGU,  "s")
     info(autosaveFields_pass0, "VAL")
 }
 
@@ -423,5 +424,6 @@ record(ao, "$(BASE)STAT_WIDTH") {
     field(PREC, "6")
     field(VAL , "1") # default to a large value to include entire period
     field(PINI, "YES")
+    field(EGU,  "s")
     info(autosaveFields_pass0, "VAL")
 }
