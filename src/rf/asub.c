@@ -1002,6 +1002,8 @@ asub_quench(aSubRecord *prec)
 	       imped       = *(double *)prec->f, /* shunt impedance R/Q */
 	       thresh_w    = *(double *)prec->g; /* quench trip threshold */
 
+	double filter_gain = *(double *)prec->h; /* Digaree FIR filter gain */
+
 	double *consts = (double *)prec->vala,
 	       *fullscale_w_inuse = (double *)prec->valc;
 	short  *override = (short *)prec->valb;
@@ -1009,7 +1011,6 @@ asub_quench(aSubRecord *prec)
 	double max;
 
 	double freq_rad = 2 * PI * freq,
-	       filter_gain = 80, /* FIR filter */
 	       dt = 32 * 33 * 14 / 1320e6,
 	       dudt_scale  = 16;
 
@@ -1026,8 +1027,8 @@ asub_quench(aSubRecord *prec)
 
 	if (debug) {
 		printf("asub_quench: %s\n     inputs: cav_scale %.1f fwd_scale %.1f rev_scale %.1f\n"
-			"     fullscale_w %.1f freq %.1f R/Q %.1f thresh_w %.1f\n",
-			prec->name, cav_scale, fwd_scale, rev_scale, fullscale_w, freq, imped, thresh_w);
+			"         fullscale_w %.1f freq %.1f R/Q %.1f thresh_w %.1f filter_gain %.1f\n",
+			prec->name, cav_scale, fwd_scale, rev_scale, fullscale_w, freq, imped, thresh_w, filter_gain);
 	}
 
 	consts[0] = pow(rev_scale,2);
