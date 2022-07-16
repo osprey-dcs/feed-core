@@ -1002,7 +1002,7 @@ asub_quench(aSubRecord *prec)
 	       imped       = *(double *)prec->f, /* shunt impedance R/Q */
 	       thresh_w    = *(double *)prec->g; /* quench trip threshold */
 
-	double filter_gain = *(double *)prec->h; /* Digaree FIR filter gain */
+	double filter_gain = (double)*(epicsUInt32 *)prec->h; /* Digaree FIR filter gain */
 
 	double *consts = (double *)prec->vala,
 	       *fullscale_w_inuse = (double *)prec->valc;
