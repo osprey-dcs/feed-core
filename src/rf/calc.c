@@ -682,7 +682,7 @@ long calc_ctrl(aSubRecord* prec)
 
 	size_t i;
 	epicsUInt32 len = prec->neb; /* actual output length */
-	double sel_poff = 0.0, gain = 1.0;
+	double poff = 0.0, gain = 1.0;
 
 	double *DACI = (double*)prec->b,
 		*DACQ  = (double*)prec->c,
@@ -709,7 +709,7 @@ long calc_ctrl(aSubRecord* prec)
 	}
 
 	if(prec->fta==menuFtypeDOUBLE) {
-		sel_poff = *(double*)prec->a;
+		poff = *(double*)prec->a;
 	}
 
 	if(prec->fte==menuFtypeDOUBLE) {
@@ -751,7 +751,7 @@ long calc_ctrl(aSubRecord* prec)
 		len = prec->novf;
 
 	for(i=0; i<len; i++) {
-		ROTP[i] = CAVP[i] - sel_poff;
+		ROTP[i] = CAVP[i] - poff;
 		rot = (ROTP[i])* PI/180; 
 		CTRLI[i] = (DACI[i]*cos(-rot) - DACQ[i]*sin(-rot))*gain;
 		CTRLQ[i] = -((DACI[i]*sin(-rot) + DACQ[i]*cos(-rot))*gain);
@@ -760,7 +760,7 @@ long calc_ctrl(aSubRecord* prec)
         DACP[i] = atan2(DACQ[i], DACI[i]) * 180 / PI;
         if ( debug ) {
 			printf("rot %f p %f selpoff %f i %f q %f p %f a %f gain %f\n",
-				rot, CAVP[i], sel_poff, CTRLI[i], CTRLQ[i], CTRLP[i], CTRLA[i], gain);
+				rot, CAVP[i], poff, CTRLI[i], CTRLQ[i], CTRLP[i], CTRLA[i], gain);
 		}
 	}
 
