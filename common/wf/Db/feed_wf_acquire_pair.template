@@ -96,7 +96,6 @@ record(aSub, "$(PREF)AP_CALC_") {
   field(INPC, "$(PREF)PWRSCALE MSI NPP")
   field(INPD, "$(PREF)ZRANGLE MSI NPP")
   field(INPE, "$(PREF)DISPANGLE MSI NPP")
-  field(INPE, "$(PREF)DISPANGLE MSI NPP")
   field(INPF, "$(PWRCONV=0)")
   field(OUTA, "$(PREF)AWF MSI PP")
   field(OUTB, "$(PREF)PWF MSI PP")
