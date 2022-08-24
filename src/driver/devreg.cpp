@@ -165,8 +165,6 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
 {
     const unsigned valsize = dbValueSize(ftvl);
     TRY {
-        size_t nreq = count ? *count : 1;
-
         switch(ftvl) {
         case menuFtypeCHAR:
         case menuFtypeUCHAR:
@@ -188,6 +186,16 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
         } else {
             DevReg::mem_t& mem = info->rbv ? info->reg->mem_tx : info->reg->mem_rx;
 
+            size_t nreq = 1, size = mem.size();
+
+            if ( count ) {
+                nreq = *count;
+                /* Optionally use fewer elements of register */
+                if ( (info->size > 0) && (info->size < size) ) {
+                    size = info->size;
+                }
+            }
+
             if(!info->rbv && !info->reg->info.readable) {
                 IFDBG(6, "Not readable");
             } else if(info->rbv && !info->reg->info.writable) {
@@ -208,7 +216,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                     }
 
                     char *out = raw, *end = raw+nreq*valsize;
-                    for(size_t i=info->offset, N = mem.size();
+                    for(size_t i=info->offset, N = size;
                         i<N && out+valsize<=end; i+=info->step, out+=valsize)
                     {
                         epicsUInt32 val = ntohl(mem[i]);
@@ -245,9 +253,9 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                     }
 
                     (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                    IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u\n",
+                    IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u size=%u\n",
                           nreq, mem.size(),
-                          info->reg->sevr, (unsigned)info->offset, (unsigned)info->step, valsize);
+                          info->reg->sevr, (unsigned)info->offset, (unsigned)info->step, valsize, size);
 
                 } else {
                     info->reg->queue(false, info->wait ? info : 0);

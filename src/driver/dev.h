@@ -24,7 +24,9 @@ struct RecInfo : public RegInterest
 {
 
     epicsUInt32 offset, // offset of first element (in words)
-                step;   // increment between elements (in words)
+                step,   // increment between elements (in words)
+                size;   // use array register data up to this element
+                        // optional; default is to use full array
 
     double scale;
 
