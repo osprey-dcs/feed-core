@@ -148,8 +148,30 @@ long write_signal_slope(aoRecord *prec)
     }CATCH()
 }
 
+// Optional size limit for array registers
+// If set less than register size, will limit the range
+// of elements copied into record. See devreg.cpp
+static
+long write_signal_size(longoutRecord *prec)
+{
+    TRY {
+        if(prec->val<=0) {
+            (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
+            return EINVAL;
+        }
+
+        Guard G(device->lock);
+
+        info->siginfo->size = prec->val;
+        IFDBG(1, "set size=%u", (unsigned)info->siginfo->size);
+
+        return 0;
+    }CATCH()
+}
+
 } // namespace
 
 DSET(devLoFEEDSigOffset, longout, init_signal, NULL, write_signal_offset)
 DSET(devLoFEEDSigStep, longout, init_signal, NULL, write_signal_step)
 DSET(devAoFEEDSigScale, ao, init_signal2, NULL, write_signal_slope)
+DSET(devLoFEEDSigSize, longout, init_signal2, NULL, write_signal_size)

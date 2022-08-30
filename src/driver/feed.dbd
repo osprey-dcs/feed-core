@@ -41,6 +41,7 @@ device(bo, INST_IO, devBoFEEDWatchReg, "FEED Register Watch")
 device(longout, INST_IO, devLoFEEDSigOffset, "FEED Signal Offset")
 device(longout, INST_IO, devLoFEEDSigStep, "FEED Signal Step")
 device(ao, INST_IO, devAoFEEDSigScale, "FEED Signal Scale")
+device(longout, INST_IO, devLoFEEDSigSize, "FEED Signal Size")
 
 # hack lp:1745039
 device(longout, CONSTANT, devLoFEEDHack, "FEED Hack lp:1745039")
