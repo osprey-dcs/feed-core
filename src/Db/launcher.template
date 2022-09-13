@@ -18,6 +18,7 @@ record(bo, "$(P)STOP") {
     field(ZNAM, "Stop")
     field(ONAM, "Stop")
     field(OUT , "$(P)STOP_.PROC PP")
+    field(ASG,  "$(ASG=)")
     field(TPRO, "$(TPRO=)")
 }
 
@@ -31,6 +32,7 @@ record(bo, "$(P)ABRT") {
     field(ZNAM, "Abort")
     field(ONAM, "Abort")
     field(OUT , "$(P)ABRT_.PROC PP")
+    field(ASG,  "$(ASG=)")
     field(TPRO, "$(TPRO=)")
 }
 
