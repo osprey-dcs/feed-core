@@ -130,7 +130,7 @@ record(aSub, "$(BASE)MASK3_") {
 
 # tag handling
 # we manage the tag.  Clients may increment on request
-# as part of acqusition update sequencing
+# as part of acquisition update sequencing
 
 record(busy, "$(BASE)TAGINC_CMD") {
     field(OUT , "$(BASE)TAGINC_CALC_.PROC PP")
