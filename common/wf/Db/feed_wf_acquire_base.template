@@ -290,10 +290,11 @@ record(aSub, "$(BASE)_STATUS_CALC_") {
     field(FTVA, "ULONG")
     field(INPA, "$(BASE)STATUS_RAW_ PP MSI")
     field(NOA , "2")
-    field(OUTA, "$(BASE)STATUS_ PP MSI")
+    field(FLNK, "$(BASE)STATUS_")
 }
 
 record(longin, "$(BASE)STATUS_") {
+    field(INP, "$(BASE)_STATUS_CALC_.VALA MSI")
     field(TSEL, "$(BASE)CIRCRAW_.TIME")
 	field(FLNK, "$(BASE)STATUS")
 }
