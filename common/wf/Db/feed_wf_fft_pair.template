@@ -47,6 +47,7 @@ record(ao, "$(PREF)AFFTMAX_THRESH") {
   field(VAL,  "1.0")
   field(DRVL, "1.0")
   field(DRVH, "1e12")
+  field(PINI, "YES")
   info(autosaveFields_pass0, "VAL")
 }
 
