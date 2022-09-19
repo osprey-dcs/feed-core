@@ -37,7 +37,7 @@ typedef struct FFTDev_ {
 } FFTDevRec, *FFTDev;
 
 static long
-fft_data_find(FFTDev pvt, char *name) 
+fft_data_find(FFTDev pvt, char *name)
 {
 	FFTData fftData = 0;
 
@@ -48,7 +48,7 @@ fft_data_find(FFTDev pvt, char *name)
 	return 0;
 }
 
-static long 
+static long
 fft_sub_init(aSubRecord* prec)
 {
 	FFTDev pvt = 0; /* Info stored with record */
@@ -106,7 +106,7 @@ fft_sub_init(aSubRecord* prec)
 	return 0;
 }
 
-static long 
+static long
 fft_init_send(aSubRecord* prec)
 {
 	char event_name[MAX_NAME_LENGTH];
@@ -134,7 +134,7 @@ fft_init_send(aSubRecord* prec)
 	return 0;
 }
 
-static long 
+static long
 fft_init_recv(aSubRecord* prec)
 {
 	if ( fft_sub_init( prec ) ) {
@@ -142,11 +142,11 @@ fft_init_recv(aSubRecord* prec)
 		prec->pact=TRUE;
 		return -1;
 	}
-	
+
 	return 0;
 }
 
-static long 
+static long
 fft_calc_send(aSubRecord* prec)
 {
 	short   debug   = (prec->tpro > 1) ? 1 : 0;
@@ -158,8 +158,8 @@ fft_calc_send(aSubRecord* prec)
 	double  *IWF  =  (double*)prec->a,   /* I waveform, already scaled */
        		*QWF  =  (double*)prec->b,   /* Q waveform, already scaled */
        		TSTEP = *(double*)prec->c;   /* sample spacing [s] */
- 
-    if(prec->fta!=menuFtypeDOUBLE 
+
+    if(prec->fta!=menuFtypeDOUBLE
 		|| prec->ftb!=menuFtypeDOUBLE
 		|| prec->ftc!=menuFtypeDOUBLE)
     {
@@ -173,12 +173,12 @@ fft_calc_send(aSubRecord* prec)
 	/* Hack: to keep data lengths consistent across all waveforms for a cavity
 	 * (in order to use same FFTW plan), if len is odd, set to next lower even value.
 	 * This is because the waveform lengths may be off by 1, depending on
-	 * active number of waveforms. 
+	 * active number of waveforms.
 	 */
 
 	if ( len % 2 != 0 ) {
 		if ( debug ) {
-			errlogPrintf("%s Original data length %i, reduce by one\n", 
+			errlogPrintf("%s Original data length %i, reduce by one\n",
 				prec->name, len);
 		}
 		len -= 1;
@@ -186,7 +186,7 @@ fft_calc_send(aSubRecord* prec)
 
 	if ( (len == 0) || (TSTEP <= 0) ) {
 		if ( debug ) {
-			errlogPrintf("%s Data length %i 0 or time step %f <= 0\n", 
+			errlogPrintf("%s Data length %i 0 or time step %f <= 0\n",
 				prec->name, len, TSTEP);
 		}
 		return 1;
@@ -203,7 +203,7 @@ fft_calc_send(aSubRecord* prec)
 	if ( debug ) {
 		printf("output length %i tstep %f s index %i type %i\n", len, TSTEP, pvt->index, pvt->type);
 		for ( i = 0; i < 30; i++ ) {
-			printf("%s convert_iq2ap: I[i] %f Q[i]] %f\n", 
+			printf("%s convert_iq2ap: I[i] %f Q[i]] %f\n",
 				prec->name, IWF[i], QWF[i]);
 		}
     }
@@ -218,7 +218,7 @@ fft_calc_send(aSubRecord* prec)
 	return 0;
 }
 
-static long 
+static long
 fft_calc_recv(aSubRecord* prec)
 {
 	short debug = (prec->tpro > 1) ? 1 : 0;
@@ -242,14 +242,14 @@ fft_calc_recv(aSubRecord* prec)
            *FNYQ     = (double*)prec->vali, /* Max measurable freq (Nyquist), samplingrate/2 */
            *FSTEP    = (double*)prec->valj, /* FFT frequency resolution */
            *AFFTSUM  = (double*)prec->valk; /* Sum of amplitude FFT bins */
- 
+
     int i;
 
 	short *AFFTMAXFOUND = (short*)prec->valh; /* Array corresponding to peaks, element is 1 if sufficient
-											   * amplitude to declare a peak 
+											   * amplitude to declare a peak
 											   */
 	*AFFTMAXFOUND = 0;
-									   
+
     if(prec->fta!=menuFtypeDOUBLE
 			|| prec->ftva!=menuFtypeDOUBLE
             || prec->ftvb!=menuFtypeDOUBLE
@@ -294,11 +294,11 @@ fft_calc_recv(aSubRecord* prec)
 	FFTF = fftData->freq + (index * max_len);
 
 	if ( debug ) {
-		errlogPrintf("%s fft_re offset %i  fft_im offset %i  index %i  output len %i  tstep %.4e s  fstep %f Hz  type %i\n", 
-			prec->name, (int)(index * 2 * max_len), (int)((index * 2 + 1) * max_len), index, (int)len, 
+		errlogPrintf("%s fft_re offset %i  fft_im offset %i  index %i  output len %i  tstep %.4e s  fstep %f Hz  type %i\n",
+			prec->name, (int)(index * 2 * max_len), (int)((index * 2 + 1) * max_len), index, (int)len,
 			fftData->tstep[index], *FSTEP, pvt->type);
 	}
- 
+
 	/* Nyquist frequency, maximum measurable frequency given time step */
 	*FNYQ = 1 / fftData->tstep[index] / 2.0;
 
@@ -308,12 +308,12 @@ fft_calc_recv(aSubRecord* prec)
 		IFFT[i] = FFTI[i];
 		QFFT[i] = FFTQ[i];
 		AFFT[i] = sqrt(FFTI[i]*FFTI[i] + FFTQ[i]*FFTQ[i]);
-		FWF[i]  = FFTF[i]; 
+		FWF[i]  = FFTF[i];
 
-		if ( AFFT[i] > *AFFTMAX ) { 			
-			*AFFTMAX = AFFT[i]; 			
-			*AFFTMAXF = FWF[i]; 			
-			afftmax_index = i; 		
+		if ( AFFT[i] > *AFFTMAX ) {
+			*AFFTMAX = AFFT[i];
+			*AFFTMAXF = FWF[i];
+			afftmax_index = i;
 		}
 
         *AFFTMEAN += AFFT[i];
@@ -330,18 +330,18 @@ fft_calc_recv(aSubRecord* prec)
 	*AFFTSUM = *AFFTMEAN;
     *AFFTMEAN  /= N; // <x>
 
-	if ( *AFFTMAX > threshscale * *AFFTMEAN ) { 		
-		*AFFTMAXFOUND = 1; 		
-		if ( debug ) { 			
+	if ( *AFFTMAX > threshscale * *AFFTMEAN ) {
+		*AFFTMAXFOUND = 1;
+		if ( debug ) {
 			errlogPrintf("%s Found max amp %f at freq %f mean %f index %i threshscale %f\n",
 				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN, afftmax_index, threshscale );
-		} 	
-	} 	
-	else { 		
-		if ( debug ) { 			
+		}
+	}
+	else {
+		if ( debug ) {
 			errlogPrintf("%s Failed to find max amp, use prev max amp %f at freq %f, current mean %f threshscale %f\n",
 				prec->name, *AFFTMAX, *AFFTMAXF, *AFFTMEAN, threshscale  );
-		} 	
+		}
 	}
 
     return 0;
