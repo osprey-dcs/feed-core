@@ -486,7 +486,8 @@ long asub_setamp(aSubRecord *prec)
 	ssa_ped   = *(double *)prec->k,
 	max_magn  = *(double *)prec->l,
 	max_imag  = *(double *)prec->m,
-	sel_aset  = *(double *)prec->p;
+	sel_aset  = *(double *)prec->p,
+	fudge     = *(double *)prec->q;
 
     short amp_close = *(short *)prec->g,
 	pha_close   = *(short *)prec->h,
@@ -504,9 +505,6 @@ long asub_setamp(aSubRecord *prec)
 	*lowslope = (double *)prec->valh,
 	*x_lo     = (double *)prec->valm,
 	*x_hi     = (double *)prec->valn;
-/*
-	*y_hi     = (double *)prec->valj;
-*/
 
     double y_lo, y_hi, x_lo_final, x_hi_final;
 
@@ -532,6 +530,8 @@ long asub_setamp(aSubRecord *prec)
 
     short debug = (prec->tpro > 1) ? 1 : 0;
 
+    /* Apply correction for measured beam energy gain */
+    ades = ades / fudge;
     double adesv  = ades*1e6;
 
     unsigned short MASK_LIMS  = 0x1F;
@@ -551,9 +551,9 @@ long asub_setamp(aSubRecord *prec)
     if (debug) {
 		printf("%s: input values rfctrl %i rfmodectrl %i  prev %i ades %f MV imped %f ohms freq %f Hz qloaded %f "
 			"amp_close %i pha_close %i ssa_slope %f ssa_minx %f ssa_ped %f "
-			"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f\n",
+			"fwd_fs %f sqrt(Watts) cav_fs %f MV mag_magn %f max_imag %f sel_aset %f fudge %f\n",
 			prec->name, rfctrl, rfmodectrl, rfmodeprev, ades, imped, freq, qloaded, amp_close, pha_close, ssa_slope, 
-			ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset);
+			ssa_minx, ssa_ped, fwd_fs, cav_fs, max_magn, max_imag, sel_aset, fudge);
     }
 
 	/* Chirp control. 
@@ -624,8 +624,10 @@ long asub_setamp(aSubRecord *prec)
     *lim_x_lo = (epicsInt32)(79500 * (x_lo_final));
     *lim_x_hi = (epicsInt32)(79500 * (x_hi_final));
 
-    /* Calculate value for set-magnitude register */
-    *adcn = ades / cav_fs;
+    /* Calculate value for set-magnitude register
+     * Fudge already included in ades and cav_fs
+     */
+    *adcn = fudge * ades / cav_fs;
     *setm = (epicsInt32)(round(*adcn * CORDIC_SCALE));
 
     if (debug) {
