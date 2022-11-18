@@ -52,7 +52,7 @@ a search against all register names.
 This search includes the provided name argument as a suffix
 with the "instance" list.
 
-The instance list if a concatination of the instance= arguments
+The instance list if a concatenation of the instance= arguments
 of the :py:meth:`open` function and the instance argument
 of the method being called.  For example, if a device
 has two registers named 'prefix_0_foo' and 'prefix_1_foo',
@@ -80,7 +80,7 @@ An exception will be raised unless a search matches exactly one register name.
 Waveform Acquisition
 --------------------
 
-The sequence for waveform acquistion is ::
+The sequence for waveform acquisition is ::
 
   dev.set_channel_mask([0, 1])
   while True:
@@ -90,7 +90,7 @@ The sequence for waveform acquistion is ::
 
 Where the argument of the :py:meth:`set_channel_mask` method
 is the list of channels to acquire.
-When it is desired to coordinate acquistion with changes to
+When it is desired to coordinate acquisition with changes to
 setting registers, then ::
 
 
