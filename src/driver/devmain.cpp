@@ -49,7 +49,7 @@
 //   default port number for all devices.
 // User can still override for individual devices
 //   by appending :port to end of IP/node.
-unsigned short feedUDPPortNum = 50006;
+int feedUDPPortNum = 50006;
 
 long get_on_connect_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 {
