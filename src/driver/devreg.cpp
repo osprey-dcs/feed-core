@@ -253,7 +253,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                     }
 
                     (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                    IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u size=%u\n",
+                    IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u size=%zu\n",
                           nreq, mem.size(),
                           info->reg->sevr, (unsigned)info->offset, (unsigned)info->step, valsize, size);
 
