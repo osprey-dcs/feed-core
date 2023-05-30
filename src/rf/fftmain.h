@@ -15,7 +15,7 @@
 #define FFT_TYPE_C2C 0 /* Complex to complex, fftwf_plan_dft_1d */
 #define FFT_TYPE_R2C 1 /* Realize to complex, fftwf_plan_dft_r2c_1d*/
 
-
+extern
 epicsMutexId  fftInitTaskMutex; /* Global mutex for use when initializing FFT tasks */
 
 typedef struct FFTDataRec_ {
