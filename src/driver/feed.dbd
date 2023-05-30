@@ -56,12 +56,6 @@ variable(feedUDPPortNum, int)
 # utilities
 registrar(asubFEEDRegistrar)
 registrar(rfcalcRegister)
-function(parmSelSubInit)
-function(parmSelSubProc)
-
-# RF-specific
-registrar(rfasubRegister)
-registrar(INTres2tmp_reg)
 
 # Waveform FFT
 registrar(asubFFTRegister)

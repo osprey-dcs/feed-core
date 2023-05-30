@@ -36,10 +36,6 @@ LIB_SRCS += iocsh.cpp
 SRC_DIRS += $(TOP)/src/rf
 LIB_SRCS += asub.c
 LIB_SRCS += calc.c
-LIB_SRCS += chirp.c
-LIB_SRCS += rf_asub.c
-LIB_SRCS += parmselsub.c
-LIB_SRCS += INTres2tmp.c
 
 ifeq ($(USE_FFTW),YES)
 LIB_LIBS += fftw3 
