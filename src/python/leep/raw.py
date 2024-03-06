@@ -146,6 +146,10 @@ class LEEPDevice(DeviceBase):
         else:
             self.rfs = True
 
+    def close(self):
+        self.sock.close()
+        super(LEEPDevice, self).close()
+
     @print_reg
     def reg_write(self, ops, instance=[]):
 
