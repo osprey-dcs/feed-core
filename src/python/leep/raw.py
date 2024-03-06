@@ -166,7 +166,7 @@ class LEEPDevice(DeviceBase):
             if isinstance(base_addr, (bytes, unicode)):
                 base_addr = int(base_addr, 0)
 
-            value = numpy.asarray(value, dtype='I')
+            value = numpy.array(value).astype('I')
 
             if L > 1:
                 _log.debug('reg_write %s <- %s ...', name, value[:10])
