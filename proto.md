@@ -120,6 +120,15 @@ The first 4 registers will read back the 16 byte constant value "Hello World!\r\
 These 2048 registers access static configuration data.
 See section Configuration ROM.
 
+If 0x800 has a zero (0) value, then the altnerate ROM location
+should be used.
+
+### Alternate ROM location
+
+Consists of 16384 registers 0x004000 - 0x007fff
+containing static configuration data.
+See section Configuration ROM.
+
 ## Configuration ROM Format
 
 The register range 0x800 - 0xfff holds static data describing the device.
