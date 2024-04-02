@@ -209,9 +209,9 @@ The (first) Address of this register.
 Determines number of Addresses which constitute this register.
 Number of Addresses is 2 to the power of addr_width.
 
-<pre>
+```
   naddrs = 1u<<addr_width;
-</pre>
+```
 
 eg. an addr_width of 0 defines a register with exactly one Address.
 
@@ -229,7 +229,7 @@ An arbitrary string describing this register.
 
 ### Example
 
-<pre>
+```
 {
     "J18_debug": {
         "access": "r",
@@ -242,4 +242,4 @@ An arbitrary string describing this register.
         "special": "sauce"
     }
 }
-</pre>
+```
