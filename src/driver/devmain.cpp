@@ -78,10 +78,10 @@ long get_reg_changed_intr(int dir, dbCommon *prec, IOSCANPVT *scan)
 namespace {
 
 #define TRY RecInfo *info = static_cast<RecInfo*>(prec->dpvt); if(!info) { \
-    (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
+    (void)recGblSetSevrMsg(prec, COMM_ALARM, INVALID_ALARM, "No dev"); return ENODEV; } \
     Device *device=info->device; (void)device; try
 
-#define CATCH() catch(std::exception& e) { (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); \
+#define CATCH() catch(std::exception& e) { (void)recGblSetSevrMsg(prec, COMM_ALARM, INVALID_ALARM, "ERR %s", e.what()); \
     errlogPrintf("%s: Error %s\n", prec->name, e.what()); info->cleanup(); return 0; }
 
 long write_debug(longoutRecord *prec)
@@ -99,7 +99,7 @@ long write_address(stringoutRecord *prec)
         osiSockAddr addr;
 
         if(prec->val[0] && aToIPAddr(prec->val, feedUDPPortNum, &addr.ia)) {
-            (void)recGblSetSevr(prec, WRITE_ALARM, INVALID_ALARM);
+            (void)recGblSetSevrMsg(prec, WRITE_ALARM, INVALID_ALARM, "Bad host/IP[:port]");
             return EINVAL;
         }
 
@@ -160,7 +160,7 @@ long read_jsoninfo(aaiRecord *prec)
 {
     TRY {
         if(prec->ftvl!=menuFtypeCHAR) {
-            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            (void)recGblSetSevrMsg(prec, READ_ALARM, INVALID_ALARM, "FTVL must be CHAR");
             return -1;
         }
         char *buf = (char*)prec->bptr;
@@ -173,14 +173,14 @@ long read_jsoninfo(aaiRecord *prec)
         case 1: str = &device->jsonhash; break;
         case 2: str = &device->codehash; break;
         default:
-            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            (void)recGblSetSevrMsg(prec, READ_ALARM, INVALID_ALARM, "offset= out of range");
             return -1;
         }
 
         // len includes trailing nil
         const size_t len  = std::min(str->size()+1, size_t(prec->nelm));
         if(len==0) {
-            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            (void)recGblSetSevrMsg(prec, READ_ALARM, INVALID_ALARM, "NELM too small");
             return -1;
         }
 
@@ -206,7 +206,7 @@ long read_counter(longinRecord *prec)
         case 5: prec->val = device->send_seq; break;
         case 6: prec->val = device->cnt_recv_bytes; break;
         default:
-            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            (void)recGblSetSevrMsg(prec, READ_ALARM, INVALID_ALARM, "offset= out of range");
         }
         return 0;
     }CATCH()
@@ -302,7 +302,7 @@ long read_jblob(aaiRecord *prec)
 
 #undef TRY
 #define TRY SyncInfo *info = static_cast<SyncInfo*>(prec->dpvt); if(!info) { \
-    (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); return ENODEV; } \
+    (void)recGblSetSevrMsg(prec, COMM_ALARM, INVALID_ALARM, "No Info"); return ENODEV; } \
     Device *device=info->device; (void)device; try
 
 
@@ -373,7 +373,7 @@ long read_sync(longinRecord *prec)
 
         } else {
             if(device->current!=Device::Running || info->wait_for)
-                (void)(recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM));
+                (void)(recGblSetSevrMsg(prec, COMM_ALARM, INVALID_ALARM, "Not Running"));
 
             info->wait_for = 0u;
             prec->pact = 0;
@@ -417,7 +417,7 @@ long read_metadata(longinRecord *prec)
             prec->val = it->second;
 
         } else if(!info->has_default) {
-            (void)recGblSetSevr(prec, READ_ALARM, INVALID_ALARM);
+            (void)recGblSetSevrMsg(prec, READ_ALARM, INVALID_ALARM, "No meta");
 
         } else {
             prec->val = info->defval;
