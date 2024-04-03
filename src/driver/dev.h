@@ -9,8 +9,13 @@
 #include <dbLock.h>
 #include <recSup.h>
 #include <dbScan.h>
+#include <recGbl.h>
 
 #include "device.h"
+
+#ifndef DBR_AMSG
+#  define recGblSetSevrMsg(REC, STAT, SEVR, ...) recGblSetSevr(REC, STAT, SEVR)
+#endif
 
 typedef std::map<std::string, std::string> pairs_t;
 
