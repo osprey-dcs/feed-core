@@ -151,6 +151,11 @@ long write_register_ao(aoRecord *prec)
     return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, menuFtypeLONG);
 }
 
+long write_register_bo(boRecord *prec)
+{
+    return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, menuFtypeULONG);
+}
+
 long write_register_mbbo(mbboRecord *prec)
 {
     return write_register_common((dbCommon*)prec, (const char*)&prec->rval, 1, menuFtypeULONG);
@@ -288,6 +293,11 @@ long read_register_ai(aiRecord *prec)
     return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, menuFtypeLONG);
 }
 
+long read_register_bi(biRecord *prec)
+{
+    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, menuFtypeULONG);
+}
+
 long read_register_mbbi(mbbiRecord *prec)
 {
     return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, menuFtypeULONG);
@@ -324,6 +334,7 @@ template<> void RecRegInfo<longoutRecord>::connected() {
 }
 
 template<> void RecRegInfo<aoRecord>::connected() {}
+template<> void RecRegInfo<boRecord>::connected() {}
 template<> void RecRegInfo<mbboRecord>::connected() {}
 template<> void RecRegInfo<aaoRecord>::connected() {}
 
@@ -337,6 +348,7 @@ template<> void RecRegInfo<longinRecord>::connected() {
 }
 
 template<> void RecRegInfo<aiRecord>::connected() {}
+template<> void RecRegInfo<biRecord>::connected() {}
 template<> void RecRegInfo<mbbiRecord>::connected() {}
 template<> void RecRegInfo<aaiRecord>::connected() {}
 
@@ -345,11 +357,13 @@ template<> void RecRegInfo<aaiRecord>::connected() {}
 // register writes
 DSET(devLoFEEDWriteReg, longout, init_common<RecRegInfo<longoutRecord> >::fn, NULL, write_register_lo)
 DSET(devAoFEEDWriteReg, ao, init_common<RecRegInfo<aoRecord> >::fn, NULL, write_register_ao)
+DSET(devBoFEEDWriteReg, bo, init_common<RecRegInfo<boRecord> >::fn, NULL, write_register_bo)
 DSET(devMbboFEEDWriteReg, mbbo, init_common<RecRegInfo<mbboRecord> >::fn, NULL, write_register_mbbo)
 DSET(devAaoFEEDWriteReg, aao, init_common<RecRegInfo<aaoRecord> >::fn, NULL, write_register_aao)
 
 // register reads
 DSET(devLiFEEDWriteReg, longin, init_common<RecRegInfo<longinRecord> >::fn, get_reg_changed_intr, read_register_li)
 DSET(devAiFEEDWriteReg, ai, init_common<RecRegInfo<aiRecord> >::fn, get_reg_changed_intr, read_register_ai)
+DSET(devBiFEEDWriteReg, bi, init_common<RecRegInfo<biRecord> >::fn, get_reg_changed_intr, read_register_bi)
 DSET(devMbbiFEEDWriteReg, mbbi, init_common<RecRegInfo<mbbiRecord> >::fn, get_reg_changed_intr, read_register_mbbi)
 DSET(devAaiFEEDWriteReg, aai, init_common<RecRegInfo<aaiRecord> >::fn, get_reg_changed_intr, read_register_aai)
