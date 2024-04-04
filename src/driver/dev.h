@@ -41,6 +41,7 @@ struct RecInfo : public RegInterest
 
     double scale;
 
+    bool commit;
     bool wait;
     // effects input records
     // false - use data from previous read op

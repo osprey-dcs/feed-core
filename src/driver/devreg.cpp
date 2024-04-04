@@ -95,33 +95,37 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
         } else {
             if(!prec->pact) {
 
-                const char *in = raw, *end = raw+count*valsize;
+                if(count) {
+                    const char *in = raw, *end = raw+count*valsize;
 
-                for(size_t i=info->offset, N = info->reg->mem_tx.size();
-                    i<N && in+valsize<=end; i+=info->step, in+=valsize)
-                {
-                    epicsUInt32 val = 0u;
+                    for(size_t i=info->offset, N = info->reg->mem_tx.size();
+                        i<N && in+valsize<=end; i+=info->step, in+=valsize)
+                    {
+                        epicsUInt32 val = 0u;
 
-                    switch(ftvl) {
-                    case menuFtypeCHAR:
-                    case menuFtypeUCHAR: val = *(const epicsUInt8*)in; break;
-                    case menuFtypeSHORT:
-                    case menuFtypeUSHORT: val = *(const epicsUInt16*)in; break;
-                    case menuFtypeLONG:
-                    case menuFtypeULONG: val = *(const epicsUInt32*)in; break;
-                    case menuFtypeDOUBLE: val = (*(const double*)in) / info->scale; break;
-                    default:
-                        break;
+                        switch(ftvl) {
+                        case menuFtypeCHAR:
+                        case menuFtypeUCHAR: val = *(const epicsUInt8*)in; break;
+                        case menuFtypeSHORT:
+                        case menuFtypeUSHORT: val = *(const epicsUInt16*)in; break;
+                        case menuFtypeLONG:
+                        case menuFtypeULONG: val = *(const epicsUInt32*)in; break;
+                        case menuFtypeDOUBLE: val = (*(const double*)in) / info->scale; break;
+                        default:
+                            break;
+                        }
+
+                        info->reg->mem_tx[i] = htonl(val);
                     }
-
-                    info->reg->mem_tx[i] = htonl(val);
                 }
 
-                info->reg->queue(true, info->wait ? info : 0);
+                if(info->commit) {
+                    info->reg->queue(true, info->wait ? info : 0);
 
-                if(info->wait && info->device->active()) {
-                    prec->pact = 1;
-                    IFDBG(6, "begin async\n");
+                    if(info->wait && info->device->active()) {
+                        prec->pact = 1;
+                        IFDBG(6, "begin async\n");
+                    }
                 }
 
             } else {
@@ -164,6 +168,11 @@ long write_register_mbbo(mbboRecord *prec)
 long write_register_aao(aaoRecord *prec)
 {
     return write_register_common((dbCommon*)prec, (const char*)prec->bptr, prec->nord, (menuFtype)prec->ftvl);
+}
+
+long flush_register_bo(boRecord *prec)
+{
+    return write_register_common((dbCommon*)prec, NULL, 0, menuFtypeULONG);
 }
 
 long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ftvl)
@@ -360,6 +369,7 @@ DSET(devAoFEEDWriteReg, ao, init_common<RecRegInfo<aoRecord> >::fn, NULL, write_
 DSET(devBoFEEDWriteReg, bo, init_common<RecRegInfo<boRecord> >::fn, NULL, write_register_bo)
 DSET(devMbboFEEDWriteReg, mbbo, init_common<RecRegInfo<mbboRecord> >::fn, NULL, write_register_mbbo)
 DSET(devAaoFEEDWriteReg, aao, init_common<RecRegInfo<aaoRecord> >::fn, NULL, write_register_aao)
+DSET(devBoFEEDFlushReg, bo, init_common<RecRegInfo<boRecord> >::fn, NULL, flush_register_bo)
 
 // register reads
 DSET(devLiFEEDWriteReg, longin, init_common<RecRegInfo<longinRecord> >::fn, get_reg_changed_intr, read_register_li)

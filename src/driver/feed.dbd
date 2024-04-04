@@ -23,6 +23,7 @@ device(longin, INST_IO, devLiFEEDMetadata, "FEED __metadata__")
 device(mbbi, INST_IO, devMbbiFEEDRegState, "FEED Register State")
 
 # register writes
+device(bo, INST_IO, devBoFEEDFlushReg, "FEED Register Flush")
 device(longout, INST_IO, devLoFEEDWriteReg, "FEED Register Write")
 device(ao, INST_IO, devAoFEEDWriteReg, "FEED Register Write")
 device(bo, INST_IO, devBoFEEDWriteReg, "FEED Register Write")
