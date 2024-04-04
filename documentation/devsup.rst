@@ -42,6 +42,7 @@ Valid keys are:
    Default ``1``.
 -  ``scale=`` Multiplier used for ``aai``/``aao`` with ``FTVL`` set to
    ``DOUBLE``. Default ``1.0``.
+-  ``commit=`` Boolean.  See below.
 -  ``wait=`` Boolean. See below.
 -  ``rbv=`` Boolean. Input records only. ``false`` (default), use value
    from previous read op. ``true``, use value from previous write
@@ -116,6 +117,11 @@ On scan, request write of the named register. Processing completes on
 success, with updated VAL/RVAL, or an ``INVALID`` alarm on timeout.
 
 When ``FTVL`` is ``DOUBLE``, link option ``scale=`` multiplier is used.
+
+When ``commit=false`` (not default).  Processing only updates an internal TX register value cache.
+Always synchronous.
+A subsequent Flush is needed to send.
+eg. use to (re)initialize a multi-value register and register array.
 
 ::
 
