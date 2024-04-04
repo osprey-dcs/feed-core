@@ -32,8 +32,13 @@ Socket::Socket(SOCKET s) :sock(s)
 }
 
 Socket::Socket(int domain, int type, int protocol)
-    :sock(epicsSocketCreate(domain, type, protocol))
 {
+    static bool attached;
+    if(!attached) {
+        osiSockAttach();
+        attached = true;
+    }
+    sock = epicsSocketCreate(domain, type, protocol);
     if(sock==INVALID_SOCKET)
         throw SocketError(SOCKERRNO);
 }
