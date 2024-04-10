@@ -304,7 +304,10 @@ long read_register_ai(aiRecord *prec)
 
 long read_register_bi(biRecord *prec)
 {
-    return read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, menuFtypeULONG);
+    long ret = read_register_common((dbCommon*)prec, (char*)&prec->rval, 0, menuFtypeULONG);
+    if(prec->mask)
+        prec->rval &= prec->mask;
+    return ret;
 }
 
 long read_register_mbbi(mbbiRecord *prec)
