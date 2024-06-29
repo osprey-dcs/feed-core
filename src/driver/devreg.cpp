@@ -47,7 +47,7 @@
 namespace {
 
 template<typename Rec>
-struct RecRegInfo : public RecInfo
+struct RecRegInfo final : public RecInfo
 {
     RecRegInfo(dbCommon *prec, Device *device)
         :RecInfo(prec, device)
@@ -334,7 +334,41 @@ void maybePost(dbCommon *prec, fld_t *fld, epicsInt64 value)
     }
 }
 
+void* getVAL(dbCommon *prec)
+{
+    DBENTRY ent;
+    dbInitEntryFromRecord(prec, &ent);
+    void *pfield = ent.precordType->pvalFldDes->offset + (char*)prec;
+    dbFinishEntry(&ent);
+    return pfield;
+}
+
+void persistSettings(RecInfo *info)
+{
+    dbCommon *prec = info->prec;
+    if(prec->udf)
+        return; // do not persist undefined/invalid
+
+    IFDBG(6, "Persisting");
+
+    const dset6<dbCommon> * dset = reinterpret_cast<dset6<dbCommon>*>(prec->dset);
+
+    /* Partially "process" to update TX cache from VAL,
+     * but do not trigger any links.
+     */
+    bool save = info->commit;
+    info->commit = false;
+    dset->readwrite(prec);
+    info->commit = save;
+
+    unsigned short monitor_mask = recGblResetAlarms(prec);
+    if (monitor_mask)
+        db_post_events(prec, getVAL(prec), monitor_mask);
+}
+
 template<> void RecRegInfo<longoutRecord>::connected() {
+    ScanLock G(prec);
+    persistSettings(this);
     if(meta) {
         longoutRecord *prec = (longoutRecord*)this->prec;
         assert(reg);
@@ -345,13 +379,14 @@ template<> void RecRegInfo<longoutRecord>::connected() {
     }
 }
 
-template<> void RecRegInfo<aoRecord>::connected() {}
-template<> void RecRegInfo<boRecord>::connected() {}
-template<> void RecRegInfo<mbboRecord>::connected() {}
-template<> void RecRegInfo<aaoRecord>::connected() {}
+template<> void RecRegInfo<aoRecord>::connected() { ScanLock G(prec); persistSettings(this);}
+template<> void RecRegInfo<boRecord>::connected() { ScanLock G(prec); persistSettings(this); }
+template<> void RecRegInfo<mbboRecord>::connected() { ScanLock G(prec); persistSettings(this); }
+template<> void RecRegInfo<aaoRecord>::connected() { ScanLock G(prec); persistSettings(this); }
 
 template<> void RecRegInfo<longinRecord>::connected() {
     if(meta) {
+        ScanLock G(prec);
         longinRecord *prec = (longinRecord*)this->prec;
         assert(reg);
         maybePost(this->prec, &prec->lopr, reg->info.min());
