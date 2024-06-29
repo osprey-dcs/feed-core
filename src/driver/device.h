@@ -44,7 +44,7 @@ struct RegInterest
     virtual void show(std::ostream& strm, int lvl) {}
     // called when building Device::dev_info
     virtual void getInfo(infos_t& infos) const {}
-    // called after (re)connect
+    // called after (re)connect.  In Inspecting state, just prior to Running
     virtual void connected() {};
 };
 
