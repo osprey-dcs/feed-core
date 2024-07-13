@@ -13,6 +13,7 @@
 #include <device.h>
 #include <rom.h>
 #include <simulator.h>
+#include <dev.h>
 
 #ifndef TOP
 // really defined in makefile.  stub here to help static analysis
@@ -152,9 +153,10 @@ MAIN(testdevice)
         while(1) {
             dbCommon *prec = testdbRecordPtr("tst:One-SP");
             int pact;
-            dbScanLock(prec);
-            pact = prec->pact;
-            dbScanUnlock(prec);
+            {
+                ScanLock G(prec);
+                pact = prec->pact;
+            }
             if(!pact)
                 break;
         }
