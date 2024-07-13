@@ -25,6 +25,12 @@ bool get_pair(const pairs_t& pairs, const std::string& key, epicsUInt32& out);
 bool get_pair(const pairs_t& pairs, const std::string& key, double& out);
 bool get_pair(const pairs_t& pairs, const std::string& key, bool& out);
 
+struct ScanLock {
+    dbCommon * const prec;
+    ScanLock(dbCommon *prec) :prec(prec) { dbScanLock(prec); }
+    ~ScanLock() { dbScanUnlock(prec); }
+};
+
 struct RecInfo : public RegInterest
 {
 

@@ -226,11 +226,10 @@ void RecInfo::cleanup() {
 
 void RecInfo::complete() {
     long (*process)(dbCommon*) = (long (*)(dbCommon*))prec->rset->process;
-    dbScanLock(prec);
+    ScanLock G(prec);
     if(prec->pact) {
         (*process)(prec); // ignore result
     }
-    dbScanUnlock(prec);
 }
 
 void RecInfo::show(std::ostream& strm, int lvl) {
