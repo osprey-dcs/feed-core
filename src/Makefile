@@ -56,14 +56,6 @@ else
 LIB_SRCS += fftnoop.c
 endif
 
-ifneq ($(SNCSEQ),)
-DBD += rfseq.dbd
-FEED_DBD += rfseq.dbd
-LIB_LIBS += seq pv
-LIB_SRCS += rfresstep.st
-LIB_SRCS += chirpscan.st
-endif
-
 #===========================
 
 include $(TOP)/configure/RULES

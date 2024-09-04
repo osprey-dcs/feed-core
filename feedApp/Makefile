@@ -55,11 +55,6 @@ fftw3_DIR = $(FFTW_LIB)
 feedioc_LIBS += fftw3 
 endif
 
-ifneq ($(SNCSEQ),)
-feedioc_DBD += rfseq.dbd
-feedioc_LIBS += seq pv
-endif
-
 feedioc_LIBS += $(EPICS_BASE_IOC_LIBS)
 feedioc_SYS_LIBS += z
 
