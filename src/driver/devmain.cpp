@@ -137,10 +137,19 @@ long read_dev_state(mbbiRecord *prec)
     }CATCH()
 }
 
-// something to go with get_on_connect_intr()
 long read_inc(longinRecord *prec)
 {
     prec->val++;
+
+    /* HACK?
+     * when processing as a result of an external event like On Connect
+     * we want to ensure that any changes are reflected to downstream
+     * async. records result in re-processing if that record happens
+     * to already be queued.
+     * So mark PUTF to trigger propagation logic when FLNK is evaluated
+     */
+    prec->putf = TRUE;
+
     return 0;
 }
 
