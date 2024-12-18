@@ -261,6 +261,7 @@ struct epicsShareClass Device : public epicsThreadRunable
 
     // main loop
     virtual void run() override final;
+    virtual void show ( unsigned int level ) const override final;
 
     void show(std::ostream& strm, int lvl) const;
 

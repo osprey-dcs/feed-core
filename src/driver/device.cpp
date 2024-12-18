@@ -1013,6 +1013,7 @@ void Device::run()
     IFDBG(4, "Runner stopping");
 }
 
+void Device::show ( unsigned int ) const {}
 
 void Device::show(std::ostream& strm, int lvl) const
 {
