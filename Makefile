@@ -15,6 +15,9 @@ sim_DEPEND_DIRS = configure src
 DIRS += common/wf/Db
 common/wf/Db_DEPEND_DIRS = configure
 
+DIRS += common/logic/Db
+common/logic/Db_DEPEND_DIRS = configure
+
 DIRS += common/wf/opi
 common/wf/opi_DEPEND_DIRS = configure
 
