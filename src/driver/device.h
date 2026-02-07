@@ -166,6 +166,8 @@ struct epicsShareClass Device : public epicsThreadRunable
     // 4 0x10 - Worker thread
     // 5 0x20 - Register queuing
     // 6 0x40 - dset
+    // 7 0x80 - register writes
+    // 8 0x80 - register reads
     epicsUInt32 debug;
 
     enum state_t {

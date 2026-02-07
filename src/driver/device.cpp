@@ -406,6 +406,8 @@ void Device::handle_send(Guard& G)
 
             } else {
                 val = R->mem_tx.at(offset);
+
+                IFDBG(7, "0x%08x <- 0x%08x", unsigned(addr), unsigned(val));
             }
 
             msg.reg[j] = R;
@@ -530,10 +532,13 @@ void Device::handle_process(const std::vector<char>& buf, PrintAddr& addr)
         epicsUInt32 cmd_addr = ntohl(ibuf[j*2 + 2]),
                 data     = ibuf[j*2 + 3];
 
-        epicsUInt32 offset = (cmd_addr&0x00ffffff) - reg->info.base_addr;
+        epicsUInt32 addr = cmd_addr&0x00ffffff,
+                    offset = addr - reg->info.base_addr;
 
         if(cmd_addr&0x10000000) {
             reg->mem_rx.at(offset) = data;
+            IFDBG(8, "0x%08x -> 0x%08x", unsigned(addr), unsigned(data));
+
         } else {
             // writes simply echo written value, ignore data
         }
