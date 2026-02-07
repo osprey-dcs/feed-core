@@ -20,7 +20,7 @@ namespace {
 #define CATCH() catch(std::exception& e) { (void)recGblSetSevr(prec, COMM_ALARM, INVALID_ALARM); \
     errlogPrintf("%s: Error %s\n", prec->name, e.what()); info->cleanup(); return 0; }
 
-#define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(1<<(N)))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 #define ERR(FMT, ...) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 struct WaitInfo : public RecInfo

@@ -42,7 +42,7 @@
 
 #include <epicsExport.h>
 
-#define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(N))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(1u<<(N)))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 namespace {
 
@@ -124,7 +124,7 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
 
                     if(info->wait && info->device->active()) {
                         prec->pact = 1;
-                        IFDBG(6, "begin async\n");
+                        IFDBG(6, "begin async");
                     }
                 }
 
@@ -133,7 +133,7 @@ long write_register_common(dbCommon *prec, const char *raw, size_t count, menuFt
 
                 prec->pact = 0;
 
-                IFDBG(6, "complete async\n");
+                IFDBG(6, "complete async");
             }
             return 0;
         }
@@ -267,7 +267,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                     }
 
                     (void)recGblSetSevr(prec, info->reg->stat, info->reg->sevr);
-                    IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u size=%zu\n",
+                    IFDBG(6, "Copy in %zu of %zu words.  sevr=%u offset=%u step=%u valsize=%u size=%zu",
                           nreq, mem.size(),
                           info->reg->sevr, (unsigned)info->offset, (unsigned)info->step, valsize, size);
 
@@ -278,7 +278,7 @@ long read_register_common(dbCommon *prec, char *raw, size_t *count, menuFtype ft
                     if(count)
                         *count = 0;
 
-                    IFDBG(6, "begin async\n");
+                    IFDBG(6, "begin async");
                 }
                 return 0;
 

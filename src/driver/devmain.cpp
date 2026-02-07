@@ -39,7 +39,7 @@
 
 #include <epicsExport.h>
 
-#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(prec->tpro>1 || (info->device->debug&(1u<<(N)))) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 #define ERR(FMT, ...) errlogPrintf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 // UDP port numbers:
@@ -291,9 +291,9 @@ long read_jblob(aaiRecord *prec)
         }
 
         if(blob->empty()) {
-            IFDBG(1, "Not connected");
+            IFDBG(6, "Not connected");
         } else if(blob->size() > prec->nelm) {
-            IFDBG(1, "blob size %zu exceeds NELM=%u",
+            IFDBG(6, "blob size %zu exceeds NELM=%u",
                   blob->size(), (unsigned)prec->nelm);
         } else {
             memcpy(prec->bptr,
@@ -335,8 +335,11 @@ struct SyncInfo : public RecInfo
                 wait_for--;
                 if(wait_for!=0) {
                     done = false;
-                    IFDBG(1, "%u remaining", wait_for);
-                } IFDBG(1, "Sync'd");
+                    if(device->debug&(1<<6))
+                        ERR("%u remaining", wait_for);
+                } if(device->debug&(1<<6)) {
+                    ERR("Sync'd");
+                }
             }
 
         }catch(std::exception& e){
@@ -359,7 +362,7 @@ long read_sync(longinRecord *prec)
     TRY {
         if(!prec->pact && info->device->active()) {
             if(device->reg_send.empty())
-                IFDBG(1, "Send queue empty");
+                IFDBG(6, "Send queue empty");
 
             info->wait_for = 0u;
 
@@ -378,7 +381,7 @@ long read_sync(longinRecord *prec)
             }
 
             if(prec->pact)
-                IFDBG(1, "Wait for %u registers", info->wait_for);
+                IFDBG(6, "Wait for %u registers", info->wait_for);
 
         } else {
             if(device->current!=Device::Running || info->wait_for)
@@ -387,7 +390,7 @@ long read_sync(longinRecord *prec)
             info->wait_for = 0u;
             prec->pact = 0;
             prec->val++;
-            IFDBG(1, "Complete");
+            IFDBG(6, "Complete");
         }
 
         return 0;

@@ -88,7 +88,7 @@ bool get_pair(const pairs_t& pairs, const std::string& key, bool& out)
     return true;
 }
 
-#define IFDBG(N, FMT, ...) if(prec->tpro>(N)) printf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
+#define IFDBG(N, FMT, ...) if(prec->tpro>(1u<<(N))) printf("%s %s : " FMT "\n", logTime(), prec->name, ##__VA_ARGS__)
 
 long init_common_base(dbCommon *prec, RecInfo*(*buildfn)(dbCommon *prec, Device *device))
 {
@@ -138,16 +138,16 @@ long init_common_base(dbCommon *prec, RecInfo*(*buildfn)(dbCommon *prec, Device 
         if(get_pair(pairs, "reg", info->regname))
         {
             info->device->reg_interested.insert(std::make_pair(info->regname, info.get()));
-            IFDBG(1, "Attach to %s", info->regname.c_str());
+            IFDBG(6, "Attach to %s", info->regname.c_str());
 
             Device::reg_by_name_t::iterator it(info->device->reg_by_name.find(info->regname));
             if(it!=info->device->reg_by_name.end() && it->second->bootstrap) {
                 // bootstrap registers connected immediately and perpetually
                 info->reg = it->second;
                 it->second->interested.push_back(info.get());
-                IFDBG(2, "Attach to bootstrap");
+                IFDBG(6, "Attach to bootstrap");
             }
-        } else IFDBG(2, "No register named in: %s", lstr);
+        } else IFDBG(6, "No register named in: %s", lstr);
 
         if(get_pair(pairs, "signal", info->signal))
         {
@@ -160,9 +160,9 @@ long init_common_base(dbCommon *prec, RecInfo*(*buildfn)(dbCommon *prec, Device 
 
             } else {
                 RecInfo::signals[info->signal] = info.get();
-                IFDBG(1, "is signal %s", info->signal.c_str());
+                IFDBG(6, "is signal %s", info->signal.c_str());
             }
-        } else IFDBG(2, "No signal");
+        } else IFDBG(6, "No signal");
 
         prec->dpvt = info.release();
         return 0;
