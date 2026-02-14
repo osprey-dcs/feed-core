@@ -75,12 +75,13 @@ def dumpaddrs(args, dev):
         base = info['base_addr']
         if isinstance(base, (bytes, str)):
             base = int(base, 0)
+        value = value.astype('u4')
         if info.get('addr_width', 0) == 0:
             # scalar
-            addrs.append((base, value & 0xffffffff))
+            addrs.append((base, value))
         else:
             # vector
-            for pair in enumerate(value & 0xffffffff, base):
+            for pair in enumerate(value, base):
                 addrs.append(pair)
 
     # sort by address increasing
