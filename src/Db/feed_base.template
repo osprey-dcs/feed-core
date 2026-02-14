@@ -157,7 +157,6 @@ record(aai, "$(PREF)JINFO") {
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "16000")
-    field(FLNK, "$(PREF)JSON")
 }
 
 record(aai, "$(PREF)JSON") {
@@ -167,7 +166,6 @@ record(aai, "$(PREF)JSON") {
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "16000")
-    field(FLNK, "$(PREF)FW_DESC")
 }
 
 record(aai, "$(PREF)FW_DESC") {
@@ -177,7 +175,6 @@ record(aai, "$(PREF)FW_DESC") {
     field(SCAN, "I/O Intr")
     field(FTVL, "CHAR")
     field(NELM, "256")
-    field(FLNK, "$(PREF)FW_CODEHASH")
 }
 
 record(aai, "$(PREF)FW_CODEHASH") {
