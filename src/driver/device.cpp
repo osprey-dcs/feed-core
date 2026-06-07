@@ -1077,7 +1077,10 @@ void Device::show(std::ostream& strm, int lvl) const
     {
         strm<<"  ";
         it->second->show(strm, lvl);
-        strm<<" -> "<<it->first<<"\n";
+        strm<<" -> "<<it->first;
+        if(!it->second->reg)
+            strm<<" (missing)";
+        strm<<"\n";
     }
 
     if(lvl<=3)
